@@ -6,8 +6,8 @@ class Page2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.yellow,
-      child: Center(
+      //color: Colors.yellow,
+      child: const Center(
         child: Text('Корзина'),
       ),
     );

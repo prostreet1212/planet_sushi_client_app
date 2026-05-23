@@ -1,11 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/pages/page1.dart';
-import 'package:planet_sushi_client_app/features/testing/CustomBottomNavBa1.dart';
 
 import '../pages/page2.dart';
-import '../../../testing/CustomBottomNavBar.dart';
-import '../../../testing/fab_screen.dart';
 import '../pages/page3.dart';
 
 class MainScreen extends StatefulWidget {
@@ -18,7 +15,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   int _previousIndex = 0;
-  List<Widget>  pages= [Page1(), Page2(), Page3()];
+  List<Widget>  pages= [/*const Page1()*/MenuScreen(), const Page2(), const Page3()];
 
   void _selectedTab(int index) {
     setState(() {
@@ -31,13 +28,13 @@ class _MainScreenState extends State<MainScreen> {
   bool _getTransitionType(int from, int to) {
     if (to > from) {
       // Переход вперёд (слева направо)
-      return true;
+      return false;
     } else if (to < from) {
       // Переход назад (справа налево)
-      return false;
+      return true;
     } else {
       // Если индекс не изменился - используем стандартную горизонтальную анимацию
-      return true;
+      return false;
     }
   }
 
@@ -45,18 +42,18 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(title: Text('Планета суши'),),
+      appBar: AppBar(title: const Text('Планета суши'),),
       //body: pages[_lastIndex],
       body: PageTransitionSwitcher(
         reverse: _getTransitionType(_previousIndex, _currentIndex),
         duration: const Duration(milliseconds: 500),
         transitionBuilder: (Widget child, Animation<double> animation, Animation<double> secondaryAnimation) {
           return SharedAxisTransition(
-            child: child,
             animation: animation,
             secondaryAnimation: secondaryAnimation,
             transitionType: SharedAxisTransitionType.horizontal, // Горизонтальная ось
             fillColor: Colors.transparent,
+            child: child,
           );
         },
         child: pages[_currentIndex],
@@ -127,8 +124,8 @@ class _MainScreenState extends State<MainScreen> {
                 type: MaterialType.transparency,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(28.0),
-                  splashColor: Colors.blue.withOpacity(0.3), // Цвет "волны"
-                  highlightColor: Colors.blue.withOpacity(0.1),
+                  splashColor: Colors.blue.withValues(alpha: 0.3), // Цвет "волны"
+                  highlightColor: Colors.blue.withValues(alpha: 0.1),
                   onTap: () {
                     _selectedTab(0);
                   },
@@ -143,7 +140,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
             ),
-            Center(child: Padding(padding: EdgeInsets.only(top: 30), child: Text('Корзина',style: TextStyle(fontSize: 12,color:_currentIndex==1?Colors.white:Colors.black, ),))),
+            Center(child: Padding(padding: const EdgeInsets.only(top: 30), child: Text('Корзина',style: TextStyle(fontSize: 12,color:_currentIndex==1?Colors.white:Colors.black, ),))),
             /*IconButton(
             icon:  Icon(
               Icons.menu,
@@ -160,8 +157,8 @@ class _MainScreenState extends State<MainScreen> {
                 type: MaterialType.transparency,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(28.0),
-                    splashColor: Colors.blue.withOpacity(0.3), // Цвет "волны"
-                    highlightColor: Colors.blue.withOpacity(0.1),
+                    splashColor: Colors.blue.withValues(alpha: 0.3), // Цвет "волны"
+                    highlightColor: Colors.blue.withValues(alpha: 0.1),
                   onTap: () {
                     _selectedTab(2);
 

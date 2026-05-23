@@ -5,7 +5,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+   const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -107,19 +107,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
 // Screens for the different bottom navigation items
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.green,
-      child:  Center(child: Text('Home')),
+      child:  const Center(child: Text('Home')),
     );
   }
 }
 
 class Search extends StatelessWidget {
-  const Search({Key? key}) : super(key: key);
+  const Search({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +128,7 @@ class Search extends StatelessWidget {
 }
 
 class Favourite extends StatelessWidget {
-  const Favourite({Key? key}) : super(key: key);
+  const Favourite({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +137,7 @@ class Favourite extends StatelessWidget {
 }
 
 class Profile extends StatelessWidget {
-  const Profile({Key? key}) : super(key: key);
+  const Profile({super.key});
 
   @override
   Widget build(BuildContext context) {

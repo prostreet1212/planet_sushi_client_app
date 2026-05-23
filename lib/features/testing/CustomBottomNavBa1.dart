@@ -6,6 +6,8 @@ import '../main/presentation/pages/page2.dart';
 import '../main/presentation/pages/page3.dart';
 
 class CustomBottomNavBar1 extends StatefulWidget {
+  const CustomBottomNavBar1({super.key});
+
   @override
   _CustomBottomNavBar1State createState() => _CustomBottomNavBar1State();
 }
@@ -14,9 +16,9 @@ class _CustomBottomNavBar1State extends State<CustomBottomNavBar1> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    Page1(),
-    Page2(),
-    Page3(),
+    //const Page1(),
+    const Page2(),
+    const Page3(),
   ];
 
   @override
@@ -26,7 +28,7 @@ class _CustomBottomNavBar1State extends State<CustomBottomNavBar1> {
         body: _pages[_selectedIndex],
         bottomNavigationBar: Container(
           height: 65,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
             boxShadow: [
               BoxShadow(offset: Offset(0, -2), blurRadius: 4, color: Colors.black12),
@@ -36,7 +38,7 @@ class _CustomBottomNavBar1State extends State<CustomBottomNavBar1> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(Icons.home, 'Home', 0),
-              SizedBox(width: 40), // Пространство для FAB
+              const SizedBox(width: 40), // Пространство для FAB
               _buildNavItem(Icons.person, 'Profile', 2),
             ],
           ),
@@ -44,8 +46,8 @@ class _CustomBottomNavBar1State extends State<CustomBottomNavBar1> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           onPressed: () => setState(() => _selectedIndex = 1),
-          child: Icon(Icons.add),
           elevation: 4,
+          child: const Icon(Icons.add),
         ),
       ),
     );

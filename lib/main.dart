@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:planet_sushi_client_app/features/main/presentation/pages/page1.dart';
-import 'package:planet_sushi_client_app/features/main/presentation/pages/page2.dart';
 
 import 'features/main/presentation/screens/main_screen.dart';
 
@@ -20,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:MainScreen(),
+      home:const MainScreen(),
     );
   }
 }
