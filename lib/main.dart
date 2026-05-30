@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:planet_sushi_client_app/features/main/presentation/screens/login_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'features/main/presentation/screens/main_screen.dart';
 
-void main() {
+Future<void> main() async{
+  await Supabase.initialize(
+    url: 'https://pyihjwclvypcaeifmbcu.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5aWhqd2NsdnlwY2FlaWZtYmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODI1MzIsImV4cCI6MjA5NTM1ODUzMn0.Wsfi8Rr7uTuXrJYcNLPQy7fZ-OM_m1f_GqxQ2d7JU4Q',
+  );
   runApp(const MyApp());
 }
 
@@ -18,7 +24,8 @@ class MyApp extends StatelessWidget {
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:const MainScreen(),
+      //home:const MainScreen(),
+      home:const LoginScreen(),
     );
   }
 }
