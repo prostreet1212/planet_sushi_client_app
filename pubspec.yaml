@@ -60,9 +60,10 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/
+    - assets/fonts/roboto_condensed/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -75,6 +76,18 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: RobotoCondensed
+      fonts:
+        - asset: assets/fonts/roboto_condensed/RobotoCondensed-Black.ttf
+        - asset: assets/fonts/roboto_condensed/RobotoCondensed-BlackItalic.ttf
+          style: italic
+    - family: Custom
+      fonts:
+        - asset: assets/fonts/roboto_condensed/RobotoCondensed-Thin.ttf
+
+
+
   # fonts:
   #   - family: Schyler
   #     fonts:
