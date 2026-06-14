@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/login_screen.dart';
-import 'package:planet_sushi_client_app/features/main/presentation/screens/test_screen.dart';
+import 'package:planet_sushi_client_app/features/testing/test_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'features/main/presentation/screens/main_screen.dart';
@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        fontFamily: 'RobotoCondensed',
 
       ),
       debugShowCheckedModeBanner: false,
