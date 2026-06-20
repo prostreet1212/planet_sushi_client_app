@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/widgets/phone_info_vertical.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -30,18 +31,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     print('Строитель логинскрин');
     return //рабочий вертикальный экран
-      OrientationBuilder(
-        builder: (context, orientation) {
+      LayoutBuilder(
+        builder: (context, constraints) {
+          final isPortrait = constraints.maxWidth < constraints.maxHeight;
+
+          final viewInsets = MediaQuery.of(context).viewInsets;
+          final isKeyboardVisible = viewInsets.bottom > 0;
+
+          // Вычисляем доступную высоту с учетом клавиатуры
+         // final availableHeight =isPortrait&&isKeyboardVisible? constraints.maxHeight - viewInsets.bottom:constraints.maxHeight;
+
           return Scaffold(
-            resizeToAvoidBottomInset:orientation == Orientation.portrait?true: false,
+            //resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset:isPortrait?true: false,
             //backgroundColor: Colors.green,
             body: SafeArea(
               child:Container(
-                height: MediaQuery.of(context).size.height,
+
                 decoration: BoxDecoration(
                   //image: DecorationImage(image: AssetImage('assets/images/grey_fon1.jpg'),fit: BoxFit.cover)
                   gradient: LinearGradient(
@@ -49,252 +57,173 @@ class _LoginScreenState extends State<LoginScreen> {
                     begin: Alignment.topCenter,
                     end: Alignment(
                       0.0,
-                      orientation == Orientation.portrait ? 0.7 : 1,
+                      isPortrait  ? 0.7 : 1,
                     ),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Планета суши',
-                          style: TextStyle(fontSize: 30, color: Colors.black),
-                        ),
-                        orientation == Orientation.portrait
-                            ? Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 50),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Image.asset(
-                                    'assets/images/panda_auth1.png',
-                                    width: 220,
-                                  ),
-                                  SizedBox(height: 36),
-                                  Text(
-                                    'Войдите в профиль или зарегистрируйтесь по номеру телефона',
-                                    style: TextStyle(fontSize: 20),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(height: 20),
-                                  Form(
-                                    key: _formKey,
-                                    child: TextFormField(
-                                      controller: _phoneController,
-                                      keyboardType: TextInputType.phone,
-                                      inputFormatters: [phoneMaskFormatter],
-                                      onChanged: (value) {
-                                        if (_phoneController.text.length >
-                                            14 &&
-                                            sendCodeEnabled == false) {
-                                          setState(() {
-                                            sendCodeEnabled = true;
-                                            var number = phoneMaskFormatter
-                                                .getUnmaskedText();
-                                            print('номер ${number}');
-                                          });
-                                        } else if (_phoneController
-                                            .text
-                                            .length <=
-                                            14 &&
-                                            sendCodeEnabled == true) {
-                                          setState(() {
-                                            sendCodeEnabled = false;
-                                            var number = phoneMaskFormatter
-                                                .getUnmaskedText();
-                                            print('номер ${number}');
-                                          });
-                                        }
-                                      },
-                                      decoration: InputDecoration(
-                                        labelText: 'Номер телефона',
-                                        hintText: '(999) 999-99-99',
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
-                                        prefix: Text('+7'),
-                                        prefixIcon: Padding(
-                                          padding: EdgeInsets.only(
-                                            left: 8,
-                                            right: 8,
-                                          ),
-                                          child: const Icon(Icons.call),
-                                        ),
-                                        prefixIconConstraints: BoxConstraints(
-                                          minWidth: 0,
-                                        ),
-                                        fillColor: Colors.white70,
-                                        filled: true,
-                                      ),
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Введите номер телефона';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                            : Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Image.asset(
-                                'assets/images/panda_auth1.png',
-                                width: 180,
-                              ),
-                            ),
-                            SizedBox(width: 24),
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Text(
-                                    'Войдите в профиль или зарегистрируйтесь по номеру телефона',
-                                    style: TextStyle(fontSize: 20),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(height: 20),
-                                  Form(
-                                    key: _formKey,
-                                    child: TextFormField(
-                                      controller: _phoneController,
-                                      keyboardType: TextInputType.phone,
-                                      inputFormatters: [phoneMaskFormatter],
-                                      onChanged: (value) {
-                                        if (_phoneController.text.length >
-                                            14 &&
-                                            sendCodeEnabled == false) {
-                                          setState(() {
-                                            sendCodeEnabled = true;
-                                            var number = phoneMaskFormatter
-                                                .getUnmaskedText();
-                                            print('номер ${number}');
-                                          });
-                                        } else if (_phoneController
-                                            .text
-                                            .length <=
-                                            14 &&
-                                            sendCodeEnabled == true) {
-                                          setState(() {
-                                            sendCodeEnabled = false;
-                                            var number = phoneMaskFormatter
-                                                .getUnmaskedText();
-                                            print('номер ${number}');
-                                          });
-                                        }
-                                      },
-                                      decoration: InputDecoration(
-                                        labelText: 'Номер телефона',
-                                        hintText: '(999) 999-99-99',
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
-                                        prefix: Text('+7'),
-                                        prefixIcon: Padding(
-                                          padding: EdgeInsets.only(
-                                            left: 8,
-                                            right: 8,
-                                          ),
-                                          child: const Icon(Icons.call),
-                                        ),
-                                        prefixIconConstraints: BoxConstraints(
-                                          minWidth: 0,
-                                        ),
-                                        fillColor: Colors.white70,
-                                        filled: true,
-                                      ),
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Введите номер телефона';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                  /*SizedBox(height: 20),
-                                  ElevatedButton(
-                                            onPressed: sendCodeEnabled ? () {} : null,
-                                            style: ElevatedButton.styleFrom(
-                                              fixedSize: Size(width / 2, 54),
-                                              backgroundColor: const Color(
-                                                0xFF88b705,
-                                              ),
-                                              foregroundColor: Colors.white,
-                                              elevation: 0,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(
-                                                  32,
-                                                ),
-                                              ),
-                                            ),
-                                            child: const Text(
-                                              'Отправить код',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),*/
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
 
-                        //SizedBox на expanded?
-                        Expanded(
-                          //height: height * 0.373,
-                          child: Align(
-                            alignment: AlignmentGeometry.bottomCenter,
-                            child: ElevatedButton(
-                              onPressed: sendCodeEnabled ? () {} : null,
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: Size(width / 2, 54),
-                                backgroundColor: const Color(
-                                  0xFF88b705,
-                                ),
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    32,
-                                  ),
-                                ),
-                              ),
-                              child: const Text(
-                                'Отправить код',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                      child: Column(
+
+                        //mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            'Планета суши',
+                            style: TextStyle(fontSize: 30, color: Colors.black),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
+                          isPortrait
+                              ?
+                              PhoneInfoVertical(formKey: _formKey, phoneController: _phoneController, phoneMaskFormatter: phoneMaskFormatter, sendCodeEnabled: sendCodeEnabled,)
+                              :  Row(
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Image.asset(
+                                    'assets/images/panda_auth1.png',
+                                    width: 180,
+                                  ),
+                                ),
+                                SizedBox(width: 24),
+                                Expanded(
+                                  flex: 2,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Text(
+                                        'Войдите в профиль или зарегистрируйтесь по номеру телефона',
+                                        style: TextStyle(fontSize: 20),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      SizedBox(height: 20),
+                                      Form(
+                                        key: _formKey,
+                                        child: TextFormField(
+                                          controller: _phoneController,
+                                          keyboardType: TextInputType.phone,
+                                          inputFormatters: [phoneMaskFormatter],
+                                          onChanged: (value) {
+                                            if (_phoneController.text.length >
+                                                14 &&
+                                                sendCodeEnabled == false) {
+                                              setState(() {
+                                                sendCodeEnabled = true;
+                                                var number = phoneMaskFormatter
+                                                    .getUnmaskedText();
+                                                print('номер ${number}');
+                                              });
+                                            } else if (_phoneController
+                                                .text
+                                                .length <=
+                                                14 &&
+                                                sendCodeEnabled == true) {
+                                              setState(() {
+                                                sendCodeEnabled = false;
+                                                var number = phoneMaskFormatter
+                                                    .getUnmaskedText();
+                                                print('номер ${number}');
+                                              });
+                                            }
+                                          },
+                                          decoration: InputDecoration(
+                                            labelText: 'Номер телефона',
+                                            hintText: '(999) 999-99-99',
+                                            border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                12,
+                                              ),
+                                            ),
+                                            prefix: Text('+7'),
+                                            prefixIcon: Padding(
+                                              padding: EdgeInsets.only(
+                                                left: 8,
+                                                right: 8,
+                                              ),
+                                              child: const Icon(Icons.call),
+                                            ),
+                                            prefixIconConstraints: BoxConstraints(
+                                              minWidth: 0,
+                                            ),
+                                            fillColor: Colors.white70,
+                                            filled: true,
+                                          ),
+                                          validator: (value) {
+                                            if (value == null || value.isEmpty) {
+                                              return 'Введите номер телефона';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                      /*SizedBox(height: 20),
+                                      ElevatedButton(
+                                                onPressed: sendCodeEnabled ? () {} : null,
+                                                style: ElevatedButton.styleFrom(
+                                                  fixedSize: Size(width / 2, 54),
+                                                  backgroundColor: const Color(
+                                                    0xFF88b705,
+                                                  ),
+                                                  foregroundColor: Colors.white,
+                                                  elevation: 0,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(
+                                                      32,
+                                                    ),
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  'Отправить код',
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),*/
+                                    ],
+                                  ),
+                                ),
+                                                            ],
+                                                          ),
 
-                  //),
-                ),
+
+
+                          //SizedBox на expanded?
+                                             Expanded(
+                            //height: height * 0.373,
+                            child: Align(
+                              alignment: AlignmentGeometry.bottomCenter,
+                              child: ElevatedButton(
+                                onPressed: sendCodeEnabled ? () {} : null,
+                                style: ElevatedButton.styleFrom(
+                                  fixedSize: Size(constraints.maxWidth / 2, 54),
+                                  backgroundColor: const Color(
+                                    0xFF88b705,
+                                  ),
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      32,
+                                    ),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Отправить код',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+
+               ),
               ),
-            ),
           );
         },
       );

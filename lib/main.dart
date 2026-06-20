@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:planet_sushi_client_app/features/main/presentation/screens/login_screen.dart';
+import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/login_screen.dart';
 import 'package:planet_sushi_client_app/features/testing/test_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
