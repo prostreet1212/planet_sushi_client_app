@@ -33,6 +33,8 @@ dependencies:
   animations: ^2.2.0
   supabase_flutter: ^2.12.4
   mask_text_input_formatter: ^2.9.0
+  provider: ^6.1.5+1
+  get_it: ^9.2.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -83,6 +85,10 @@ flutter:
         - asset: assets/fonts/roboto_condensed/RobotoCondensed-Black.ttf
         - asset: assets/fonts/roboto_condensed/RobotoCondensed-BlackItalic.ttf
           style: italic
+
+
+
+
     - family: Custom
       fonts:
         - asset: assets/fonts/roboto_condensed/RobotoCondensed-Thin.ttf

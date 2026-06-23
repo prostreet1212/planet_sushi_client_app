@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:planet_sushi_client_app/main.dart';
 
-class PhoneInfoHorizontal extends StatefulWidget {
-   PhoneInfoHorizontal({super.key, required this.formKey, required this.phoneController, required this.phoneMaskFormatter,required this.sendCodeEnabled});
-  final GlobalKey<FormState> formKey;
-  final TextEditingController phoneController;
-  final MaskTextInputFormatter phoneMaskFormatter;
-  bool sendCodeEnabled;
+import 'general_widgets/number_text_field.dart';
 
-  @override
-  State<PhoneInfoHorizontal> createState() => _PhoneInfoHorizontalState();
-}
+class PhoneInfoHorizontal extends StatelessWidget {
+    const PhoneInfoHorizontal({super.key});
 
-class _PhoneInfoHorizontalState extends State<PhoneInfoHorizontal> {
+
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -37,65 +33,7 @@ class _PhoneInfoHorizontalState extends State<PhoneInfoHorizontal> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20),
-              Form(
-                key: widget.formKey,
-                child: TextFormField(
-                  controller: widget.phoneController,
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [widget.phoneMaskFormatter],
-                  onChanged: (value) {
-                    if (widget.phoneController.text.length >
-                        14 &&
-                        widget.sendCodeEnabled == false) {
-                      setState(() {
-                        widget.sendCodeEnabled = true;
-                        var number = widget.phoneMaskFormatter
-                            .getUnmaskedText();
-                        print('номер ${number}');
-                      });
-                    } else if (widget.phoneController
-                        .text
-                        .length <=
-                        14 &&
-                        widget.sendCodeEnabled == true) {
-                      setState(() {
-                        widget.sendCodeEnabled = false;
-                        var number = widget.phoneMaskFormatter
-                            .getUnmaskedText();
-                        print('номер ${number}');
-                      });
-                    }
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Номер телефона',
-                    hintText: '(999) 999-99-99',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                        12,
-                      ),
-                    ),
-                    prefix: Text('+7'),
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.only(
-                        left: 8,
-                        right: 8,
-                      ),
-                      child: const Icon(Icons.call),
-                    ),
-                    prefixIconConstraints: BoxConstraints(
-                      minWidth: 0,
-                    ),
-                    fillColor: Colors.white70,
-                    filled: true,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Введите номер телефона';
-                    }
-                    return null;
-                  },
-                ),
-              ),
+              NumberTextField(),
               /*SizedBox(height: 20),
                                       ElevatedButton(
                                                 onPressed: sendCodeEnabled ? () {} : null,
