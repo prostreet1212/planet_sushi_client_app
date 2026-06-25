@@ -39,8 +39,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       //home:const MainScreen(),
       //home:const AuthScreen(),
-      home: const LoginScreen(),
-      //home: const OtpScreen(phone: '+79532602744'),
+      //home: const LoginScreen(),
+      home: const OtpScreen(phone: '+79532602744'),
     );
   }
 }

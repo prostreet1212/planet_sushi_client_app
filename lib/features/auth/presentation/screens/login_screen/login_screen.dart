@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       const Text(
                         'Планета суши',
-                        style: TextStyle(fontSize: 30, color: Colors.black),
+                        style: TextStyle(fontSize: 30, color: Colors.black,fontWeight: FontWeight.w600),
                       ),
                       isPortrait
                           ? const PhoneInfoVertical()
