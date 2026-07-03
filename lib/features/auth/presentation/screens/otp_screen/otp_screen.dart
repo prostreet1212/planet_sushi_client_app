@@ -1,5 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:planet_sushi_client_app/features/main/presentation/screens/main_screen.dart';
+import 'package:planet_sushi_client_app/features/testing/pageview_app.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -16,6 +19,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
   final pinController = PinInputController();
   final _formKey = GlobalKey<FormState>();
+  bool otpIsValid=true;
 
   @override
   void dispose() {
@@ -28,8 +32,11 @@ class _OtpScreenState extends State<OtpScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
+        maintainBottomViewPadding: true,
         child: Container(
-          width: MediaQuery.of(context).size.width,
+          //width: MediaQuery.of(context).size.width,
+          width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [const Color(0xff07aa55), Colors.white],
@@ -39,64 +46,120 @@ class _OtpScreenState extends State<OtpScreen> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child:  Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Код из СМС',
-                    style: TextStyle(fontSize: 30, color: Colors.black),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Код из СМС',
+                  style: TextStyle(fontSize: 30, color: Colors.black),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Отправили его на номер ${widget.phone}',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontFamily: 'RobotoCondensedRegular',
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Отправили его на номер ${widget.phone}',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontFamily: 'RobotoCondensedRegular',
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Form(
+                ),
+                SizedBox(height: 10),
+                SizedBox(
+                  height: 100, //? место с запасом под form-сообщение снизу
+                  child: Form(
                     key: _formKey,
-                    child: MaterialPinFormField(
-                      pinController: pinController,
+                    //autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: MaterialPinFormField(
+                        //scrollPadding: const EdgeInsets.all( 0), //add this line replace 50 with your required padding
+                        pinController: pinController,
                         //formErrorSpace: 20,
-                        formErrorStyle: TextStyle(fontSize: 16,),
+                        formErrorStyle: TextStyle(
+                          fontSize: 16,
+                          color: Colors.red,
+                        ),
                         length: 6,
-                      theme: MaterialPinTheme(
-                        showCursor: false,
-                        cellSize: Size(45,65),
-                        borderWidth: 2,
-                        borderColor: const Color(0xFF88b705),
-                        filledBorderColor: const Color(0xFF88b705),
-                        focusedBorderColor: Colors.orange,
-                        fillColor: Colors.white,
-                        focusedFillColor: Colors.white,
-                        filledFillColor: Colors.white,
-                        // Animation
-                        entryAnimation: MaterialPinAnimation.fade,
-                        animationDuration: Duration(milliseconds: 150),
-                        animationCurve: Curves.easeOut,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.length == 6) {
-                          return 'Please enter all 6 digits';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) => print('Saved: $value'),
-                      onCompleted: (pin){
-                          print('completed $pin');
-                          _formKey.currentState?.validate();
-                          //pinController.triggerError();
-                      },
-                      onChanged:(pin){
-                          print('changed');
-                      },
-                    ),
-                  )
+                        theme: MaterialPinTheme(
+                          showCursor: false,
+                          cellSize: Size(45, 65),
+                          borderWidth: 2,
+                          borderColor: const Color(0xFF88b705),
+                          filledBorderColor: const Color(0xFF88b705),
 
-                  /*ElevatedButton(
+                          errorColor: Colors.black,
+                          errorBorderColor: Colors.red,
+                          errorFillColor: Colors.white,
+                          errorAnimationDuration: Duration(milliseconds: 0),
+
+                          completeBorderColor: Colors.purpleAccent,
+                          focusedBorderColor: Colors.orange,
+                          fillColor: Colors.white,
+                          focusedFillColor: Colors.white,
+                          filledFillColor: Colors.white,
+                          // Animation
+                          entryAnimation: MaterialPinAnimation.fade,
+                          animationDuration: Duration(milliseconds: 150),
+                          animationCurve: Curves.easeOut,
+                        ),
+
+                        validator: (value) {
+                          if (value == null || value == '111111') {
+                            pinController.triggerError();
+                            return 'Введите другой код';
+                            //return null;
+                          }
+                          if(!otpIsValid){
+                            return 'Код неверный';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => print('Saved: $value'),
+                        onCompleted: (pin) async{
+                          print('completed $pin');
+
+                          try{
+                            // Подтверждаем код
+                            final response = await Supabase.instance.client.auth.verifyOTP(
+                              phone: widget.phone,
+                              token: pinController.text.trim(),
+                              type: OtpType.sms,
+                            );
+                            if (response.session != null) {
+                              print(response.session!.user);
+                              String error = 'auth completed';
+                              print(error);
+                              Navigator.push(context, MaterialPageRoute(builder: (c)=>MainScreen()));
+
+                            }
+                          }catch(e){
+                            String error = e.toString();
+                            print('otp error: $error');
+                            otpIsValid=false;
+                            pinController.triggerError();
+                            _formKey.currentState?.validate();
+                          }
+                        },
+                        onChanged: (pin) {
+                          if(!otpIsValid){
+                            otpIsValid=true;
+                            pinController.clearError();
+                            _formKey.currentState?.reset();
+
+                          }
+                          print('changed');
+                        },
+                        onTap: (){_formKey.currentState?.reset();},
+                        onTapOutside: (a){
+                          _formKey.currentState?.reset();
+                        },
+                      ),
+
+                  ),
+                ),
+                ElevatedButton(onPressed: () {
+                  //_formKey.currentState?.clearError();
+                  _formKey.currentState?.reset();
+                }, child: Text('')),
+                /*ElevatedButton(
                     onPressed: () async {
                       try{
                         // Подтверждаем код
@@ -130,8 +193,8 @@ class _OtpScreenState extends State<OtpScreen> {
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                   ),*/
-                ],
-              ),
+              ],
+            ),
           ),
         ),
       ),
