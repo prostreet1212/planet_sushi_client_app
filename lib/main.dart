@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planet_sushi_client_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/login_screen.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/providers/login_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/otp_screen.dart';
@@ -29,7 +31,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(providers: [
+      BlocProvider<AuthCubit>(create: (context)=>di.sl<AuthCubit>()),
+    ],child: MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
@@ -39,8 +43,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       //home:const MainScreen(),
       //home:const AuthScreen(),
-      //home: const LoginScreen(),
-      home: const OtpScreen(phone: '+79532602744'),
-    );
+      home: const LoginScreen(),
+      //home: const OtpScreen(phone: '+79532602744'),
+    ),);
   }
 }

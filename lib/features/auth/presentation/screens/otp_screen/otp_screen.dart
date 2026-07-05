@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/main_screen.dart';
@@ -68,7 +67,6 @@ class _OtpScreenState extends State<OtpScreen> {
                   height: 100, //? место с запасом под form-сообщение снизу
                   child: Form(
                     key: _formKey,
-                    //autovalidateMode: AutovalidateMode.onUserInteraction,
                       child: MaterialPinFormField(
                         //scrollPadding: const EdgeInsets.all( 0), //add this line replace 50 with your required padding
                         pinController: pinController,
@@ -130,35 +128,35 @@ class _OtpScreenState extends State<OtpScreen> {
                               Navigator.push(context, MaterialPageRoute(builder: (c)=>MainScreen()));
 
                             }
-                          }catch(e){
+                          }on AuthApiException catch(e){
                             String error = e.toString();
                             print('otp error: $error');
-                            otpIsValid=false;
-                            pinController.triggerError();
-                            _formKey.currentState?.validate();
+                            //if(e.statusCode=='403'){
+                              otpIsValid=false;
+                              pinController.triggerError();
+                              _formKey.currentState?.validate();
+                            //}
+                          } catch(e){
+                            String error = e.toString();
+                            print('otp error: $error');
                           }
                         },
                         onChanged: (pin) {
                           if(!otpIsValid){
                             otpIsValid=true;
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              pinController.clear();
+                            });
                             pinController.clearError();
-                            _formKey.currentState?.reset();
-
+                            _formKey.currentState?.clearError();
                           }
                           print('changed');
-                        },
-                        onTap: (){_formKey.currentState?.reset();},
-                        onTapOutside: (a){
-                          _formKey.currentState?.reset();
                         },
                       ),
 
                   ),
                 ),
-                ElevatedButton(onPressed: () {
-                  //_formKey.currentState?.clearError();
-                  _formKey.currentState?.reset();
-                }, child: Text('')),
+
                 /*ElevatedButton(
                     onPressed: () async {
                       try{
