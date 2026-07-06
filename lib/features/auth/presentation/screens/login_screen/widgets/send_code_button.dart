@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:planet_sushi_client_app/features/auth/presentation/cubit/auth_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/otp_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 
-import '../../../cubit/auth_cubit.dart';
+import '../../../cubits/auth_cibit/auth_cubit.dart';
+import '../../../cubits/auth_cibit/auth_state.dart';
 import '../providers/login_state.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
@@ -25,10 +25,15 @@ class SendCodeButton extends StatelessWidget {
         ),
         child: Align(
           alignment: AlignmentGeometry.bottomCenter,
-          child: BlocConsumer<AuthCubit,AuthState>(builder: (context,state){
-            return ElevatedButton(
-              onPressed: loginState.sendCodeEnabled ? () async{
+          child: BlocListener<AuthCubit,AuthState>(
+          /*  buildWhen: (oldState,newState){
+              return false;
+            },*/
+              child: /*(context,_){
 
+                print('строитель кнопка отправить');
+            return*/ ElevatedButton(
+              onPressed: loginState.sendCodeEnabled ? () async{
                 context.read<AuthCubit>().sendCode(loginState.phoneMaskFormatter.getUnmaskedText());
                /* String phoneNumber='+7${loginState.phoneMaskFormatter.getUnmaskedText()}';
                 debugPrint(phoneNumber);
@@ -56,11 +61,14 @@ class SendCodeButton extends StatelessWidget {
                 'Отправить код',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
-            );
-          }, listener: (context,state){
+            ),
+          //},
+  listener: (context,state){
             if(state is AuthSuccess){
               String phoneNumber='+7${loginState.phoneMaskFormatter.getUnmaskedText()}';
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>OtpScreen(phone: phoneNumber,)));
+
+              //Navigator.push(context, MaterialPageRoute(builder: (context)=>OtpScreen(phone: phoneNumber,)));
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OtpScreen(phone: phoneNumber,)), (route) => false, );
             }else if(state is AuthError){
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Ошибка ${state.message}'))

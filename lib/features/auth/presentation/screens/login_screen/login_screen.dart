@@ -17,9 +17,17 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   String error = '';
+  late LoginState _loginState;
+
+  @override
+  void initState() {
+    super.initState();
+    _loginState = di.sl<LoginState>();
+  }
 
   @override
   void dispose() {
+    //context.read<LoginState>().dispose();
     di.sl<LoginState>().dispose();
     super.dispose();
   }
@@ -34,8 +42,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: ChangeNotifierProvider(
-          create: (_) => di.sl<LoginState>(),
+        child: ChangeNotifierProvider.value(
+          value: _loginState,
+          //create: (context) => di.sl<LoginState>(),
+          //create: (context) => context.read<LoginState>(),
           child: LayoutBuilder(
             builder: (context, constraints) {
               debugPrint('Строитель логинскринлайоутбилдер');

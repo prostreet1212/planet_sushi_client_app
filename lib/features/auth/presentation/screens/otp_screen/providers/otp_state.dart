@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-
+/*
 class OtpState extends ChangeNotifier{
   final _pinController = PinInputController();
   final _formKey = GlobalKey<FormState>();
@@ -14,4 +14,4 @@ class OtpState extends ChangeNotifier{
     _otpIsValid = value;
     //notifyListeners();
   }
-}
+}*/
