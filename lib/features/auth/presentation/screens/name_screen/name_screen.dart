@@ -10,6 +10,9 @@ class NameScreen extends StatefulWidget {
 class _NameScreenState extends State<NameScreen> {
   @override
   Widget build(BuildContext context) {
+    // Получаем высоту клавиатуры
+    final EdgeInsets viewInsets = MediaQuery.of(context).viewInsets;
+    final double keyboardHeight = viewInsets.bottom;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -28,7 +31,7 @@ class _NameScreenState extends State<NameScreen> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(height: 10,),
                  Column(
@@ -66,7 +69,7 @@ class _NameScreenState extends State<NameScreen> {
           ),
                    Padding(
                         padding: EdgeInsets.only(
-                          bottom:   0,
+                          bottom:   keyboardHeight,
                         ),
                         child: Align(
                           alignment: AlignmentGeometry.bottomCenter,
