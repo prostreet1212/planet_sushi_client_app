@@ -8,7 +8,7 @@ class LoginState extends ChangeNotifier {
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy,
   );
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+ // final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool _sendCodeEnabled = false;
   bool _isPortrait=true;
    BoxConstraints _constraints = BoxConstraints();

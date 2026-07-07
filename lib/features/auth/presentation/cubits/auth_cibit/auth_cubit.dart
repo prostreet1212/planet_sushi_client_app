@@ -5,11 +5,11 @@ import 'package:planet_sushi_client_app/injection_container.dart' as di;
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-
-  AuthCubit() : super(AuthInitial());
+  final AuthDataSource _authDataSource;
+  AuthCubit({required this._authDataSource}) : super(AuthInitial());
 
   void sendCode(String number) async {
-    final authData = await di.sl<AuthDataSource>().sendCode(number);
+    final authData = await _authDataSource.sendCode(number);
     authData.fold(
       (error) {
         emit(AuthError(message: error));

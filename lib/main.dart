@@ -39,7 +39,13 @@ class MyApp extends StatelessWidget {
     ],child: MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        // Настраиваем цветовую схему выделения
+        textSelectionTheme: TextSelectionThemeData(
+          //selectionHandleColor: Colors.blue, // Цвет вашей "капельки"
+          //cursorColor: Colors.blue,          // Цвет самого курсора
+          //selectionColor: Colors.blue, // Цвет фона выделенного текста
+        ),
+        colorScheme: .fromSeed(seedColor: Colors.yellow),
         useMaterial3: false,
         fontFamily: 'RobotoCondensed',
       ),

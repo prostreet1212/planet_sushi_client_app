@@ -11,9 +11,10 @@ class NumberTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginState = context.watch<LoginState>();
-    return Form(
+    return /*Form(
       key: loginState.formKey,
-      child: TextFormField(
+      child: */TextFormField(
+        //key: loginState.formKey,
         controller: loginState.phoneController,
         keyboardType: TextInputType.phone,
         inputFormatters: [loginState.phoneMaskFormatter],
@@ -49,7 +50,7 @@ class NumberTextField extends StatelessWidget {
           }
           return null;
         },
-      ),
+     // ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/providers/login_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/widgets/general_widgets/number_text_field.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/widgets/phone_info_horizontal.dart';
@@ -65,7 +66,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     end: Alignment(0.0, isPortrait ? 0.7 : 1),
                   ),
                 ),
-
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(

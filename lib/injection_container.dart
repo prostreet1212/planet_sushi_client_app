@@ -18,7 +18,7 @@ Future<void> init() async{
   sl.registerLazySingleton(() => AuthDataSource(supabase: sl()));
 
   //states
-  sl.registerFactory(() => AuthCubit());
+  sl.registerFactory(() => AuthCubit(authDataSource: sl()));
   sl.registerFactory(() => OtpCubit(authDataSource: sl()));
   sl.registerFactory(() => LoginState());
 
