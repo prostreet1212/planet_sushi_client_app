@@ -3,6 +3,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../models/user_model.dart';
+
 class AuthDataSource {
   final Supabase supabase;
 
@@ -29,7 +31,7 @@ class AuthDataSource {
   Future<Either<String,Null>> verifyOtp(String number,String token)async{
     try{
       // Подтверждаем код
-      final response = await Supabase.instance.client.auth.verifyOTP(
+      final response = await supabase.client.auth.verifyOTP(
         phone: number,
         token: token,
         type: OtpType.sms,
@@ -59,5 +61,23 @@ class AuthDataSource {
 
   }
 
+  /// Добавляет запись о пользователе в таблицу `users`.
+  ///
+  /// Принимает [user] — модель [UserModel] с полями phone, name и опциональными
+  /// данными (email, аватар, бонусные баллы и т.д.).
+  /// Поле `id` привязывается к текущему авторизованному пользователю Supabase,
+  /// если сессия активна.
+  Future<Either<String, Null>> createUser(UserModel user) async {
+    try {
+      final userId = supabase.client.auth.currentUser?.id;
+      Map<String,dynamic> data = (userId != null ? user.copyWith(id: userId) : user).toJson();
+      await supabase.client.from('users').insert(data);
+      return const Right(null);
+    } catch (e) {
+      String error = e.toString();
+      debugPrint(error);
+      return Left(error);
+    }
+  }
 
 }

@@ -25,7 +25,6 @@ class _NameScreenState extends State<NameScreen> {
           builder: (context, constraints) {
             final bool isPortrait =
                 constraints.maxWidth < constraints.maxHeight;
-
             return Container(
               /*width: double.infinity,
               height: double.infinity,*/
@@ -63,6 +62,7 @@ class _NameScreenState extends State<NameScreen> {
                         SizedBox(height: 10),
                         TextFormField(
                           controller: _nameController,
+                          maxLength: 15,
                           keyboardType: TextInputType.name,
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(
@@ -75,12 +75,26 @@ class _NameScreenState extends State<NameScreen> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
+                            counterText: '',
                             //prefixIconConstraints: BoxConstraints(minWidth: 0),
                             fillColor: Colors.white70,
                             filled: true,
                           ),
                           cursorColor: Colors.black,
                           enableInteractiveSelection: false,
+                          onChanged: (value){
+                            if (_nameController.text.length > 1 &&
+                                _nameIsFilled == false) {
+                              setState(() {
+                                _nameIsFilled = true;
+                              });
+                            }else if(_nameController.text.length < 2 &&
+                                _nameIsFilled == true){
+                              setState(() {
+                                _nameIsFilled = false;
+                              });
+                            }
+                          },
                           validator: (value) {},
                         ),
                       ],

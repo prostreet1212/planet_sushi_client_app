@@ -18,6 +18,8 @@ class NumberTextField extends StatelessWidget {
         controller: loginState.phoneController,
         keyboardType: TextInputType.phone,
         inputFormatters: [loginState.phoneMaskFormatter],
+      cursorColor: Colors.black,
+      enableInteractiveSelection: false,
         onChanged: (value) {
           if (loginState.phoneController.text.length > 14 &&
               loginState.sendCodeEnabled == false) {
