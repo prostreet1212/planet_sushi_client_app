@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planet_sushi_client_app/features/auth/data/datasource/auth_data_source.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/cubits/otp_cubit/otp_cubit.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/login_screen.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/providers/login_state.dart';
@@ -33,28 +34,31 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      BlocProvider<AuthCubit>(create: (context)=>di.sl<AuthCubit>()),
-      BlocProvider<OtpCubit>(create: (context)=>di.sl<OtpCubit>()),
-    ],child: MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // Настраиваем цветовую схему выделения
-        textSelectionTheme: TextSelectionThemeData(
-          //selectionHandleColor: Colors.blue, // Цвет вашей "капельки"
-          //cursorColor: Colors.blue,          // Цвет самого курсора
-          //selectionColor: Colors.blue, // Цвет фона выделенного текста
+    return/* MultiProvider(providers: [
+     // BlocProvider<AuthCubit>(create: (context)=>di.sl<AuthCubit>()),
+      //BlocProvider<OtpCubit>(create: (context)=>di.sl<OtpCubit>()),
+      //Provider(create: (context)=>di.sl<AuthDataSource>())
+    ],
+      child: );*/
+      MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          // Настраиваем цветовую схему выделения
+          textSelectionTheme: TextSelectionThemeData(
+            //selectionHandleColor: Colors.blue, // Цвет вашей "капельки"
+            //cursorColor: Colors.blue,          // Цвет самого курсора
+            //selectionColor: Colors.blue, // Цвет фона выделенного текста
+          ),
+          colorScheme: .fromSeed(seedColor: Colors.yellow),
+          useMaterial3: false,
+          fontFamily: 'RobotoCondensed',
         ),
-        colorScheme: .fromSeed(seedColor: Colors.yellow),
-        useMaterial3: false,
-        fontFamily: 'RobotoCondensed',
-      ),
-      debugShowCheckedModeBanner: false,
-      //home:const MainScreen(),
-      //home:const AuthScreen(),
-      //home: const LoginScreen(),
-      //home: const OtpScreen(phone: '+79532602744'),
-      home: const NameScreen(),
-    ),);
+        debugShowCheckedModeBanner: false,
+        //home:const MainScreen(),
+        //home:const AuthScreen(),
+        home: const LoginScreen(),
+        //home: const OtpScreen(phone: '+79532602744'),
+        //home: const NameScreen(phone: '+79532602744'),
+      );
   }
 }

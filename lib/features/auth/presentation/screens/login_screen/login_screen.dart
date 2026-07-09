@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/providers/login_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/widgets/general_widgets/number_text_field.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/widgets/phone_info_horizontal.dart';
@@ -8,6 +9,8 @@ import 'package:planet_sushi_client_app/features/auth/presentation/screens/login
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
+
+import '../../cubits/auth_cibit/auth_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,6 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     _loginState = di.sl<LoginState>();
+
+    //_loginState.phoneController.text='9532602744';
   }
 
   @override
@@ -40,52 +45,56 @@ class _LoginScreenState extends State<LoginScreen> {
     final EdgeInsets viewInsets = MediaQuery.of(context).viewInsets;
     final double keyboardHeight = viewInsets.bottom;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: ChangeNotifierProvider.value(
-          value: _loginState,
-          //create: (context) => di.sl<LoginState>(),
-          //create: (context) => context.read<LoginState>(),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              debugPrint('Строитель логинскринлайоутбилдер');
-              final loginState = context.read<LoginState>();
-              final bool isPortrait =
-                  constraints.maxWidth < constraints.maxHeight;
-              loginState.updateSizes(
-                isPortrait,
-                constraints,
-                keyboardHeight,
-              );
-              return Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [const Color(0xff07aa55), Colors.white],
-                    begin: Alignment.topCenter,
-                    end: Alignment(0.0, isPortrait ? 0.7 : 1),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Планета суши',
-                        style: TextStyle(fontSize: 30, color: Colors.black,fontWeight: FontWeight.w600),
+    return BlocProvider<AuthCubit>(
+      create: (context)=>di.sl<AuthCubit>(),
+        child:  Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: SafeArea(
+            child: ChangeNotifierProvider.value(
+              value: _loginState,
+              //create: (context) => di.sl<LoginState>(),
+              //create: (context) => context.read<LoginState>(),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  debugPrint('Строитель логинскринлайоутбилдер');
+                  final loginState = context.read<LoginState>();
+                  final bool isPortrait =
+                      constraints.maxWidth < constraints.maxHeight;
+                  loginState.updateSizes(
+                    isPortrait,
+                    constraints,
+                    keyboardHeight,
+                  );
+                  return Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [const Color(0xff07aa55), Colors.white],
+                        begin: Alignment.topCenter,
+                        end: Alignment(0.0, isPortrait ? 0.7 : 1),
                       ),
-                      isPortrait
-                          ? const PhoneInfoVertical()
-                          : const PhoneInfoHorizontal(),
-                      SendCodeButton(),
-                    ],
-                  ),
-                ),
-              );
-            },
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          const Text(
+                            'Планета суши',
+                            style: TextStyle(fontSize: 30, color: Colors.black,fontWeight: FontWeight.w600),
+                          ),
+                          isPortrait
+                              ? const PhoneInfoVertical()
+                              : const PhoneInfoHorizontal(),
+                           SendCodeButton(),//не const
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
         ),
-      ),
+
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:planet_sushi_client_app/features/auth/data/models/user_model.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/name_screen.dart';
 
 import '../../../../../main/presentation/screens/main_screen.dart';
@@ -48,7 +49,15 @@ class _OtpFormFieldState extends State<OtpFormField> {
           });
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (c) => NameScreen()),
+            MaterialPageRoute(builder: (c) => const MainScreen()),
+          );
+        }else if(otpState is OtpNext){
+          setState(() {
+            _readOnly = false;
+          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (c) => NameScreen(phone: widget.phone,)),
           );
         }
       },

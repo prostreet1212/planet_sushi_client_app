@@ -13,7 +13,12 @@ class OtpCubit extends Cubit<OtpState> {
         emit(OtpError(message: error));
       },
           (success) {
-        emit(OtpSuccess());
+            if(success!=null){
+              emit(OtpSuccess(user: success));
+
+            }else{
+              emit(OtpNext());
+            }
       },
     );
   }
