@@ -1,26 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planet_sushi_client_app/features/auth/presentation/cubits/auth_cibit/auth_cubit.dart';
+import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/providers/name_state.dart';
+import 'package:planet_sushi_client_app/features/main/presentation/screens/main_screen.dart';
 
+import '../../../../../../injection_container.dart' as di;
+import '../../../../../testing/pageview_app.dart';
+import '../../../../data/datasource/auth_data_source.dart';
 import '../../../../data/models/user_model.dart';
 import '../../../cubits/add_user_cubit/add_user_cubit.dart';
 import '../../../cubits/add_user_cubit/add_user_state.dart';
-/*
+
 class AddUserButton extends StatelessWidget {
-  const AddUserButton({super.key});
+
+  const AddUserButton({super.key,});
 
   @override
   Widget build(BuildContext context) {
+    final nameState = context.watch<NameState>();
     return Expanded(
       child: Padding(
         padding: EdgeInsets.only(
-          bottom: isPortrait ? keyboardHeight : 0,
+          bottom: nameState.isPortrait ? nameState.keyboardHeight : 0,
         ),
         child: Align(
           alignment: AlignmentGeometry.bottomCenter,
           child: BlocListener<AddUserCubit,AddUserState>(
             listener: (context,state){
               if (state is AddUserSuccess) {
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const MyHomePage()), (route)=>false);
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const MainScreen()), (route)=>false);
               }else if(state is AddUserError){
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Ошибка ${state.message}'))
@@ -28,9 +36,11 @@ class AddUserButton extends StatelessWidget {
               }
             },
             child: ElevatedButton(
-              onPressed:_nameIsFilled? () {
-                final user = UserModel(phone: widget.phone, name: _nameController.text);
-                di.sl<AuthDataSource>().createUser(user);
+              onPressed:nameState.nameIsFilled? () {
+                final user = UserModel(phone: nameState.phone, name: nameState.nameController.text);
+                //di.sl<AuthDataSource>().createUser(user);
+                //di.sl<AddUserCubit>().addUser(user);
+                context.read<AddUserCubit>().addUser(user);
               }:null,
               style: ElevatedButton.styleFrom(
                 fixedSize: Size(205, 54),
@@ -56,4 +66,3 @@ class AddUserButton extends StatelessWidget {
     );
   }
 }
-*/

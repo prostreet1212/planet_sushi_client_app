@@ -24,9 +24,7 @@ class _NameFormFieldState extends State<NameFormField> {
   @override
   Widget build(BuildContext context) {
 
-    return ChangeNotifierProvider.value(
-      value: di.sl<NameState>(),
-      child: TextFormField(
+    return TextFormField(
         controller: nameState.nameController,
         maxLength: 15,
         keyboardType: TextInputType.name,
@@ -62,8 +60,7 @@ class _NameFormFieldState extends State<NameFormField> {
           }
         },
         validator: (value) {},
-      ),
-    );
+      );
   }
 }
 

@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 
 import '../../../cubits/auth_cibit/auth_cubit.dart';
 import '../../../cubits/auth_cibit/auth_state.dart';
+import '../../name_screen/providers/name_state.dart';
 import '../providers/login_state.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
@@ -68,6 +69,7 @@ class SendCodeButton extends StatelessWidget {
               String phoneNumber='+7${loginState.phoneMaskFormatter.getUnmaskedText()}';
 
               //Navigator.push(context, MaterialPageRoute(builder: (context)=>OtpScreen(phone: phoneNumber,)));
+             // di.sl<NameState>().setPhone(phoneNumber);
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OtpScreen(phone: phoneNumber,)), (route) => false, );
             }else if(state is AuthError){
               ScaffoldMessenger.of(context).showSnackBar(

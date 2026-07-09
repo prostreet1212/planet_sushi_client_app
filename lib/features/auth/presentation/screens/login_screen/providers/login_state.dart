@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class LoginState extends ChangeNotifier {
-  final TextEditingController phoneController = TextEditingController();
+   TextEditingController phoneController = TextEditingController();
   final MaskTextInputFormatter phoneMaskFormatter = MaskTextInputFormatter(
     mask: '(###) ###-##-##',
     filter: {"#": RegExp(r'[0-9]')},
@@ -25,10 +25,14 @@ class LoginState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateSizes(bool isPortrait,BoxConstraints constraints,double keyboardHeight) {
+  void updateSizes(bool isPortrait,BoxConstraints constraints,/*double keyboardHeight*/) {
     _isPortrait = isPortrait;
     _constraints=constraints;
-    _keyboardHeight=keyboardHeight;
+    //_keyboardHeight=keyboardHeight;
+  }
+
+  void setKeyboardHeight(double value) {
+    _keyboardHeight = value;
   }
 
 

@@ -40,10 +40,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //_loginState = di.sl<LoginState>();
     debugPrint('Строитель логинскрин');
     // Получаем высоту клавиатуры
     final EdgeInsets viewInsets = MediaQuery.of(context).viewInsets;
-    final double keyboardHeight = viewInsets.bottom;
+    _loginState.setKeyboardHeight(viewInsets.bottom);
+    //final double keyboardHeight = viewInsets.bottom;
 
     return BlocProvider<AuthCubit>(
       create: (context)=>di.sl<AuthCubit>(),
@@ -57,20 +59,20 @@ class _LoginScreenState extends State<LoginScreen> {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   debugPrint('Строитель логинскринлайоутбилдер');
-                  final loginState = context.read<LoginState>();
-                  final bool isPortrait =
-                      constraints.maxWidth < constraints.maxHeight;
-                  loginState.updateSizes(
-                    isPortrait,
+                  //final loginState = context.read<LoginState>();
+                  /*final bool isPortrait =
+                      constraints.maxWidth < constraints.maxHeight;*/
+                  _loginState.updateSizes(
+                    constraints.maxWidth < constraints.maxHeight,
                     constraints,
-                    keyboardHeight,
+                    //_loginState.keyboardHeight,
                   );
                   return Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [const Color(0xff07aa55), Colors.white],
                         begin: Alignment.topCenter,
-                        end: Alignment(0.0, isPortrait ? 0.7 : 1),
+                        end: Alignment(0.0, _loginState.isPortrait ? 0.7 : 1),
                       ),
                     ),
                     child: Padding(
@@ -81,10 +83,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             'Планета суши',
                             style: TextStyle(fontSize: 30, color: Colors.black,fontWeight: FontWeight.w600),
                           ),
-                          isPortrait
+                          _loginState.isPortrait
                               ? const PhoneInfoVertical()
                               : const PhoneInfoHorizontal(),
-                           SendCodeButton(),//не const
+                           const SendCodeButton(),//не const
                         ],
                       ),
                     ),

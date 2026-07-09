@@ -12,11 +12,11 @@ class AuthDataSource {
   AuthDataSource({required this.supabase});
 
   Future<Either<String, Null>> sendCode(String number) async {
-    String phoneNumber = '+7${number}';
+    String phoneNumber = '+7$number';
     debugPrint(phoneNumber);
     try {
       await supabase.client.auth.signInWithOtp(phone: phoneNumber);
-      return Right(null);
+      return const Right(null);
       //Navigator.push(context, MaterialPageRoute(builder: (context)=>OtpScreen(phone: phoneNumber,)));
     } catch (e) {
       String error = e.toString();
@@ -83,8 +83,13 @@ class AuthDataSource {
         return Left('Ошибка при регистрации');
       } else {
         Map<String, dynamic> data = (user.copyWith(id: userId)).toJson();
-        await supabase.client.from('users').insert(data);
-        return const Right(null);
+        try{
+          await supabase.client.from('users').insert(data);
+          return const Right(null);
+        }catch(e){
+          return  Left(e.toString());
+        }
+
       }
     } catch (e) {
       String error = e.toString();
