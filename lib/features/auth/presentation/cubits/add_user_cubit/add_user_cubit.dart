@@ -1,7 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/auth/data/models/user_model.dart';
-import 'package:planet_sushi_client_app/features/auth/presentation/cubits/add_user_cubit/add_user_cubit.dart';
-
 import '../../../data/datasource/auth_data_source.dart';
 import 'add_user_state.dart';
 

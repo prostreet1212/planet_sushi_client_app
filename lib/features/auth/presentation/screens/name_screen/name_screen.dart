@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:planet_sushi_client_app/features/auth/data/datasource/auth_data_source.dart';
-import 'package:planet_sushi_client_app/features/auth/data/models/user_model.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/cubits/add_user_cubit/add_user_cubit.dart';
-import 'package:planet_sushi_client_app/features/auth/presentation/cubits/add_user_cubit/add_user_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/providers/name_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/widgets/add_user_button.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/widgets/name_form_field.dart';
-import 'package:planet_sushi_client_app/features/testing/pageview_app.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 import 'package:provider/provider.dart';
 

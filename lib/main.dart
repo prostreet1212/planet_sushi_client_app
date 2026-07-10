@@ -1,19 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:planet_sushi_client_app/features/auth/data/datasource/auth_data_source.dart';
-import 'package:planet_sushi_client_app/features/auth/presentation/cubits/otp_cubit/otp_cubit.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/login_screen.dart';
-import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/providers/login_state.dart';
-import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/name_screen.dart';
-import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/otp_screen.dart';
-import 'package:planet_sushi_client_app/features/testing/login_screen_test.dart';
-import 'package:planet_sushi_client_app/features/testing/test_screen.dart';
-import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'features/auth/presentation/cubits/auth_cibit/auth_cubit.dart';
-import 'features/auth/presentation/screens/login_screen/widgets/general_widgets/number_text_field.dart';
-import 'features/main/presentation/screens/main_screen.dart';
+import 'features/auth/presentation/screens/name_screen/name_screen.dart';
 import 'injection_container.dart' as di;
 
 
@@ -44,7 +33,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           // Настраиваем цветовую схему выделения
-          textSelectionTheme: TextSelectionThemeData(
+          textSelectionTheme: const TextSelectionThemeData(
             //selectionHandleColor: Colors.blue, // Цвет вашей "капельки"
             //cursorColor: Colors.blue,          // Цвет самого курсора
             //selectionColor: Colors.blue, // Цвет фона выделенного текста
@@ -58,7 +47,7 @@ class MyApp extends StatelessWidget {
         //home:const AuthScreen(),
         home: const LoginScreen(),
         //home: const OtpScreen(phone: '+79532602744'),
-        //home: const NameScreen(phone: '+79532602744'),
+        //home: const NameScreen(),
       );
   }
 }

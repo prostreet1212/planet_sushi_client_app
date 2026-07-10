@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 
 class NameState extends ChangeNotifier{
 
-  TextEditingController _nameController= TextEditingController();
+  final TextEditingController _nameController= TextEditingController();
   bool _nameIsFilled=false;
   bool _isPortrait=true;
   double _keyboardHeight=0;
-  String _phone='';
+  //String _phone='';
 
 
   TextEditingController get nameController => _nameController;
   bool get nameIsFilled => _nameIsFilled;
   bool get isPortrait => _isPortrait;
   double get keyboardHeight => _keyboardHeight;
-  String get phone => _phone;
+  //String get phone => _phone;
 
   void setNameIsFilled(bool value){
     _nameIsFilled=value;
@@ -30,7 +30,7 @@ class NameState extends ChangeNotifier{
     _isPortrait=value;
   }
 
-  void setPhone(String value){
+ /* void setPhone(String value){
     _phone=value;
-  }
+  }*/
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/widgets/otp_form_field.dart';
 
 import '../../../../../injection_container.dart' as di;
@@ -7,12 +8,13 @@ import '../../cubits/otp_cubit/otp_cubit.dart';
 
 
 class OtpScreen extends StatelessWidget {
-  const OtpScreen({super.key, required this.phone});
+  const OtpScreen({super.key,/* required this.phone*/});
 
-  final String phone;
+ // final String phone;
 
   @override
   Widget build(BuildContext context) {
+    OtpPhoneState otpPhoneState = di.sl<OtpPhoneState>();
     debugPrint('Строитель отпскрин');
     return BlocProvider<OtpCubit>(
       create: (context)=>di.sl<OtpCubit>(),
@@ -43,7 +45,7 @@ class OtpScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Отправили его на номер $phone',
+                    'Отправили его на номер ${otpPhoneState.phone}.',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.black,
@@ -51,7 +53,7 @@ class OtpScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                   OtpFormField(phone: phone),
+                   OtpFormField(/*phone: phone*/),
                 ],
               ),
             ),

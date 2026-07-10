@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:planet_sushi_client_app/main.dart';
 
 import 'general_widgets/number_text_field.dart';
 
@@ -21,8 +19,8 @@ class PhoneInfoHorizontal extends StatelessWidget {
             width: 180,
           ),
         ),
-        SizedBox(width: 24),
-        Expanded(
+        const SizedBox(width: 24),
+        const Expanded(
           flex: 2,
           child: Column(
             mainAxisSize: MainAxisSize.max,

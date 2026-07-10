@@ -2,22 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class LoginState extends ChangeNotifier {
-   TextEditingController phoneController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final MaskTextInputFormatter phoneMaskFormatter = MaskTextInputFormatter(
     mask: '(###) ###-##-##',
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy,
   );
- // final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  bool _sendCodeEnabled = false;
-  bool _isPortrait=true;
-   BoxConstraints _constraints = BoxConstraints();
-   double _keyboardHeight=0;
 
+  // final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool _sendCodeEnabled = false;
+  bool _isPortrait = true;
+  BoxConstraints _constraints = const BoxConstraints();
+  double _keyboardHeight = 0;
+
+  TextEditingController get phoneController => _phoneController;
 
   bool get sendCodeEnabled => _sendCodeEnabled;
+
   bool get isPortrait => _isPortrait;
+
   double get keyboardHeight => _keyboardHeight;
+
   BoxConstraints get constraints => _constraints;
 
   void updateSendCodeEnabled(bool value) {
@@ -25,16 +30,21 @@ class LoginState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateSizes(bool isPortrait,BoxConstraints constraints,/*double keyboardHeight*/) {
+  void updateSizes(
+    bool isPortrait,
+    BoxConstraints constraints,
+    /*double keyboardHeight*/
+  ) {
     _isPortrait = isPortrait;
-    _constraints=constraints;
+    _constraints = constraints;
     //_keyboardHeight=keyboardHeight;
+    //notifyListeners();
   }
 
   void setKeyboardHeight(double value) {
     _keyboardHeight = value;
+    notifyListeners();
   }
-
 
   @override
   void dispose() {

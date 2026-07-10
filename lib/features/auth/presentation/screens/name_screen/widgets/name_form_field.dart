@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/providers/name_state.dart';
-import 'package:provider/provider.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
 class NameFormField extends StatefulWidget {
@@ -59,7 +58,6 @@ class _NameFormFieldState extends State<NameFormField> {
             });
           }
         },
-        validator: (value) {},
       );
   }
 }

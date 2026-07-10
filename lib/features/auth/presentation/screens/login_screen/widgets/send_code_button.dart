@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/otp_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
+import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
 
 import '../../../cubits/auth_cibit/auth_cubit.dart';
 import '../../../cubits/auth_cibit/auth_state.dart';
-import '../../name_screen/providers/name_state.dart';
 import '../providers/login_state.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
@@ -19,24 +17,25 @@ class SendCodeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginState = context.watch<LoginState>();
+    print(loginState.keyboardHeight);
     return Expanded(
       child: Padding(
         padding: EdgeInsets.only(
-          bottom: loginState.isPortrait ? loginState.keyboardHeight : 0,
+          bottom: loginState.isPortrait ?loginState.keyboardHeight : 0,
         ),
         child: Align(
-          alignment: AlignmentGeometry.bottomCenter,
-          child: BlocListener<AuthCubit,AuthState>(
-          /*  buildWhen: (oldState,newState){
+            alignment: AlignmentGeometry.bottomCenter,
+            child: BlocListener<AuthCubit,AuthState>(
+              /*  buildWhen: (oldState,newState){
               return false;
             },*/
-              child: /*(context,_){
+                child: /*(context,_){
 
                 print('строитель кнопка отправить');
             return*/ ElevatedButton(
-              onPressed: loginState.sendCodeEnabled ? () async{
-                context.read<AuthCubit>().sendCode(loginState.phoneMaskFormatter.getUnmaskedText());
-               /* String phoneNumber='+7${loginState.phoneMaskFormatter.getUnmaskedText()}';
+                  onPressed: loginState.sendCodeEnabled ? () async{
+                    context.read<AuthCubit>().sendCode(loginState.phoneMaskFormatter.getUnmaskedText());
+                    /* String phoneNumber='+7${loginState.phoneMaskFormatter.getUnmaskedText()}';
                 debugPrint(phoneNumber);
                 try {
                   await Supabase.instance.client.auth.signInWithOtp(
@@ -48,37 +47,37 @@ class SendCodeButton extends StatelessWidget {
                   debugPrint(error);
 
                 }*/
-              } : null,
-              style: ElevatedButton.styleFrom(
-                fixedSize: Size(loginState.constraints.maxWidth / 2, 54),
-                backgroundColor: const Color(0xFF88b705),
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32),
+                  } : null,
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: Size(loginState.constraints.maxWidth / 2, 54),
+                    backgroundColor: const Color(0xFF88b705),
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                  ),
+                  child: const Text(
+                    'Отправить код',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
                 ),
-              ),
-              child: const Text(
-                'Отправить код',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-            ),
-          //},
-  listener: (context,state){
-            if(state is AuthSuccess){
-              String phoneNumber='+7${loginState.phoneMaskFormatter.getUnmaskedText()}';
+                //},
+                listener: (context,state){
+                  if(state is AuthSuccess){
+                    String phoneNumber='+7${loginState.phoneMaskFormatter.getUnmaskedText()}';
 
-              //Navigator.push(context, MaterialPageRoute(builder: (context)=>OtpScreen(phone: phoneNumber,)));
-             // di.sl<NameState>().setPhone(phoneNumber);
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OtpScreen(phone: phoneNumber,)), (route) => false, );
-            }else if(state is AuthError){
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Ошибка ${state.message}'))
-              );
+                    //Navigator.push(context, MaterialPageRoute(builder: (context)=>OtpScreen(phone: phoneNumber,)));
+                     di.sl<OtpPhoneState>().setPhone(phoneNumber);
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OtpScreen()), (route) => false, );
+                  }else if(state is AuthError){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Ошибка ${state.message}'))
+                    );
 
-            }
-            
-          })
+                  }
+
+                })
         ),
       ),
     );

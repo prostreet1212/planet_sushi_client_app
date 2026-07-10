@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:planet_sushi_client_app/features/auth/data/models/user_model.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/name_screen.dart';
-import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/providers/name_state.dart';
+import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
 
 import '../../../../../main/presentation/screens/main_screen.dart';
 import '../../../cubits/otp_cubit/otp_cubit.dart';
@@ -11,9 +10,9 @@ import '../../../cubits/otp_cubit/otp_state.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
 class OtpFormField extends StatefulWidget {
-  final String phone;
+  //final String phone;
 
-  const OtpFormField({super.key, required this.phone});
+  const OtpFormField({super.key, /*required this.phone*/});
 
   @override
   State<OtpFormField> createState() => _OtpFormFieldState();
@@ -35,6 +34,7 @@ class _OtpFormFieldState extends State<OtpFormField> {
   @override
   Widget build(BuildContext context) {
     debugPrint('Строитель филдотпскрин');
+    OtpPhoneState otpPhoneState = di.sl<OtpPhoneState>();
     return BlocListener<OtpCubit, OtpState>(
       listener: (context, otpState)async {
         if (otpState is OtpError) {
@@ -57,7 +57,7 @@ class _OtpFormFieldState extends State<OtpFormField> {
           setState(() {
             _readOnly = false;
           });
-          di.sl<NameState>().setPhone(widget.phone);
+          //di.sl<OtpPhoneState>().setPhone(widget.phone);
           Navigator.push(
             context,
             MaterialPageRoute(builder: (c) =>const NameScreen()),
@@ -77,12 +77,12 @@ class _OtpFormFieldState extends State<OtpFormField> {
             //formErrorSpace: 20,
             formErrorStyle: TextStyle(fontSize: 16, color: Colors.red),
             length: 6,
-            theme: MaterialPinTheme(
+            theme: const MaterialPinTheme(
               showCursor: false,
               cellSize: Size(45, 65),
               borderWidth: 2,
-              borderColor: const Color(0xFF88b705),
-              filledBorderColor: const Color(0xFF88b705),
+              borderColor: Color(0xFF88b705),
+              filledBorderColor: Color(0xFF88b705),
 
               errorColor: Colors.black,
               errorBorderColor: Colors.red,
@@ -118,7 +118,7 @@ class _OtpFormFieldState extends State<OtpFormField> {
                 _readOnly = true;
               });
               context.read<OtpCubit>().verifyOtp(
-                widget.phone,
+                otpPhoneState.phone,
                 pinController.text.trim(),
               );
 

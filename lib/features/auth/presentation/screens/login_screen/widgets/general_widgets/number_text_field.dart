@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../../../injection_container.dart' as di;
 import '../../providers/login_state.dart';
 
 
@@ -25,24 +24,24 @@ class NumberTextField extends StatelessWidget {
               loginState.sendCodeEnabled == false) {
             loginState.updateSendCodeEnabled(true);
             var number = loginState.phoneMaskFormatter.getUnmaskedText();
-            print('номер ${number}');
+            print('номер $number');
           } else if (loginState.phoneController.text.length <= 14 &&
               loginState.sendCodeEnabled == true) {
             loginState.updateSendCodeEnabled(false);
             var number = loginState.phoneMaskFormatter.getUnmaskedText();
-            print('номер ${number}');
+            print('номер $number');
           }
         },
         decoration: InputDecoration(
           labelText: 'Номер телефона',
           hintText: '(999) 999-99-99',
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          prefix: Text('+7'),
-          prefixIcon: Padding(
+          prefix: const Text('+7'),
+          prefixIcon: const Padding(
             padding: EdgeInsets.only(left: 8, right: 8),
-            child: const Icon(Icons.call),
+            child: Icon(Icons.call),
           ),
-          prefixIconConstraints: BoxConstraints(minWidth: 0),
+          prefixIconConstraints: const BoxConstraints(minWidth: 0),
           fillColor: Colors.white70,
           filled: true,
         ),

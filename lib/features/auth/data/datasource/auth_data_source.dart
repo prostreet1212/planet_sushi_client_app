@@ -53,7 +53,7 @@ class AuthDataSource {
         }
 
       }
-      return Left('');
+      return const Left('');
     } on AuthApiException catch (e) {
       String error = e.toString();
       print('otp error: $error');

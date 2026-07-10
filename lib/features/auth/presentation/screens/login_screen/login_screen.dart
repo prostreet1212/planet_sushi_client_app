@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/providers/login_state.dart';
-import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/widgets/general_widgets/number_text_field.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/widgets/phone_info_horizontal.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/widgets/phone_info_vertical.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/widgets/send_code_button.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
 import '../../cubits/auth_cibit/auth_cubit.dart';
@@ -65,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   _loginState.updateSizes(
                     constraints.maxWidth < constraints.maxHeight,
                     constraints,
-                    //_loginState.keyboardHeight,
+                   // _loginState.keyboardHeight,
                   );
                   return Container(
                     decoration: BoxDecoration(
@@ -86,7 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           _loginState.isPortrait
                               ? const PhoneInfoVertical()
                               : const PhoneInfoHorizontal(),
-                           const SendCodeButton(),//не const
+                          const SendCodeButton(),//не const
+
                         ],
                       ),
                     ),
