@@ -3,6 +3,7 @@ import 'package:planet_sushi_client_app/features/auth/presentation/screens/login
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'features/auth/presentation/screens/name_screen/name_screen.dart';
+import 'features/main/presentation/screens/main_screen.dart';
 import 'injection_container.dart' as di;
 
 
@@ -43,9 +44,9 @@ class MyApp extends StatelessWidget {
           fontFamily: 'RobotoCondensed',
         ),
         debugShowCheckedModeBanner: false,
-        //home:const MainScreen(),
+        home:const MainScreen(),
         //home:const AuthScreen(),
-        home: const LoginScreen(),
+        //home: const LoginScreen(),
         //home: const OtpScreen(phone: '+79532602744'),
         //home: const NameScreen(),
       );

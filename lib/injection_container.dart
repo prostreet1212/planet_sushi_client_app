@@ -7,6 +7,7 @@ import 'package:planet_sushi_client_app/features/auth/presentation/cubits/otp_cu
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/providers/login_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/providers/name_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
+import 'package:planet_sushi_client_app/features/main/presentation/screens/providers/main_screen_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'features/auth/presentation/cubits/auth_cibit/auth_cubit.dart';
@@ -27,6 +28,7 @@ Future<void> init() async{
   sl.registerFactory(() => LoginState());
   sl.registerLazySingleton(() => NameState());
   sl.registerLazySingleton(() => OtpPhoneState());
+  sl.registerLazySingleton(() => MainScreenState());
 
   //external
   final supabase =  Supabase.instance;
