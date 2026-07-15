@@ -1,14 +1,14 @@
 
 import 'package:flutter/cupertino.dart';
 
-import '../../pages/page1.dart';
+import '../../pages/menu_page.dart';
 import '../../pages/page2.dart';
 import '../../pages/page3.dart';
 
 class MainScreenState extends ChangeNotifier{
   int _currentIndex = 0;
   int _previousIndex = 0;
-  List<Widget>  pages= [/*const Page1()*/MenuScreen(), const Page2(), const Page3()];
+  List<Widget>  pages= [/*const Page1()*/MenuPage(), const Page2(), const Page3()];
 
   int get currentIndex=>_currentIndex;
   int get previousIndex=>_previousIndex;
