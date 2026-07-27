@@ -29,7 +29,7 @@ class MainNavBar extends StatelessWidget {
                 ),*/
           const MainNavItem(
             icon: Icons.one_k_plus,
-            label: 'Домой',
+            label: 'Меню',
             tabIndex: 0,
           ),
           Center(
