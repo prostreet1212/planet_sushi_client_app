@@ -20,7 +20,8 @@ class MainScreen extends StatelessWidget {
           colorScheme: .fromSeed(seedColor: Colors.yellow),
           useMaterial3: false,
           //fontFamily: 'Custom',
-          fontFamily: 'RobotoCondensed',
+          //fontFamily: 'RobotoCondensed',
+          fontFamily: 'RobotoCondensedRegular'
         ),
         child: Scaffold(
           extendBody: true,

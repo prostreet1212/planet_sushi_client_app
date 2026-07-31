@@ -1,7 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 
-import '../../../../../shop/presentation/pages/menu_page.dart';
+import '../../../../shop/presentation/pages/menu_page.dart';
 import '../../pages/page2.dart';
 import '../../pages/page3.dart';
 

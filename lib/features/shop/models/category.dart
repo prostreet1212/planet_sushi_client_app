@@ -1,5 +1,5 @@
 
-import 'package:planet_sushi_client_app/shop/models/product.dart';
+import 'package:planet_sushi_client_app/features/shop/models/product.dart';
 
 class Category {
   final String id;

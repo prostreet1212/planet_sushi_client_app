@@ -8,11 +8,11 @@ import 'package:planet_sushi_client_app/features/auth/presentation/screens/login
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/providers/name_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/providers/main_screen_state.dart';
-import 'package:planet_sushi_client_app/shop/datasource/shop_data_source.dart';
-import 'package:planet_sushi_client_app/shop/presentation/cubits/catalog_cubit/catalog_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'features/auth/presentation/cubits/auth_cibit/auth_cubit.dart';
+import 'features/shop/datasource/shop_data_source.dart';
+import 'features/shop/presentation/cubits/catalog_cubit/catalog_cubit.dart';
 
 final sl=GetIt.instance;
 

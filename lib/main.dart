@@ -34,18 +34,17 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           // Настраиваем цветовую схему выделения
-          textSelectionTheme: const TextSelectionThemeData(
+          /*textSelectionTheme: const TextSelectionThemeData(
             //selectionHandleColor: Colors.blue, // Цвет вашей "капельки"
             //cursorColor: Colors.blue,          // Цвет самого курсора
             //selectionColor: Colors.blue, // Цвет фона выделенного текста
-          ),
+          ),*/
           colorScheme: .fromSeed(seedColor: Colors.yellow),
           useMaterial3: false,
           fontFamily: 'RobotoCondensed',
         ),
         debugShowCheckedModeBanner: false,
         home:const MainScreen(),
-        //home:const AuthScreen(),
         //home: const LoginScreen(),
         //home: const OtpScreen(phone: '+79532602744'),
         //home: const NameScreen(),
