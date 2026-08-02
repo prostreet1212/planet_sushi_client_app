@@ -1,9 +1,11 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/providers/main_screen_state.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_body.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_nav_bar.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_nav_fab.dart';
+import 'package:planet_sushi_client_app/features/shop/presentation/cubits/catalog_cubit/catalog_cubit.dart';
 import 'package:provider/provider.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
@@ -15,21 +17,27 @@ class MainScreen extends StatelessWidget {
     debugPrint('Строитель мэйнскрин');
     return ChangeNotifierProvider.value(
       value: di.sl<MainScreenState>(),
-      child: Theme(
-        data: ThemeData(
-          colorScheme: .fromSeed(seedColor: Colors.yellow),
-          useMaterial3: false,
-          //fontFamily: 'Custom',
-          //fontFamily: 'RobotoCondensed',
-          fontFamily: 'RobotoCondensedRegular'
-        ),
-        child: Scaffold(
-          extendBody: true,
-          appBar: AppBar(title: const Text('Планета суши')),
-          body: const MainBody(),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: const MainNavFab(),
-          bottomNavigationBar: const MainNavBar(),
+      child: BlocProvider<CatalogCubit>(
+        create: (context) => di.sl<CatalogCubit>()..getCatalog(),
+        child: Theme(
+          data: ThemeData(
+              colorScheme: .fromSeed(seedColor: Colors.yellow),
+              useMaterial3: false,
+              //fontFamily: 'Custom',
+              //fontFamily: 'RobotoCondensed',
+              fontFamily: 'RobotoCondensedRegular'
+          ),
+          child: SafeArea(
+            child: Scaffold(
+              extendBody: true,
+              appBar: AppBar(title: const Text('Планета суши')),
+              body: const MainBody(),
+              floatingActionButtonLocation: FloatingActionButtonLocation
+                  .centerDocked,
+              floatingActionButton: const MainNavFab(),
+              bottomNavigationBar: const MainNavBar(),
+            ),
+          ),
         ),
       ),
     );

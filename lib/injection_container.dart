@@ -11,7 +11,10 @@ import 'package:planet_sushi_client_app/features/main/presentation/screens/provi
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'features/auth/presentation/cubits/auth_cibit/auth_cubit.dart';
-import 'features/shop/datasource/shop_data_source.dart';
+import 'features/database/database.dart';
+import 'features/shop/datasource/shop_local_data_source.dart';
+import 'features/shop/datasource/shop_sync_service.dart';
+import 'features/shop/datasource/shop_remote_data_source.dart';
 import 'features/shop/presentation/cubits/catalog_cubit/catalog_cubit.dart';
 
 final sl=GetIt.instance;
@@ -22,13 +25,14 @@ Future<void> init() async{
   /*sl.registerLazySingleton<LoginState>(()
   => LoginState());*/
   sl.registerLazySingleton(() => AuthDataSource(supabase: sl()));
-  sl.registerLazySingleton(() => ShopDataSource(supabase: sl()));
+  sl.registerLazySingleton(() => ShopRemoteDataSource(supabase: sl()));
 
  //cubits
   sl.registerFactory(() => AuthCubit(authDataSource: sl()));
   sl.registerFactory(() => OtpCubit(authDataSource: sl()));
   sl.registerFactory(() => AddUserCubit(authDataSource: sl()));
-  sl.registerFactory(() => CatalogCubit(shopDataSource: sl()));
+  //sl.registerFactory(() => CatalogCubit(shopDataSource: sl()));
+  sl.registerFactory(() => CatalogCubit(syncService: sl()));
 
   //states
   sl.registerFactory(() => LoginState());
@@ -39,6 +43,14 @@ Future<void> init() async{
   //external
   final supabase =  Supabase.instance;
   sl.registerLazySingleton(() => supabase);
+
+  // database
+  sl.registerLazySingleton<AppDatabase>(() => AppDatabase());
+  sl.registerLazySingleton<ShopLocalDataSource>(() => ShopLocalDataSource(sl()));
+  sl.registerLazySingleton<ShopSyncService>(() => ShopSyncService(
+    remoteDataSource: sl(),
+    localDao: sl(),
+  ));
 
 
 

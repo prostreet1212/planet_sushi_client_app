@@ -1,21 +1,24 @@
-
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../shop/presentation/cubits/catalog_cubit/catalog_cubit.dart';
 import '../../../../shop/presentation/pages/menu_page.dart';
 import '../../pages/page2.dart';
 import '../../pages/page3.dart';
+import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
-class MainScreenState extends ChangeNotifier{
+class MainScreenState extends ChangeNotifier {
   int _currentIndex = 0;
   int _previousIndex = 0;
-  List<Widget>  pages= [/*const Page1()*/MenuPage(), const Page2(), const Page3()];
+  List<Widget> pages = [ /*const Page1()*/ MenuPage(), const Page2(), const Page3()];
 
-  int get currentIndex=>_currentIndex;
-  int get previousIndex=>_previousIndex;
+  int get currentIndex => _currentIndex;
 
-  void selectedTab(int index){
-    _previousIndex=_currentIndex;
-    _currentIndex=index;
+  int get previousIndex => _previousIndex;
+
+  void selectedTab(int index) {
+    _previousIndex = _currentIndex;
+    _currentIndex = index;
     notifyListeners();
   }
 
@@ -31,7 +34,6 @@ class MainScreenState extends ChangeNotifier{
       // Если индекс не изменился - используем стандартную горизонтальную анимацию
       return false;
     }
-
   }
 
 }

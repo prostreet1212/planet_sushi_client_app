@@ -8,10 +8,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/category.dart';
 
 
-class ShopDataSource {
+class ShopRemoteDataSource {
   final Supabase supabase;
 
-  ShopDataSource({required this.supabase});
+  ShopRemoteDataSource({required this.supabase});
 
   // Получаем категории вместе с их товарами одним запросом
   Future<Either<String,List<Category>>> getCategoriesWithProducts() async {

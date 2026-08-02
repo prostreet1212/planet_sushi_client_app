@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:planet_sushi_client_app/features/shop/models/product.dart';
 
@@ -11,7 +12,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.red,
+      //color: Colors.red,
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
@@ -19,43 +20,49 @@ class ProductCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Expanded(
-             child: ClipRRect(
-
-               borderRadius: const BorderRadius.vertical(
-                 top: Radius.circular(12),
-               ),
-
-               child: Image.network(
-                 product.imageUrl ?? '',
-                 width:double.infinity,
-                // height:double.infinity,
-                 fit: BoxFit.fitWidth, //contain
-                 //alignment: Alignment.topCenter,
-                 errorBuilder: (_, __, ___) =>
-                 const Icon(Icons.image, size: 60),
-               ),
-             ),
-           ),
-
-            /* Stack(
+          Expanded(
+            child: Stack(
               alignment: Alignment.center,
               children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                    color: Colors.grey.withValues(alpha: 0.3),
+                  ),
+                    //color:
+                ),
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(12),
                   ),
-                  child: Image.network(
+
+                  child: CachedNetworkImage(
+                      imageUrl: product.imageUrl ?? '',
+                    //width: double.infinity,
+                    //fit:BoxFit.fitWidth,
+                    placeholderFadeInDuration: Duration(milliseconds: 0),
+                    fadeInDuration: Duration(milliseconds: 0),
+                    fadeOutDuration: Duration(milliseconds: 0),
+                    errorWidget: (context, url, error) => Container(
+                      width: 100,
+                      height: 100,
+                      color: Colors.grey[200],
+                      child: const Icon(Icons.broken_image, color: Colors.grey),
+                    ),
+                  )
+                  /*Image.network(
                     product.imageUrl ?? '',
                     width: double.infinity,
+                    // height:double.infinity,
                     fit: BoxFit.fitWidth, //contain
+                    //alignment: Alignment.topCenter,
                     errorBuilder: (_, __, ___) =>
                         const Icon(Icons.image, size: 60),
-                  ),
+                  ),*/
                 ),
-                Positioned(
-                  top: 0,
-                  right: 0,
+                 Positioned(
+                  top: -1,
+                  right: -1,
                   child: SizedBox(
                     width: 36,
                     height: 36,
@@ -65,23 +72,24 @@ class ProductCard extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(12),bottomLeft: Radius.circular(12),topLeft:Radius.zero,bottomRight: Radius.zero),
                         ),
-                        backgroundColor: Colors.white.withValues(alpha: 0.9),
-                        elevation: 2,
+                        backgroundColor: Colors.white.withValues(alpha: 0.3),
+                        //backgroundColor: Colors.yellow,
+                        elevation: 0,
                       ),
                       child: const Icon(
                         Icons.favorite_border,
-                        size: 18,
-                        color: Colors.red,
+                        size: 20,
+                        color: Colors.black54,
                       ),
                     ),
                   ),
                 ),
               ],
-            ),*/
-
+            ),
+          ),
 
           SizedBox(
             height: 79.7,

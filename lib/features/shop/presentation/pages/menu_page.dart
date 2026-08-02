@@ -16,43 +16,7 @@ class MenuPage extends StatefulWidget {
   State<MenuPage> createState() => _MenuPageState();
 }
 
-// Получаем категории вместе с их товарами одним запросом
-Future<List<Category>> getCategoriesWithProducts() async {
-  try {
-    final response = await Supabase.instance.client
-        .from('categories')
-        .select('''
-            id,
-            name,
-            image_url,
-            products!inner (
-              id,
-              name,
-              description,
-              price,
-              image_url,
-              weight,
-              is_available
-            )
-          ''')
-        .order('sort_order', ascending: true) // Сортировка категорий
-        .order(
-      'name',
-      ascending: true,
-      referencedTable: 'products',
-    ); // Сортировка товаров внутри
 
-    if (response.isEmpty) return [];
-
-    return response.map((json) {
-      Category category = Category.fromJson(json);
-      return category;
-    }).toList();
-  } catch (e) {
-    print('Ошибка загрузки меню: $e');
-    rethrow;
-  }
-}
 
 class _MenuPageState extends State<MenuPage> {
 
@@ -66,31 +30,28 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
-    return  BlocProvider<CatalogCubit>(
-        create: (context) => di.sl<CatalogCubit>()..getCatalog(),
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsetsGeometry.all(8),
-            child: BlocConsumer<CatalogCubit,CatalogState>(
-                listener: (context,catalogState){
-                },
-                builder: (context,catalogState){
-                  if(catalogState is CatalogLoading) {
-                    return Center(child: CircularProgressIndicator(),);
-                  }
-                  if(catalogState is CatalogError) {
-                    return Center(child: Text(catalogState.message),);
-                  }
-                  if(catalogState is CatalogEmpty) {
-                    return Center(child: Text('Каталог пуст'),);
-                  }
-                  if(catalogState is CatalogSuccess) {
-                    return CatalogWidget(categoryList: catalogState.categoryList);
-                  } else {
-                    return SizedBox();
-                  }
+    return Padding(
+        padding: EdgeInsetsGeometry.all(8),
+        child: BlocConsumer<CatalogCubit,CatalogState>(
+          listener: (context,catalogState){
+          },
+          builder: (context,catalogState){
+            if(catalogState is CatalogLoading) {
+              return Center(child: CircularProgressIndicator(),);
+            }
+            if(catalogState is CatalogError) {
+              return Center(child: Text(catalogState.message),);
+            }
+            if(catalogState is CatalogEmpty) {
+              return Center(child: Text('Каталог пуст'),);
+            }
+            if(catalogState is CatalogSuccess) {
+              return CatalogWidget(categoryList: catalogState.categoryList);
+            } else {
+              return SizedBox();
+            }
           },),
-            /*child: FutureBuilder<List<Category>>(
+        /*child: FutureBuilder<List<Category>>(
                 future: _categoriesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState != ConnectionState.done) {
@@ -119,8 +80,6 @@ class _MenuPageState extends State<MenuPage> {
                         });
                   }
                 }),*/
-          ),
-        ),
       )
     ;
   }

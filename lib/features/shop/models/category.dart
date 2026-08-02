@@ -1,7 +1,8 @@
 
+import 'package:equatable/equatable.dart';
 import 'package:planet_sushi_client_app/features/shop/models/product.dart';
 
-class Category {
+class Category extends Equatable{
   final String id;
   final String name;
   final String? imageUrl;
@@ -25,4 +26,8 @@ class Category {
           .toList() ?? [],
     );
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id,name,imageUrl,products];
 }
