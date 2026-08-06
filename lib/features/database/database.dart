@@ -32,11 +32,35 @@ class Products extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+// --- Таблица корзины ---
+@DataClassName('CartItemTable')
+class CartItems extends Table {
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  TextColumn get productId => text()();
+  IntColumn get quantity => integer()();
+
+  @override
+  Set<Column> get primaryKey => {productId};
+}
+
+
 // --- База данных ---
-@DriftDatabase(tables: [Categories, Products])
+@DriftDatabase(tables: [Categories, Products,CartItems])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(driftDatabase(name: 'planet_sushi_db'));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (m) => m.createAll(),
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await m.createAll(); // создаст недостающую таблицу cart_items
+      }
+    },
+  );
+
 }

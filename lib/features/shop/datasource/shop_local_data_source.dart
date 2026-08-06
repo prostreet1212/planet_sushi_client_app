@@ -9,7 +9,7 @@ import '../../database/database.dart';
 class ShopLocalDataSource {
   final AppDatabase _db;
 
-  ShopLocalDataSource(this._db);
+  ShopLocalDataSource({required this._db});
 
   // Получить все категории с товарами
   Future<List<Category>> getCategoriesWithProducts() async {
