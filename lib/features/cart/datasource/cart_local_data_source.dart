@@ -48,7 +48,26 @@ class CartLocalDataSource {
   void insertCartItem(String userId, Product product)async{
     const uuid = Uuid();
     final String id = uuid.v7();
-    await _db.into(_db.cartItems).insert(CartItemsCompanion.insert(id: id, userId: userId, productId: product.id, quantity: 1));
+    try{
+      await _db.into(_db.cartItems).insert(CartItemsCompanion.insert(id: id, userId: userId, productId: product.id, quantity: 1));
+    }catch(e){
+      print('local db error:$e');
+    }
+  }
+  
+  void updateCartItem(CartItem cart,int count)async{
+    await _db.update(_db.cartItems)..where((tbl)=>tbl.id.equals(cart.id))..write(CartItemsCompanion(quantity: Value(count)));
+
+    // await (update(todoItems)
+    //   ..where((tbl) => tbl.id.equals(1)))
+    //     .write(const TodoItemsCompanion(
+    //   content: Value('Only this column changes!'),
+    // ));
+    
+  }
+
+  void deleteCartItem(CartItem cart){
+    _db.delete(_db.cartItems)..where((tbl)=>tbl.id.equals(cart.id))..go();
   }
 
   /// Полная перезапись корзины (транзакция)

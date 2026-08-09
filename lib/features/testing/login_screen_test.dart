@@ -133,7 +133,7 @@ class _LoginScreenTestState extends State<LoginScreenTest> {
 //мой сырой вариант с renderflex
 /*import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/widgets/phone_info_vertical.dart';
+import 'package:planet_sushi_client_app/features/auth/presentation/pages/login_screen/widgets/phone_info_vertical.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatefulWidget {

@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planet_sushi_client_app/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/providers/main_screen_state.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_body.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_nav_bar.dart';
@@ -17,8 +18,17 @@ class MainScreen extends StatelessWidget {
     debugPrint('Строитель мэйнскрин');
     return ChangeNotifierProvider.value(
       value: di.sl<MainScreenState>(),
-      child: BlocProvider<CatalogCubit>(
-        create: (context) => di.sl<CatalogCubit>()..getCatalog(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => di.sl<CartCubit>()..loadCart(),
+          ),
+          BlocProvider<CatalogCubit>(
+            create: (context) =>
+            di.sl<CatalogCubit>()
+              ..getCatalog(),
+          ),
+        ],
         child: Theme(
           data: ThemeData(
               colorScheme: .fromSeed(seedColor: Colors.yellow),

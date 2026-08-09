@@ -932,7 +932,7 @@ class $CartItemsTable extends CartItems
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {productId};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   CartItemTable map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';

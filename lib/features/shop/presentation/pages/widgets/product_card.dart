@@ -2,8 +2,12 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/cart/datasource/cart_local_data_source.dart';
 import 'package:planet_sushi_client_app/features/cart/datasource/cart_remote_data_source.dart';
+import 'package:planet_sushi_client_app/features/cart/models/cart_item.dart';
+import 'package:planet_sushi_client_app/features/cart/presentation/cubits/cart_cubit.dart';
+import 'package:planet_sushi_client_app/features/cart/presentation/cubits/cart_state.dart';
 import 'package:planet_sushi_client_app/features/shop/models/product.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
@@ -15,8 +19,9 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<CartCubit>().items.contains(product);
     return InkWell(
-      onTap: (){
+      onTap: ()async{
         /*
         if(di.sl<Supabase>().client.auth.currentUser!=null){
           var id=di.sl<Supabase>().client.auth.currentUser?.id;
@@ -24,9 +29,16 @@ class ProductCard extends StatelessWidget {
         }else{
           print('пользователя нетю');
         }*/
-        var id=di.sl<Supabase>().client.auth.currentUser?.id;
-        //di.sl<CartLocalDataSource>().insertCartItem(id!, product);
-        di.sl<CartRemoteDataSource>().insertCart(id!, product.id);
+        // var id=di.sl<Supabase>().client.auth.currentUser?.id;
+        // di.sl<CartLocalDataSource>().insertCartItem(id!, product);
+        //di.sl<CartRemoteDataSource>().insertCart(id!, product.id);
+
+
+
+        // List<CartItem> a=await di.sl<CartLocalDataSource>().getCartItems();
+        // a.map((e){
+        //   print(e.product!.name);
+        // });
 
       },
       child: Card(

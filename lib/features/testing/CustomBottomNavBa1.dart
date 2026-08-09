@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 
-import '../main/presentation/pages/page2.dart';
+import '../cart/presentation/pages/cart_page.dart';
 import '../main/presentation/pages/page3.dart';
 
 class CustomBottomNavBar1 extends StatefulWidget {
@@ -17,7 +17,7 @@ class _CustomBottomNavBar1State extends State<CustomBottomNavBar1> {
 
   final List<Widget> _pages = [
     //const Page1(),
-    const Page2(),
+    const CartPage(),
     const Page3(),
   ];
 

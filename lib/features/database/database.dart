@@ -41,7 +41,7 @@ class CartItems extends Table {
   IntColumn get quantity => integer()();
 
   @override
-  Set<Column> get primaryKey => {productId};
+  Set<Column> get primaryKey => {id};
 }
 
 

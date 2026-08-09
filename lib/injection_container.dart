@@ -9,6 +9,7 @@ import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
 import 'package:planet_sushi_client_app/features/cart/datasource/cart_local_data_source.dart';
 import 'package:planet_sushi_client_app/features/cart/datasource/cart_remote_data_source.dart';
+import 'package:planet_sushi_client_app/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/providers/main_screen_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -36,6 +37,7 @@ Future<void> init() async{
   sl.registerFactory(() => AddUserCubit(authDataSource: sl()));
   //sl.registerFactory(() => CatalogCubit(shopDataSource: sl()));
   sl.registerFactory(() => CatalogCubit(syncService: sl()));
+  sl.registerFactory(() => CartCubit(cartLocalDataSource: sl()));
 
   //states
   sl.registerFactory(() => LoginState());

@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../cart/presentation/pages/cart_page.dart';
 import '../../../../shop/presentation/cubits/catalog_cubit/catalog_cubit.dart';
 import '../../../../shop/presentation/pages/menu_page.dart';
-import '../../pages/page2.dart';
 import '../../pages/page3.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
 class MainScreenState extends ChangeNotifier {
   int _currentIndex = 0;
   int _previousIndex = 0;
-  List<Widget> pages = [ /*const Page1()*/ MenuPage(), const Page2(), const Page3()];
+  List<Widget> pages = [ /*const Page1()*/ MenuPage(), const CartPage(), const Page3()];
 
   int get currentIndex => _currentIndex;
 
