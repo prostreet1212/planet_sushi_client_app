@@ -44,6 +44,7 @@ class _CartCounterState extends State<CartCounter> {
                   style: IconButton.styleFrom(
                     padding: EdgeInsets.zero,
                     fixedSize: const Size(40, 40),
+
                     // Forces exact width and height
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     shape: RoundedRectangleBorder(

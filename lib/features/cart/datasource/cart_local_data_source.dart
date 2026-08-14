@@ -45,7 +45,7 @@ class CartLocalDataSource {
   }
 
 
-  void insertCartItem(String userId, Product product)async{
+  Future<void> insertCartItem(String userId, Product product)async{
     const uuid = Uuid();
     final String id = uuid.v7();
     try{
@@ -55,8 +55,8 @@ class CartLocalDataSource {
     }
   }
   
-  void updateCartItem(CartItem cart,int count)async{
-    await _db.update(_db.cartItems)..where((tbl)=>tbl.id.equals(cart.id))..write(CartItemsCompanion(quantity: Value(count)));
+  Future<void> updateCartItem(CartItem cart,int count)async{
+    _db.update(_db.cartItems)..where((tbl)=>tbl.id.equals(cart.id))..write(CartItemsCompanion(quantity: Value(count)));
 
     // await (update(todoItems)
     //   ..where((tbl) => tbl.id.equals(1)))
@@ -66,7 +66,7 @@ class CartLocalDataSource {
     
   }
 
-  void deleteCartItem(CartItem cart){
+  Future<void> deleteCartItem(CartItem cart)async{
     _db.delete(_db.cartItems)..where((tbl)=>tbl.id.equals(cart.id))..go();
   }
 

@@ -19,9 +19,9 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<CartCubit>().items.contains(product);
+    //bool isInCart=false;
     return InkWell(
-      onTap: ()async{
+      onTap: () async {
         /*
         if(di.sl<Supabase>().client.auth.currentUser!=null){
           var id=di.sl<Supabase>().client.auth.currentUser?.id;
@@ -29,17 +29,15 @@ class ProductCard extends StatelessWidget {
         }else{
           print('пользователя нетю');
         }*/
-        // var id=di.sl<Supabase>().client.auth.currentUser?.id;
-        // di.sl<CartLocalDataSource>().insertCartItem(id!, product);
+        var id = di.sl<Supabase>().client.auth.currentUser?.id;
+        //di.sl<CartLocalDataSource>().insertCartItem(id!, product);
         //di.sl<CartRemoteDataSource>().insertCart(id!, product.id);
-
-
+        await context.read<CartCubit>().insertCart(id!, product);
 
         // List<CartItem> a=await di.sl<CartLocalDataSource>().getCartItems();
         // a.map((e){
         //   print(e.product!.name);
         // });
-
       },
       child: Card(
         //color: Colors.red,
@@ -56,18 +54,20 @@ class ProductCard extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(12),
+                      ),
                       color: Colors.grey.withValues(alpha: 0.3),
                     ),
-                      //color:
+                    //color:
                   ),
                   ClipRRect(
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(12),
                     ),
-      
+
                     child: CachedNetworkImage(
-                        imageUrl: product.imageUrl ?? '',
+                      imageUrl: product.imageUrl ?? '',
                       //width: double.infinity,
                       //fit:BoxFit.fitWidth,
                       placeholderFadeInDuration: Duration(milliseconds: 0),
@@ -77,9 +77,12 @@ class ProductCard extends StatelessWidget {
                         width: 100,
                         height: 100,
                         color: Colors.grey[200],
-                        child: const Icon(Icons.broken_image, color: Colors.grey),
+                        child: const Icon(
+                          Icons.broken_image,
+                          color: Colors.grey,
+                        ),
                       ),
-                    )
+                    ),
                     /*Image.network(
                       product.imageUrl ?? '',
                       width: double.infinity,
@@ -90,7 +93,7 @@ class ProductCard extends StatelessWidget {
                           const Icon(Icons.image, size: 60),
                     ),*/
                   ),
-                   Positioned(
+                  Positioned(
                     top: -1,
                     right: -1,
                     child: SizedBox(
@@ -103,16 +106,57 @@ class ProductCard extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.zero,
                           shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(topRight: Radius.circular(12),bottomLeft: Radius.circular(12),topLeft:Radius.zero,bottomRight: Radius.zero),
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(12),
+                              bottomLeft: Radius.circular(12),
+                              topLeft: Radius.zero,
+                              bottomRight: Radius.zero,
+                            ),
                           ),
                           backgroundColor: Colors.white.withValues(alpha: 0.3),
                           //backgroundColor: Colors.yellow,
                           elevation: 0,
                         ),
-                        child: const Icon(
-                          Icons.favorite_border,
-                          size: 20,
-                          color: Colors.black54,
+                        child: BlocBuilder<CartCubit, CartState>(
+                          buildWhen: (prev, next) {
+                            if (next is CartLoading) return false; // не мигать при загрузке
+
+                            final isInCartNow = next is CartLoaded &&
+                                next.items.any((item) => item.productId == product.id);
+                            final isInCartWas = prev is CartLoaded &&
+                                prev.items.any((item) => item.productId == product.id);
+
+                            return isInCartNow != isInCartWas;
+                            /*if (next is! CartLoaded) return false;
+                            final isInCartNow = next.items.any(
+                              (item) => item.productId == product.id,
+                            );
+                            final isInCartWas =
+                                prev is CartLoaded &&
+                                prev.items.any(
+                                  (item) => item.productId == product.id,
+                                );
+                            debugPrint(
+                              'isInCartNow ${isInCartNow != isInCartWas}',
+                            );
+                            return isInCartNow != isInCartWas;*/
+                          },
+
+                          builder: (context, cartState) {
+                            print('значок ${product.name}');
+                            bool isInCart =
+                                cartState is CartLoaded &&
+                                cartState.items.any(
+                                  (item) => item.productId == product.id,
+                                );
+                            return Icon(
+                              isInCart
+                                  ? Icons.shopping_cart_rounded
+                                  : Icons.shopping_cart_outlined,
+                              size: 20,
+                              color: Colors.black54,
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -120,7 +164,7 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
             ),
-      
+
             SizedBox(
               height: 79.7,
               child: Padding(

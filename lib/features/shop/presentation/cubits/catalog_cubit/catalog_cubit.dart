@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' as fnd;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/shop/models/category.dart';
 
+import '../../../../../core/error/failure.dart';
 import '../../../datasource/shop_sync_service.dart';
 
 import 'catalog_state.dart';
@@ -67,10 +68,10 @@ class CatalogCubit extends Cubit<CatalogState> {
     // 2. Синхронизируем с Supabase и обновляем UI
     final remoteData = await _syncService.syncFromRemote();
     remoteData.fold(
-          (error) {
+          (Failure fail) {
         // Если локальных данных не было — показываем ошибку
         if (localData.isRight() && (localData as Right).value.isEmpty) {
-          emit(CatalogError(message: error));
+          emit(CatalogError(message: _mapFailureToMessage(fail)));
         }
       },
           (catalogList) {
@@ -92,5 +93,15 @@ class CatalogCubit extends Cubit<CatalogState> {
     );
   }
 
+  String _mapFailureToMessage(Failure failure) {
+    switch (failure.runtimeType) {
+      case ServerFailure:
+        return (failure as CacheFailure).error;
+      case CacheFailure:
+        return (failure as ServerFailure).error;;
+      default:
+        return 'Unexpected Error';
+    }
+  }
 
 }

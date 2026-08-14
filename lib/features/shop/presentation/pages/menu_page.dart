@@ -30,6 +30,7 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('Строитель менюпэйдж');
     return Padding(
         padding: EdgeInsetsGeometry.all(8),
         child: BlocConsumer<CatalogCubit,CatalogState>(

@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/error/exception.dart';
 import '../models/category.dart';
 
 
@@ -14,7 +15,7 @@ class ShopRemoteDataSource {
   ShopRemoteDataSource({required this.supabase});
 
   // Получаем категории вместе с их товарами одним запросом
-  Future<Either<String,List<Category>>> getCategoriesWithProducts() async {
+  Future<List<Category>> getCategoriesWithProducts() async {
     try {
       final response = await supabase.client
           .from('categories')
@@ -39,17 +40,19 @@ class ShopRemoteDataSource {
         referencedTable: 'products',
       ); // Сортировка товаров внутри
 
-      if (response.isEmpty) return Right([]);
+      if (response.isEmpty) return [];
       List<Category> categotyList=response.map((json) {
         Category category=Category.fromJson(json);
         return category;
       }).toList();
 
-      return Right(categotyList);
-    } catch (e) {
+      return categotyList;
+    } catch ( e) {
       String error='Ошибка загрузки меню: $e';
       print(error);
-      return Left(error);
+      throw ServerException(error: error.toString());
+      //return Left(error);
+
     }
   }
 

@@ -21,6 +21,8 @@ class CartItem extends Equatable {
 
   double get totalPrice => product!.price * quantity;
 
+  int get totalWeight=>product!.weight!*quantity;
+
   /// Сериализация для локальной БД и Supabase
   Map<String, dynamic> toJson() => {
     'id': id,

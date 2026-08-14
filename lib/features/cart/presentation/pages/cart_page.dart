@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:customizable_counter/customizable_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/cart/datasource/cart_local_data_source.dart';
@@ -20,6 +19,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
+    debugPrint('Строитель картпэйдж');
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: BlocBuilder<CartCubit, CartState>(
@@ -37,50 +37,69 @@ class _CartPageState extends State<CartPage> {
                 return SizedBox(
                   height: 150,
                   child: Card(
+                    // color: Colors.red,
                     child: Row(
                       //mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(5),
-                          ),
-
-                          child: CachedNetworkImage(
-                            imageUrl: cartList[index].product!.imageUrl ?? '',
-                            //width: double.infinity,
-                            //fit:BoxFit.fitWidth,
-                            placeholderFadeInDuration: Duration(
-                              milliseconds: 0,
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4),
+                              topRight: Radius.zero,
+                              bottomRight: Radius.zero,
+                              bottomLeft: Radius.circular(4),
                             ),
-                            fadeInDuration: Duration(milliseconds: 0),
-                            fadeOutDuration: Duration(milliseconds: 0),
-                            errorWidget: (context, url, error) => Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.grey[200],
-                              child: const Icon(
-                                Icons.broken_image,
-                                color: Colors.grey,
+
+                            color: Colors.grey.withValues(alpha: 0.3),
+                            // color: Colors.yellow
+                          ),
+                          height: double.infinity,
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4),
+                              topRight: Radius.zero,
+                              bottomRight: Radius.zero,
+                              bottomLeft: Radius.circular(4),
+                            ),
+
+                            child: CachedNetworkImage(
+                              imageUrl: cartList[index].product!.imageUrl ?? '',
+                              width: 106.5,
+                              //fit:BoxFit.fitWidth,
+                              placeholderFadeInDuration: Duration(
+                                milliseconds: 0,
+                              ),
+                              fadeInDuration: Duration(milliseconds: 0),
+                              fadeOutDuration: Duration(milliseconds: 0),
+                              errorWidget: (context, url, error) => Container(
+                                width: 100,
+                                height: 100,
+                                color: Colors.grey[200],
+                                child: const Icon(
+                                  Icons.broken_image,
+                                  color: Colors.grey,
+                                ),
                               ),
                             ),
+                            /*Image.network(
+                            product.imageUrl ?? '',
+                            width: double.infinity,
+                            // height:double.infinity,
+                            fit: BoxFit.fitWidth, //contain
+                            //alignment: Alignment.topCenter,
+                            errorBuilder: (_, __, ___) =>
+                                const Icon(Icons.image, size: 60),
+                          ),*/
                           ),
-                          /*Image.network(
-                          product.imageUrl ?? '',
-                          width: double.infinity,
-                          // height:double.infinity,
-                          fit: BoxFit.fitWidth, //contain
-                          //alignment: Alignment.topCenter,
-                          errorBuilder: (_, __, ___) =>
-                              const Icon(Icons.image, size: 60),
-                        ),*/
                         ),
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
+                              //mainAxisSize: MainAxisSize.min,
                               children: [
                                 Flexible(
                                   child: Text(
@@ -96,70 +115,74 @@ class _CartPageState extends State<CartPage> {
                                 const SizedBox(height: 10),
 
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     CartCounter(
                                       counter: cart.quantity,
                                       onCounterChange: (newCounter) {
-                                        di
-                                            .sl<CartLocalDataSource>()
-                                            .updateCartItem(
-                                              cartList[index],
+                                        context
+                                            .read<CartCubit>()
+                                            .updateCartQuantity(
+                                              cart,
                                               newCounter,
                                             );
                                       },
                                     ),
                                     ElevatedButton(
-                                      onPressed: () {
-                                        di.sl<CartLocalDataSource>().deleteCartItem(cart);
+                                      onPressed: () async{
+                                         await context.read<CartCubit>().deleteCart(
+                                          cart,
+                                        );
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.white,
                                         minimumSize: Size.zero,
-                                          //tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                        fixedSize: Size(40, 48),
+                                        //tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        fixedSize: Size(32, 40),
                                         iconColor: Colors.black,
                                         elevation: 0,
+                                        overlayColor: Colors.grey[800],
                                         padding: EdgeInsets.all(0),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8.0), // Скругление углов (по желанию)
-                                          side: const BorderSide(color: Colors.blue, width: 2.0), // Цвет и толщина рамки
+                                          borderRadius: BorderRadius.circular(
+                                            8.0,
+                                          ),
+                                          // Скругление углов (по желанию)
+                                          side: const BorderSide(
+                                            color: Colors.blue,
+                                            width: 2.0,
+                                          ), // Цвет и толщина рамки
                                         ),
                                       ),
-                                      child: Icon(Icons.delete_forever_outlined)
-                                    )
+
+                                      child: Icon(
+                                        Icons.delete_forever_outlined,
+                                        size: 26,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: 104,
+                                      child: Center(
+                                        child: Text(
+                                          '${cart.totalPrice.toString()}0 ₽',
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      cart.product!.weight != null
+                                          ? '${cart.totalWeight} гр.'
+                                          : '',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
                                   ],
                                 ),
 
-                                // CustomizableCounter(
-                                //   borderColor: Colors.black,
-                                //   borderWidth: 1,
-                                //   borderRadius: 100,
-                                //   //backgroundColor: Colors.amberAccent,
-                                //   showButtonText: false,
-                                //   //buttonText: "Add Item",
-                                //   textColor: Colors.black,
-                                //   textSize: 22,
-                                //
-                                //   count: 0,
-                                //   step: 1,
-                                //   minCount: 0,
-                                //   maxCount: 10,
-                                //   incrementIcon: const Icon(
-                                //       Icons.add,
-                                //       color: Colors.black,
-                                //     ),
-                                //
-                                //   decrementIcon: const Icon(
-                                //     Icons.remove,
-                                //     color: Colors.black,
-                                //   ),
-                                //   onCountChange: (count) {},
-                                //   onIncrement: (count) {
-                                //
-                                //   },
-                                //   onDecrement: (count) {},
-                                // ),
                               ],
                             ),
                           ),

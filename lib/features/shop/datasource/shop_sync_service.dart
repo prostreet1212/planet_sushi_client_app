@@ -1,6 +1,8 @@
 // shop_sync_service.dart
 
 import 'package:dartz/dartz.dart';
+import 'package:planet_sushi_client_app/core/error/exception.dart';
+import 'package:planet_sushi_client_app/core/error/failure.dart';
 import 'package:planet_sushi_client_app/features/shop/datasource/shop_local_data_source.dart';
 
 import '../models/category.dart';
@@ -8,13 +10,13 @@ import 'shop_remote_data_source.dart';
 
 class ShopSyncService {
   final ShopRemoteDataSource _remoteDataSource;
-  final ShopLocalDataSource _localDao;
+  final ShopLocalDataSource _localDataSource;
 
   ShopSyncService({
     required ShopRemoteDataSource remoteDataSource,
     required ShopLocalDataSource localDao,
   }) : _remoteDataSource = remoteDataSource,
-       _localDao = localDao;
+       _localDataSource = localDao;
 
   /// Стратегия: сначала локальные данные, потом фоновая синхронизация
   /* Future<Either<String, List<Category>>> getCatalog() async {
@@ -51,20 +53,31 @@ class ShopSyncService {
 
   /// Только локальные данные (быстро)
   Future<Either<String, List<Category>>> getLocalCatalog() async {
-    final hasLocal = await _localDao.hasCachedData();
+    final hasLocal = await _localDataSource.hasCachedData();
     if (hasLocal) {
-      final localData = await _localDao.getCategoriesWithProducts();
+      final localData = await _localDataSource.getCategoriesWithProducts();
       return Right(localData);
     }
-    return Right([]);
+    return const Right([]);
   }
 
   /// Синхронизация с Supabase → сохранение локально → возврат свежих данных
-  Future<Either<String, List<Category>>> syncFromRemote() async {
-    final remote = await _remoteDataSource.getCategoriesWithProducts();
+  Future<Either<Failure, List<Category>>> syncFromRemote() async {
+    /*final remote = await _remoteDataSource.getCategoriesWithProducts();
     return remote.fold((error) => Left(error), (data) async {
-      await _localDao.saveCategoriesWithProducts(data);
+      await _localDataSource.saveCategoriesWithProducts(data);
       return Right(data);
-    });
+    });*/
+    try{
+      final remote = await _remoteDataSource.getCategoriesWithProducts();
+      try{
+        await _localDataSource.saveCategoriesWithProducts(remote);
+        return Right(remote);
+      }on CacheException catch(e){
+        return Left(CacheFailure(error: e.error));
+      }
+    }on ServerException catch(e){
+      return Left(ServerFailure(error: e.error));
+    }
   }
 }
