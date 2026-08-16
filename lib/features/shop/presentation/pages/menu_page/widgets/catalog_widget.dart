@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:planet_sushi_client_app/features/shop/presentation/pages/widgets/product_card.dart';
-
-import '../../../models/category.dart';
-import '../../../models/product.dart';
+import 'package:planet_sushi_client_app/features/shop/presentation/pages/menu_page/widgets/product_card.dart';
+import '../../../../models/category.dart';
+import '../../../../models/product.dart';
 
 class CatalogWidget extends StatelessWidget {
   final List<Category> categoryList;

@@ -9,6 +9,7 @@ import 'package:planet_sushi_client_app/features/cart/models/cart_item.dart';
 import 'package:planet_sushi_client_app/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:planet_sushi_client_app/features/cart/presentation/cubits/cart_state.dart';
 import 'package:planet_sushi_client_app/features/shop/models/product.dart';
+import 'package:planet_sushi_client_app/features/shop/presentation/pages/product_detail_page/product_detail_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
@@ -29,10 +30,13 @@ class ProductCard extends StatelessWidget {
         }else{
           print('пользователя нетю');
         }*/
-        var id = di.sl<Supabase>().client.auth.currentUser?.id;
+
         //di.sl<CartLocalDataSource>().insertCartItem(id!, product);
         //di.sl<CartRemoteDataSource>().insertCart(id!, product.id);
-        await context.read<CartCubit>().insertCart(id!, product);
+
+       /* var id = di.sl<Supabase>().client.auth.currentUser?.id;
+        await context.read<CartCubit>().insertCart(id!, product);*/
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailPage()));
 
         // List<CartItem> a=await di.sl<CartLocalDataSource>().getCartItems();
         // a.map((e){
@@ -177,6 +181,7 @@ class ProductCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Flexible(
+                          //fit: FlexFit.loose,
                           child: Container(
                             /*constraints:  BoxConstraints(
                               minHeight: 38, // Минимальная высота для двух строк

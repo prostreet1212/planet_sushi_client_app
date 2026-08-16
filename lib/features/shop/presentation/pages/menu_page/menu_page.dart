@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:planet_sushi_client_app/features/shop/presentation/pages/widgets/catalog_widget.dart';
+import 'package:planet_sushi_client_app/features/shop/presentation/pages/menu_page/widgets/catalog_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
-import '../../models/category.dart';
-import '../cubits/catalog_cubit/catalog_cubit.dart';
-import '../cubits/catalog_cubit/catalog_state.dart';
+import '../../../models/category.dart';
+import '../../cubits/catalog_cubit/catalog_cubit.dart';
+import '../../cubits/catalog_cubit/catalog_state.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});

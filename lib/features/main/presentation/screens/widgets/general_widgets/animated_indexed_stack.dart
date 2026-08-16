@@ -96,14 +96,14 @@ class _AnimatedPageState extends State<_AnimatedPage>
 
     // Страница стала текущей — въезжает со стороны перехода
     if (widget.isCurrent && !oldWidget.isCurrent) {
-      final from = widget.reverse ? const Offset(-1, 0) : const Offset(1, 0);
+      final from = widget.reverse ? const Offset(-0.5, 0) : const Offset(0.5, 0);
       _slide = _buildSlide(from, Offset.zero);
       _controller.forward(from: 0.0);
       return;
     }
     // Страница стала «предыдущей» — уезжает в противоположную сторону
     if (widget.isPrevious && !oldWidget.isPrevious && !widget.isCurrent) {
-      final to = widget.reverse ? const Offset(1, 0) : const Offset(-1, 0);
+      final to = widget.reverse ? const Offset(0.5, 0) : const Offset(0.5, 0);
       _slide = _buildSlide(Offset.zero, to);
       _controller.forward(from: 0.0);
       return;
