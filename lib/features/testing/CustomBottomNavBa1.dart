@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 
 import '../cart/presentation/pages/cart_page.dart';
-import '../main/presentation/pages/page3.dart';
+import '../profile/presentation/pages/profile_page.dart';
 
 class CustomBottomNavBar1 extends StatefulWidget {
   const CustomBottomNavBar1({super.key});
@@ -18,7 +18,7 @@ class _CustomBottomNavBar1State extends State<CustomBottomNavBar1> {
   final List<Widget> _pages = [
     //const Page1(),
     const CartPage(),
-    const Page3(),
+    const ProfilePage(),
   ];
 
   @override

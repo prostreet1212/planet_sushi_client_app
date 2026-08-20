@@ -1,3 +1,5 @@
+
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
@@ -6,7 +8,7 @@ import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_s
 import '../../../../../injection_container.dart' as di;
 import '../../cubits/otp_cubit/otp_cubit.dart';
 
-
+@RoutePage()
 class OtpScreen extends StatelessWidget {
   const OtpScreen({super.key,/* required this.phone*/});
 

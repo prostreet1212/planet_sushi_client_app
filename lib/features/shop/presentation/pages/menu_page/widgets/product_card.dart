@@ -1,8 +1,10 @@
 import 'dart:ui';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planet_sushi_client_app/core/routers/app_router.dart';
 import 'package:planet_sushi_client_app/features/cart/datasource/cart_local_data_source.dart';
 import 'package:planet_sushi_client_app/features/cart/datasource/cart_remote_data_source.dart';
 import 'package:planet_sushi_client_app/features/cart/models/cart_item.dart';
@@ -34,9 +36,10 @@ class ProductCard extends StatelessWidget {
         //di.sl<CartLocalDataSource>().insertCartItem(id!, product);
         //di.sl<CartRemoteDataSource>().insertCart(id!, product.id);
 
-       /* var id = di.sl<Supabase>().client.auth.currentUser?.id;
+        /* var id = di.sl<Supabase>().client.auth.currentUser?.id;
         await context.read<CartCubit>().insertCart(id!, product);*/
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailPage()));
+        //Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailPage()));
+        context.router.push(const ProductDetailRoute());
 
         // List<CartItem> a=await di.sl<CartLocalDataSource>().getCartItems();
         // a.map((e){
@@ -123,12 +126,19 @@ class ProductCard extends StatelessWidget {
                         ),
                         child: BlocBuilder<CartCubit, CartState>(
                           buildWhen: (prev, next) {
-                            if (next is CartLoading) return false; // не мигать при загрузке
+                            if (next is CartLoading)
+                              return false; // не мигать при загрузке
 
-                            final isInCartNow = next is CartLoaded &&
-                                next.items.any((item) => item.productId == product.id);
-                            final isInCartWas = prev is CartLoaded &&
-                                prev.items.any((item) => item.productId == product.id);
+                            final isInCartNow =
+                                next is CartLoaded &&
+                                next.items.any(
+                                  (item) => item.productId == product.id,
+                                );
+                            final isInCartWas =
+                                prev is CartLoaded &&
+                                prev.items.any(
+                                  (item) => item.productId == product.id,
+                                );
 
                             return isInCartNow != isInCartWas;
                             /*if (next is! CartLoaded) return false;

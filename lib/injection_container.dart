@@ -1,6 +1,7 @@
 
 
 import 'package:get_it/get_it.dart';
+import 'package:planet_sushi_client_app/core/routers/app_router.dart';
 import 'package:planet_sushi_client_app/features/auth/data/datasource/auth_data_source.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/cubits/add_user_cubit/add_user_cubit.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/cubits/otp_cubit/otp_cubit.dart';
@@ -11,6 +12,7 @@ import 'package:planet_sushi_client_app/features/cart/datasource/cart_local_data
 import 'package:planet_sushi_client_app/features/cart/datasource/cart_remote_data_source.dart';
 import 'package:planet_sushi_client_app/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/providers/main_screen_state.dart';
+import 'package:planet_sushi_client_app/features/profile/datasource/profile_remote_data_source.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'features/auth/presentation/cubits/auth_cibit/auth_cubit.dart';
@@ -43,11 +45,14 @@ Future<void> init() async{
   sl.registerFactory(() => LoginState());
   sl.registerLazySingleton(() => NameState());
   sl.registerLazySingleton(() => OtpPhoneState());
-  sl.registerLazySingleton(() => MainScreenState());
+  //sl.registerLazySingleton(() => MainScreenState());
 
   //external
   final supabase =  Supabase.instance;
   sl.registerLazySingleton<Supabase>(() => supabase);
+  sl.registerLazySingleton(()=>AppRouter(
+
+  ));
 
   // database
   sl.registerLazySingleton<AppDatabase>(() => AppDatabase());
@@ -58,6 +63,10 @@ Future<void> init() async{
   ));
   sl.registerLazySingleton(() => CartLocalDataSource(db: sl()));
   sl.registerLazySingleton(() => CartRemoteDataSource(supabase: sl()));
+
+  sl.registerLazySingleton(()=>ProfileRemoteDataSource(supabase: sl()));
+
+
 
 
 

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 import 'package:provider/provider.dart';
 
+@RoutePage()
 class NameScreen extends StatefulWidget {
   const NameScreen({super.key,});
 

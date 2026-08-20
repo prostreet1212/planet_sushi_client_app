@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
 import '../../models/cart_item.dart';
 
+@RoutePage()
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
 

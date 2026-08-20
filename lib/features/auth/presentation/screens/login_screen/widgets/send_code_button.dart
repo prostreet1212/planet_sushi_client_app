@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planet_sushi_client_app/core/routers/app_router.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/otp_screen.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
 
@@ -66,10 +68,10 @@ class SendCodeButton extends StatelessWidget {
                 listener: (context,state){
                   if(state is AuthSuccess){
                     String phoneNumber='+7${loginState.phoneMaskFormatter.getUnmaskedText()}';
-
-                    //Navigator.push(context, MaterialPageRoute(builder: (context)=>OtpScreen(phone: phoneNumber,)));
                      di.sl<OtpPhoneState>().setPhone(phoneNumber);
-                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OtpScreen()), (route) => false, );
+                    //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OtpScreen()), (route) => false, );
+                  //context.router.replaceAll([const OtpRoute()]);
+                  context.router.push(const OtpRoute());
                   }else if(state is AuthError){
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Ошибка ${state.message}'))

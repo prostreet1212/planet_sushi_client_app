@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/providers/name_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/main_screen.dart';
 
+import '../../../../../../core/routers/app_router.dart';
 import '../../../../../../injection_container.dart' as di;
 import '../../../../data/models/user_model.dart';
 import '../../../cubits/add_user_cubit/add_user_cubit.dart';
@@ -27,7 +29,9 @@ class AddUserButton extends StatelessWidget {
           child: BlocListener<AddUserCubit,AddUserState>(
             listener: (context,state){
               if (state is AddUserSuccess) {
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const MainScreen()), (route)=>false);
+                //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const MainScreen()), (route)=>false);
+               // context.router.replaceAll([const MainRoute()]);
+                context.router.popUntilRoot();
               }else if(state is AddUserError){
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Ошибка ${state.message}'))

@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:planet_sushi_client_app/core/routers/app_router.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/name_screen.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
 
@@ -49,19 +51,22 @@ class _OtpFormFieldState extends State<OtpFormField> {
           setState(() {
             _readOnly = false;
           });
-          Navigator.push(
+         /* Navigator.push(
             context,
             MaterialPageRoute(builder: (c) => const MainScreen()),
-          );
+          );*/
+          //context.router.push(const MainRoute());
+          context.router.popUntilRoot();
         }else if(otpState is OtpNext){
           setState(() {
             _readOnly = false;
           });
           //di.sl<OtpPhoneState>().setPhone(widget.phone);
-          Navigator.push(
+          /*Navigator.push(
             context,
             MaterialPageRoute(builder: (c) =>const NameScreen()),
-          );
+          );*/
+          context.router.push(const NameRoute());
         }
       },
       child: SizedBox(

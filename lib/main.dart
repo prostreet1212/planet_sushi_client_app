@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planet_sushi_client_app/core/routers/app_router.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/login_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
       //Provider(create: (context)=>di.sl<AuthDataSource>())
     ],
       child: );*/
-      MaterialApp(
+      MaterialApp.router(
         title: 'Flutter Demo',
         theme: ThemeData(
           // Настраиваем цветовую схему выделения
@@ -44,7 +45,8 @@ class MyApp extends StatelessWidget {
           fontFamily: 'RobotoCondensed',
         ),
         debugShowCheckedModeBanner: false,
-        home:const MainScreen(),
+        routerConfig: di.sl<AppRouter>().config(),
+        //home:const MainScreen(),
         //home: const LoginScreen(),
         //home: const OtpScreen(phone: '+79532602744'),
         //home: const NameScreen(),

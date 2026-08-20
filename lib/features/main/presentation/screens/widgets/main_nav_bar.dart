@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/providers/main_screen_state.dart';
@@ -35,23 +36,52 @@ class MainNavBar extends StatelessWidget {
           Center(
             child: Padding(
               padding: const EdgeInsets.only(top: 30),
-              child: Selector<MainScreenState, bool>(
+              child:Builder(
+                  builder: (context) {
+                    final tabsRouter = AutoTabsRouter.of(context);
+                    return ListenableBuilder(
+                        listenable: tabsRouter,
+                        builder: (context,  child) {
+                          final isActive = tabsRouter.activeIndex == 1;
+                          return Text(
+                            'Корзина',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isActive ? Colors.white : Colors.black,
+                            ),
+                          );
+                        }
+                    );
+                  }
+              ),
+              /*Selector<MainScreenState, bool>(
                 selector: (context, state) => state.currentIndex == 1,
                 builder: (BuildContext context, bool isActive, Widget? child) {
-                  return Text(
-                    'Корзина',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: isActive ? Colors.white : Colors.black,
-                    ),
+                  return Builder(
+                    builder: (context) {
+                      final tabsRouter = AutoTabsRouter.of(context);
+                      return ListenableBuilder(
+                        listenable: tabsRouter,
+                        builder: (context,  child) {
+                          final isActive = tabsRouter.activeIndex == 1;
+                          return Text(
+                            'Корзина',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isActive ? Colors.white : Colors.black,
+                            ),
+                          );
+                        }
+                      );
+                    }
                   );
                 },
-              ),
+              ),*/
             ),
           ),
           const MainNavItem(
-            icon: Icons.one_k_plus,
-            label: 'Отзывы',
+            icon: Icons.person,
+            label: 'Профиль',
             tabIndex: 2,
           ),
 

@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/providers/main_screen_state.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/general_widgets/animated_indexed_stack1.dart';
@@ -30,7 +31,7 @@ class MainBody extends StatelessWidget {
                 child: child,
               );
             },
-            // child: mainScreenState.pages[mainScreenState.currentIndex],
+            // child: mainScreenState.pages[mainScreenState.currentIndex],было изначально
             child: IndexedStack(
               key: ValueKey(data.currentIndex),
               index: mainScreenState.currentIndex,
@@ -40,15 +41,16 @@ class MainBody extends StatelessWidget {
         }
     );
   }*/
-
-    final state = context.watch<MainScreenState>();
+return Container();
+  /*  final state = context.watch<MainScreenState>();
     return AnimatedIndexedStack1(
       index: state.currentIndex,
       children: state.pages,
       duration: Duration(milliseconds: 500),
       curve: Easing.legacy,
-    );
+    );*/
   }
+
 }
 
 //пробники
@@ -62,17 +64,3 @@ class MainBody extends StatelessWidget {
 //   duration: const Duration(milliseconds: 5000),
 // );
 
-/* return EasyAnimatedIndexedStack(
-          index: mainScreenState.currentIndex,
-          duration: const Duration(milliseconds: 5000),
-          /*animationBuilder: (context, animation, child) {
-            return Opacity(
-              opacity: animation.value,
-              child: Transform.translate(
-                offset: Offset((1 - animation.value) * 10,0 ),
-                child: child,
-              ),
-            );
-          },*/
-          children:  mainScreenState.pages,
-        );*/
