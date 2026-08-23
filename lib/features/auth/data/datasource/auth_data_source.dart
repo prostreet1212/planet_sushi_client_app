@@ -70,31 +70,5 @@ class AuthDataSource {
     }
   }
 
-  /// Добавляет запись о пользователе в таблицу `users`.
-  ///
-  /// Принимает [user] — модель [UserModel] с полями phone, name и опциональными
-  /// данными (email, аватар, бонусные баллы и т.д.).
-  /// Поле `id` привязывается к текущему авторизованному пользователю Supabase,
-  /// если сессия активна.
-  Future<Either<String, Null>> createUser(UserModel user) async {
-    try {
-      String? userId = supabase.client.auth.currentUser?.id;
-      if (userId == null) {
-        return Left('Ошибка при регистрации');
-      } else {
-        Map<String, dynamic> data = (user.copyWith(id: userId)).toJson();
-        try{
-          await supabase.client.from('users').insert(data);
-          return const Right(null);
-        }catch(e){
-          return  Left(e.toString());
-        }
 
-      }
-    } catch (e) {
-      String error = e.toString();
-      debugPrint(error);
-      return Left(error);
-    }
-  }
 }

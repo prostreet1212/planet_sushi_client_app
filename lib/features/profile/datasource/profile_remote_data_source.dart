@@ -1,4 +1,6 @@
 
+import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planet_sushi_client_app/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -29,4 +31,18 @@ class ProfileRemoteDataSource {
 
     
   }
+
+  Future<void> createProfile(UserModel user) async {
+    try {
+     // String? userId = supabase.client.auth.currentUser?.id;
+        Map<String, dynamic> data = /*(user.copyWith(id: userId))*/user.toJson();
+          await supabase.client.from('users').insert(data);
+
+    } catch (e) {
+      String error = e.toString();
+      debugPrint(error);
+    }
+  }
+
+
 }

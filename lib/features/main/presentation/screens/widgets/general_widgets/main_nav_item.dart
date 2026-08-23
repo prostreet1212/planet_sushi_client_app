@@ -35,6 +35,7 @@ class MainNavItem extends StatelessWidget {
             if (tabIndex == 2 && !isAuthenticated) {
               // Не авторизован → открываем логин, вкладку не переключаем
               context.router.push(const LoginRoute());
+              //tabsRouter.setActiveIndex(tabIndex);
             }else{
               tabsRouter.setActiveIndex(tabIndex);
             }

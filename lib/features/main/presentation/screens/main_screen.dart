@@ -6,6 +6,7 @@ import 'package:planet_sushi_client_app/core/routers/app_router.dart';
 import 'package:planet_sushi_client_app/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/providers/main_screen_state.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/general_widgets/animated_indexed_stack1.dart';
+import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/general_widgets/fixed_center_docked_fab_location.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_body.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_nav_bar.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_nav_fab.dart';
@@ -53,6 +54,7 @@ class MainScreen extends StatelessWidget {
           builder:(context, children, tabsRouter) {
             return SafeArea(
               child: Scaffold(
+                resizeToAvoidBottomInset: false,
                 extendBody: true,
                 appBar: AppBar(title: const Text('Планета суши'),
                   leading:AutoLeadingButton(
@@ -68,7 +70,8 @@ class MainScreen extends StatelessWidget {
                   curve: Easing.legacy,
                 ),
                 floatingActionButtonLocation: FloatingActionButtonLocation
-                    .centerDocked,
+                   .centerDocked,
+                //floatingActionButtonLocation: const FixedCenterDockedFabLocation(),
                 floatingActionButton: const MainNavFab(),
                 bottomNavigationBar: const MainNavBar(),
               ),

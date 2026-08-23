@@ -1,9 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/cart/datasource/cart_local_data_source.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../shop/models/product.dart';
 import '../../models/cart_item.dart';
 import 'cart_state.dart';
+import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
 class CartCubit extends Cubit<CartState> {
   final CartLocalDataSource _cartLocalDataSource;
@@ -33,6 +35,8 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<void> loadCart() async {
+    String? a=di.sl<Supabase>().client.auth.currentUser?.id??'a';
+    print('пользователь $a');
     _items = await _cartLocalDataSource.getCartItems();
     if (_items.isEmpty) {
       emit(CartEmpty());

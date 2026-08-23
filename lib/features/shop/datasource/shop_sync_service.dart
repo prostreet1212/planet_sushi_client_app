@@ -14,9 +14,9 @@ class ShopSyncService {
 
   ShopSyncService({
     required ShopRemoteDataSource remoteDataSource,
-    required ShopLocalDataSource localDao,
+    required ShopLocalDataSource localDataSource,
   }) : _remoteDataSource = remoteDataSource,
-       _localDataSource = localDao;
+       _localDataSource = localDataSource;
 
   /// Стратегия: сначала локальные данные, потом фоновая синхронизация
   /* Future<Either<String, List<Category>>> getCatalog() async {
