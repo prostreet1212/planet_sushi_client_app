@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
+import 'package:drift/native.dart';
 import 'package:planet_sushi_client_app/core/error/exception.dart';
 import 'package:planet_sushi_client_app/features/auth/data/models/user_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../database/database.dart';
@@ -41,8 +43,12 @@ class ProfileLocalDataSource {
               avatar_url: Value(user.avatarUrl),
             ),
           );
-    } catch (e) {
+    }on SqliteException catch (e) {
+      throw CacheException(error: e.message);
+
+  } catch (e) {
       print('local db error:$e');
+      throw CacheException(error: e.toString());
     }
   }
 

@@ -9,8 +9,7 @@ import 'package:planet_sushi_client_app/features/auth/presentation/screens/login
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/widgets/send_code_button.dart';
 import 'package:provider/provider.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
-
-import '../../cubits/auth_cibit/auth_cubit.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
 
 @RoutePage()
 class LoginScreen extends StatefulWidget {

@@ -1,17 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/auth/data/models/user_model.dart';
 import 'package:planet_sushi_client_app/features/profile/datasource/profile_remote_data_source.dart';
-import 'package:planet_sushi_client_app/features/profile/datasource/profile_sync_service.dart';
+import 'package:planet_sushi_client_app/features/profile/datasource/profile_repository.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/datasource/auth_data_source.dart';
 import 'add_user_state.dart';
 
 class AddUserCubit extends Cubit<AddUserState>{
-  //final ProfileRemoteDataSource _profileRemoteDataSource;
-  final ProfileSyncService _profileSyncService;
-  AddUserCubit({required this._profileSyncService}) : super(AddUserInitial());
+  //final PProfileRepositoryurce _profileRemoteDataSource;
+  final ProfileRepository _profileRepository;
+  AddUserCubit({required this._profileRepository}) : super(AddUserInitial());
 
   void addUser(UserModel user) async{
-    final addUserData = await _profileSyncService.insertProfile(user);
+    final addUserData = await _profileRepository.insertProfile(user);
     addUserData.fold(
             (error) {
               emit(AddUserError(message: error));
@@ -20,4 +21,6 @@ class AddUserCubit extends Cubit<AddUserState>{
               emit(AddUserSuccess());
     });
   }
+
+
 }

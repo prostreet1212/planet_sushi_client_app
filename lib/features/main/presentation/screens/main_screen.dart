@@ -10,6 +10,7 @@ import 'package:planet_sushi_client_app/features/main/presentation/screens/widge
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_body.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_nav_bar.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_nav_fab.dart';
+import 'package:planet_sushi_client_app/features/profile/presentation/cubits/profile_cubit/profile_cubit.dart';
 import 'package:planet_sushi_client_app/features/shop/presentation/cubits/catalog_cubit/catalog_cubit.dart';
 import 'package:provider/provider.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
@@ -35,6 +36,9 @@ class MainScreen extends StatelessWidget {
           di.sl<CatalogCubit>()
             ..getCatalog(),
         ),
+        BlocProvider<ProfileCubit>(
+          create: (context) => di.sl<ProfileCubit>()..getLProfile(),
+        )
       ],
       child: Theme(
         data: ThemeData(

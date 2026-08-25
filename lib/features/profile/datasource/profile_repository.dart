@@ -1,16 +1,20 @@
 import 'package:dartz/dartz.dart';
+import 'package:planet_sushi_client_app/core/error/exception.dart';
 import 'package:planet_sushi_client_app/features/profile/datasource/profile_local_data_source.dart';
 import 'package:planet_sushi_client_app/features/profile/datasource/profile_remote_data_source.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../auth/data/models/user_model.dart';
 
-class ProfileSyncService {
+
+//рабочий образец с обработкой ошибок
+class ProfileRepository {
   final ProfileRemoteDataSource _profileRemoteDataSource;
   final ProfileLocalDataSource _profileLocalDataSource;
   final Supabase _supabase;
 
-  ProfileSyncService({
+  ProfileRepository({
     required this._profileRemoteDataSource,
     required this._profileLocalDataSource,
     required this._supabase,
@@ -19,6 +23,7 @@ class ProfileSyncService {
 
   Future<Either<String, UserModel>> getProfile() async {
     UserModel? userModel=await _profileLocalDataSource.getProfile();
+    return Right(userModel!);
 
   }
 
@@ -31,12 +36,12 @@ class ProfileSyncService {
       final remote = await _profileRemoteDataSource.createProfile(user);
       try {
         final local = await _profileLocalDataSource.insertProfile(user);
-      } catch (e) {
-        return const Right(null);
+      } on CacheException catch (e) {
+        //если не записалось в локальную бд, не критично
       }
       return const Right(null);
-    } catch (e) {
-      return Left(e.toString());
+    }on ServerException catch (e) {
+      return Left(e.error);
     }
   }
 }

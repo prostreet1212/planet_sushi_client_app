@@ -5,8 +5,9 @@ import 'package:planet_sushi_client_app/core/routers/app_router.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/otp_screen.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
 
-import '../../../cubits/auth_cibit/auth_cubit.dart';
-import '../../../cubits/auth_cibit/auth_state.dart';
+
+import '../../../cubits/auth_cubit/auth_cubit.dart';
+import '../../../cubits/auth_cubit/auth_state.dart';
 import '../providers/login_state.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 

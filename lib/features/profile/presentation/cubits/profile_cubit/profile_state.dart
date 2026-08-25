@@ -5,7 +5,7 @@ import 'package:planet_sushi_client_app/features/auth/data/models/user_model.dar
 abstract class ProfileState {}
 
 class ProfileInit extends ProfileState{}
-class Profileoading extends ProfileState{}
+class ProfileLoading extends ProfileState{}
 class ProfileEmpty extends ProfileState{}
 
 class ProfileSuccess extends ProfileState{

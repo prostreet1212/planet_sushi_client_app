@@ -38,9 +38,13 @@ class ProfileRemoteDataSource {
         Map<String, dynamic> data = /*(user.copyWith(id: userId))*/user.toJson();
           await supabase.client.from('users').insert(data);
 
-    } catch (e) {
+    }on PostgrestException catch (e){
+      throw ServerException(error: e.message);
+    }
+    catch (e) {
       String error = e.toString();
       debugPrint(error);
+      throw ServerException(error: error);
     }
   }
 
