@@ -18,7 +18,7 @@ import 'package:planet_sushi_client_app/features/profile/datasource/profile_repo
 import 'package:planet_sushi_client_app/features/profile/presentation/cubits/profile_cubit/profile_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'features/auth/presentation/cubits/auth_cibit/auth_cubit.dart';
+import 'features/auth/presentation/cubits/auth_cubit/auth_cubit.dart';
 import 'features/database/database.dart';
 import 'features/shop/datasource/shop_local_data_source.dart';
 import 'features/shop/datasource/shop_sync_service.dart';
@@ -38,7 +38,7 @@ Future<void> init() async{
 
  //cubits
   sl.registerFactory(() => AuthCubit(authDataSource: sl()));
-  sl.registerFactory(() => OtpCubit(authDataSource: sl()));
+  sl.registerFactory(() => OtpCubit(authDataSource: sl(),profileRepository: sl()));
   sl.registerFactory(() => AddUserCubit(profileRepository: sl()));
   sl.registerFactory(() => CatalogCubit(syncService: sl()));
   sl.registerFactory(() => CartCubit(cartLocalDataSource: sl()));

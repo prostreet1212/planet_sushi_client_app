@@ -44,4 +44,13 @@ class ProfileRepository {
       return Left(e.error);
     }
   }
+
+  Future<Either<String,Null>> insertLocalProfile(UserModel user)async{
+    try {
+      final local = await _profileLocalDataSource.insertProfile(user);
+    } on CacheException catch (e) {
+      //если не записалось в локальную бд, не критично
+    }
+    return const Right(null);
+  }
 }

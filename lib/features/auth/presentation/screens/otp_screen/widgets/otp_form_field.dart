@@ -5,8 +5,10 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:planet_sushi_client_app/core/routers/app_router.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/name_screen.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
+import 'package:planet_sushi_client_app/features/profile/datasource/profile_local_data_source.dart';
 
 import '../../../../../main/presentation/screens/main_screen.dart';
+import '../../../../data/models/user_model.dart';
 import '../../../cubits/otp_cubit/otp_cubit.dart';
 import '../../../cubits/otp_cubit/otp_state.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
