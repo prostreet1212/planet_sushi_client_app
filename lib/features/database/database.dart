@@ -48,7 +48,7 @@ class CartItems extends Table {
 class Users extends Table{
   TextColumn get id=>text()();
   TextColumn get phone=>text()();
-  TextColumn get name=>text()();
+  TextColumn get name=>text().nullable()();
   TextColumn get avatar_url=>text().nullable()();
 
   @override

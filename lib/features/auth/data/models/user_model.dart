@@ -1,7 +1,7 @@
 class UserModel {
   final String? id;
   final String phone;
-  final String name;
+  final String? name;
 
   //final String? email;
   final String? avatarUrl;
@@ -23,7 +23,7 @@ class UserModel {
     return UserModel(
       id: json['id'] as String?,
       phone: json['phone'] as String,
-      name: json['name'] as String,
+      name: json['name'] as String?,
       avatarUrl: json['avatar_url'] as String?,
       //bonusPoints: (json['bonus_points'] as num?)?.toInt() ?? 0,
       updatedAt: json['updated_at'] != null

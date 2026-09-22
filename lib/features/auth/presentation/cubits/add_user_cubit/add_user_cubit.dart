@@ -7,11 +7,12 @@ import '../../../data/datasource/auth_data_source.dart';
 import 'add_user_state.dart';
 
 class AddUserCubit extends Cubit<AddUserState>{
-  //final PProfileRepositoryurce _profileRemoteDataSource;
+  //final ProfileRepositoryurce _profileRemoteDataSource;
   final ProfileRepository _profileRepository;
   AddUserCubit({required this._profileRepository}) : super(AddUserInitial());
 
   void addUser(UserModel user) async{
+    //закладка
     final addUserData = await _profileRepository.insertProfile(user);
     addUserData.fold(
             (error) {

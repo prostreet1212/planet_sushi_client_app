@@ -39,7 +39,8 @@ class ProfileLocalDataSource {
             UsersCompanion.insert(
               id: user.id!,
               phone: user.phone,
-              name: user.name,
+              name: Value(user.name),
+              //name: '',
               avatar_url: Value(user.avatarUrl),
             ),
           );

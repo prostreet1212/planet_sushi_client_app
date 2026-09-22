@@ -1175,9 +1175,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UsersTable> {
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
     'name',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _avatar_urlMeta = const VerificationMeta(
     'avatar_url',
@@ -1222,8 +1222,6 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UsersTable> {
         _nameMeta,
         name.isAcceptableOrUnknown(data['name']!, _nameMeta),
       );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
     }
     if (data.containsKey('avatar_url')) {
       context.handle(
@@ -1251,7 +1249,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UsersTable> {
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
-      )!,
+      ),
       avatar_url: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}avatar_url'],
@@ -1268,12 +1266,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UsersTable> {
 class UsersTable extends DataClass implements Insertable<UsersTable> {
   final String id;
   final String phone;
-  final String name;
+  final String? name;
   final String? avatar_url;
   const UsersTable({
     required this.id,
     required this.phone,
-    required this.name,
+    this.name,
     this.avatar_url,
   });
   @override
@@ -1281,7 +1279,9 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['phone'] = Variable<String>(phone);
-    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
     if (!nullToAbsent || avatar_url != null) {
       map['avatar_url'] = Variable<String>(avatar_url);
     }
@@ -1292,7 +1292,7 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
     return UsersCompanion(
       id: Value(id),
       phone: Value(phone),
-      name: Value(name),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
       avatar_url: avatar_url == null && nullToAbsent
           ? const Value.absent()
           : Value(avatar_url),
@@ -1307,7 +1307,7 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
     return UsersTable(
       id: serializer.fromJson<String>(json['id']),
       phone: serializer.fromJson<String>(json['phone']),
-      name: serializer.fromJson<String>(json['name']),
+      name: serializer.fromJson<String?>(json['name']),
       avatar_url: serializer.fromJson<String?>(json['avatar_url']),
     );
   }
@@ -1317,7 +1317,7 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'phone': serializer.toJson<String>(phone),
-      'name': serializer.toJson<String>(name),
+      'name': serializer.toJson<String?>(name),
       'avatar_url': serializer.toJson<String?>(avatar_url),
     };
   }
@@ -1325,12 +1325,12 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
   UsersTable copyWith({
     String? id,
     String? phone,
-    String? name,
+    Value<String?> name = const Value.absent(),
     Value<String?> avatar_url = const Value.absent(),
   }) => UsersTable(
     id: id ?? this.id,
     phone: phone ?? this.phone,
-    name: name ?? this.name,
+    name: name.present ? name.value : this.name,
     avatar_url: avatar_url.present ? avatar_url.value : this.avatar_url,
   );
   UsersTable copyWithCompanion(UsersCompanion data) {
@@ -1370,7 +1370,7 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
 class UsersCompanion extends UpdateCompanion<UsersTable> {
   final Value<String> id;
   final Value<String> phone;
-  final Value<String> name;
+  final Value<String?> name;
   final Value<String?> avatar_url;
   final Value<int> rowid;
   const UsersCompanion({
@@ -1383,12 +1383,11 @@ class UsersCompanion extends UpdateCompanion<UsersTable> {
   UsersCompanion.insert({
     required String id,
     required String phone,
-    required String name,
+    this.name = const Value.absent(),
     this.avatar_url = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       phone = Value(phone),
-       name = Value(name);
+       phone = Value(phone);
   static Insertable<UsersTable> custom({
     Expression<String>? id,
     Expression<String>? phone,
@@ -1408,7 +1407,7 @@ class UsersCompanion extends UpdateCompanion<UsersTable> {
   UsersCompanion copyWith({
     Value<String>? id,
     Value<String>? phone,
-    Value<String>? name,
+    Value<String?>? name,
     Value<String?>? avatar_url,
     Value<int>? rowid,
   }) {
@@ -2319,7 +2318,7 @@ typedef $$UsersTableCreateCompanionBuilder =
     UsersCompanion Function({
       required String id,
       required String phone,
-      required String name,
+      Value<String?> name,
       Value<String?> avatar_url,
       Value<int> rowid,
     });
@@ -2327,7 +2326,7 @@ typedef $$UsersTableUpdateCompanionBuilder =
     UsersCompanion Function({
       Value<String> id,
       Value<String> phone,
-      Value<String> name,
+      Value<String?> name,
       Value<String?> avatar_url,
       Value<int> rowid,
     });
@@ -2445,7 +2444,7 @@ class $$UsersTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> phone = const Value.absent(),
-                Value<String> name = const Value.absent(),
+                Value<String?> name = const Value.absent(),
                 Value<String?> avatar_url = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion(
@@ -2459,7 +2458,7 @@ class $$UsersTableTableManager
               ({
                 required String id,
                 required String phone,
-                required String name,
+                Value<String?> name = const Value.absent(),
                 Value<String?> avatar_url = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion.insert(

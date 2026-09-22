@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../../../core/routers/app_router.dart';
+import '../../../../../auth/presentation/cubits/auth_status_cubit/auth_status_cubit.dart';
+import '../../../../../auth/presentation/cubits/auth_status_cubit/auth_status_state.dart';
 import '../../providers/main_screen_state.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
@@ -30,8 +32,10 @@ class MainNavItem extends StatelessWidget {
           onTap: () {
            // mainScreenState.selectedTab(0);
             //context.read<MainScreenState>().selectedTab(tabIndex);
+            /*final isAuthenticated =
+                di.sl<Supabase>().client.auth.currentUser?.id != null;*/
             final isAuthenticated =
-                di.sl<Supabase>().client.auth.currentUser?.id != null;
+            context.read<AuthStatusCubit>().state is AuthStatusAuthorized;
             if (tabIndex == 2 && !isAuthenticated) {
               // Не авторизован → открываем логин, вкладку не переключаем
               context.router.push(const LoginRoute());

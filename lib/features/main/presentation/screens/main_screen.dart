@@ -15,57 +15,72 @@ import 'package:planet_sushi_client_app/features/shop/presentation/cubits/catalo
 import 'package:provider/provider.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
+import '../../../auth/presentation/cubits/auth_status_cubit/auth_status_cubit.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
 import '../../../shop/presentation/pages/menu_page/menu_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 
 @RoutePage()
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+
+  @override
+  void dispose() {
+    context.read<AuthStatusCubit>().close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     debugPrint('Строитель мэйнскрин');
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => di.sl<CartCubit>()..loadCart(),
+        BlocProvider<AuthStatusCubit>(
+          lazy: false,
+          create: (context) => di.sl<AuthStatusCubit>()..init(),
         ),
+        BlocProvider(create: (context) => di.sl<CartCubit>()..loadCart()),
         BlocProvider<CatalogCubit>(
-          create: (context) =>
-          di.sl<CatalogCubit>()
-            ..getCatalog(),
+          create: (context) => di.sl<CatalogCubit>()..getCatalog(),
         ),
         BlocProvider<ProfileCubit>(
-          create: (context) => di.sl<ProfileCubit>()..getLProfile(),
-        )
+          create: (context) => di.sl<ProfileCubit>(),//..getLProfile(),
+        ),
       ],
       child: Theme(
         data: ThemeData(
-            colorScheme: .fromSeed(seedColor: Colors.yellow),
-            useMaterial3: false,
-            //fontFamily: 'Custom',
-            //fontFamily: 'RobotoCondensed',
-            fontFamily: 'RobotoCondensedRegular'
+          colorScheme: .fromSeed(seedColor: Colors.yellow),
+          useMaterial3: false,
+          //fontFamily: 'Custom',
+          //fontFamily: 'RobotoCondensed',
+          fontFamily: 'RobotoCondensedRegular',
         ),
-        child:AutoTabsRouter.builder(
+        child: AutoTabsRouter.builder(
           routes: [
             MenuRoute(),
             CartRoute(),
             const ProfileRoute(),
             //LoginRoute(),
           ],
-          builder:(context, children, tabsRouter) {
+          builder: (context, children, tabsRouter) {
             return SafeArea(
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
                 extendBody: true,
-                appBar: AppBar(title: const Text('Планета суши'),
-                  leading:AutoLeadingButton(
+                appBar: AppBar(
+                  title: const Text('Планета суши'),
+                  leading: AutoLeadingButton(
                     showIfChildCanPop: true,
                     showIfParentCanPop: false,
                   ),
-                  automaticallyImplyLeading: true,),
+                  automaticallyImplyLeading: true,
+                ),
                 // body: MainBody(),
                 body: AnimatedIndexedStack1(
                   index: tabsRouter.activeIndex,
@@ -73,8 +88,8 @@ class MainScreen extends StatelessWidget {
                   duration: Duration(milliseconds: 500),
                   curve: Easing.legacy,
                 ),
-                floatingActionButtonLocation: FloatingActionButtonLocation
-                   .centerDocked,
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerDocked,
                 //floatingActionButtonLocation: const FixedCenterDockedFabLocation(),
                 floatingActionButton: const MainNavFab(),
                 bottomNavigationBar: const MainNavBar(),
@@ -82,7 +97,6 @@ class MainScreen extends StatelessWidget {
             );
           },
         ),
-
 
         /*SafeArea(
             child: Scaffold(
@@ -208,7 +222,8 @@ class MainScreen extends StatelessWidget {
           ),*/
         ),
       ),
-    )*/;
+    )*/
+    ;
   }
 }
 

@@ -7,26 +7,30 @@ import 'otp_state.dart';
 class OtpCubit extends Cubit<OtpState> {
   final AuthDataSource _authDataSource;
   final ProfileRepository _profileRepository;
-  OtpCubit({required this._authDataSource, required this._profileRepository}) : super(OtpInitial());
 
-  void verifyOtp(String number,String token) async {
-    final authData =await _authDataSource.verifyOtp(number, token);
+  OtpCubit({required this._authDataSource, required this._profileRepository})
+    : super(OtpInitial());
+
+  void verifyOtp(String number, String token) async {
+    final authData = await _authDataSource.verifyOtp(number, token);
     authData.fold(
-          (error) {
+      (error) {
         emit(OtpError(message: error));
       },
-          (success) async {
-            //если пользователя есть в supabase таблице
-            if(success!=null){
-              //запишем юзера в локальную бд
-               final profileData=await _profileRepository.insertLocalProfile(success);
-               profileData.fold((error){}, (profile){
-               });
-              emit(OtpSuccess(user: success));
-
-            }else{
-              emit(OtpNext());
-            }
+      (user) async {
+        //если пользователя есть в supabase таблице
+        if (user != null) {
+          //запишем юзера в локальную бд
+          final profileData = await _profileRepository.insertLocalProfile(user);
+          profileData.fold((error) {}, (profile) {});
+          if (user.name != '') {
+            emit(OtpSuccess(user: user));
+          } else {
+            emit(OtpNext());
+          }
+        } else {
+          emit(OtpNext());
+        }
       },
     );
   }

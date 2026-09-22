@@ -19,6 +19,7 @@ import 'package:planet_sushi_client_app/features/profile/presentation/cubits/pro
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'features/auth/presentation/cubits/auth_cubit/auth_cubit.dart';
+import 'features/auth/presentation/cubits/auth_status_cubit/auth_status_cubit.dart';
 import 'features/database/database.dart';
 import 'features/shop/datasource/shop_local_data_source.dart';
 import 'features/shop/datasource/shop_sync_service.dart';
@@ -32,7 +33,7 @@ Future<void> init() async{
 
   /*sl.registerLazySingleton<LoginState>(()
   => LoginState());*/
-  sl.registerLazySingleton(() => AuthDataSource(supabase: sl()));
+  sl.registerLazySingleton(() => AuthDataSource(supabase: sl(),profileRepository: sl()));
   sl.registerLazySingleton(() => ShopRemoteDataSource(supabase: sl()));
 
 
@@ -43,6 +44,7 @@ Future<void> init() async{
   sl.registerFactory(() => CatalogCubit(syncService: sl()));
   sl.registerFactory(() => CartCubit(cartLocalDataSource: sl()));
   sl.registerFactory(() => ProfileCubit(profileRepository: sl()));
+  sl.registerFactory(() => AuthStatusCubit(authDataSource: sl()));
 
   //states
   sl.registerFactory(() => LoginState());

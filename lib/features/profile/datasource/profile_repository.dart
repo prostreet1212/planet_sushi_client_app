@@ -22,8 +22,14 @@ class ProfileRepository {
 
 
   Future<Either<String, UserModel>> getProfile() async {
-    UserModel? userModel=await _profileLocalDataSource.getProfile();
-    return Right(userModel!);
+    try{
+      UserModel? userModel=await _profileLocalDataSource.getProfile();
+      return Right(userModel!);
+    }on CacheException catch(e){
+      return Left(e.error);
+    }
+
+
 
   }
 
