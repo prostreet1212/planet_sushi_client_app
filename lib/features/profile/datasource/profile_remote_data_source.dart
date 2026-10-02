@@ -38,8 +38,9 @@ class ProfileRemoteDataSource {
     try {
       await supabase.client
           .from('users')
-          .update({'name': 'New Value${user.name}'})
+          .update({'name': '${user.name}'})
           .eq('id', user.id!);
+
     } on PostgrestException catch (e) {
       throw ServerException(error: e.message);
     } catch (e) {

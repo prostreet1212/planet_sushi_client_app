@@ -9,7 +9,7 @@ import 'package:planet_sushi_client_app/features/auth/presentation/screens/login
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/widgets/send_code_button.dart';
 import 'package:provider/provider.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
-import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../cubits/send_code_cubit/send_code_cubit.dart';
 
 @RoutePage()
 class LoginScreen extends StatefulWidget {
@@ -47,8 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
     _loginState.setKeyboardHeight(viewInsets.bottom);
     //final double keyboardHeight = viewInsets.bottom;
 
-    return BlocProvider<AuthCubit>(
-      create: (context)=>di.sl<AuthCubit>(),
+    return BlocProvider<SendCodeCubit>(
+      create: (context)=>di.sl<SendCodeCubit>(),
         child:  Scaffold(
           resizeToAvoidBottomInset: false,
           body: SafeArea(

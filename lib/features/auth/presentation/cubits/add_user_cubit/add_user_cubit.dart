@@ -12,8 +12,9 @@ class AddUserCubit extends Cubit<AddUserState>{
   AddUserCubit({required this._profileRepository}) : super(AddUserInitial());
 
   void addUser(UserModel user) async{
-    //закладка
-    final addUserData = await _profileRepository.insertProfile(user);
+    //final addUserData = await _profileRepository.insertProfile(user);
+    final addUserData = await _profileRepository.updateProfile(user);
+    
     addUserData.fold(
             (error) {
               emit(AddUserError(message: error));

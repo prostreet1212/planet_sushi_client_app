@@ -23,6 +23,7 @@ class AuthStatusCubit extends Cubit<AuthStatusState> {
           (event) {
         if (event.event == AuthChangeEvent.signedOut) {
           emit(AuthStatusUnauthorized());
+          print('status ${state}');
         } else {
           checkStatus();
         }
@@ -44,6 +45,10 @@ class AuthStatusCubit extends Cubit<AuthStatusState> {
         emit(AuthStatusUnauthorized());
     }
     print('status ${state}');
+  }
+
+  void changeAuthStatus(AuthStatusState state){
+    emit(state);
   }
 
   @override

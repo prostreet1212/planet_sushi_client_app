@@ -6,8 +6,8 @@ import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_s
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
 
 
-import '../../../cubits/auth_cubit/auth_cubit.dart';
-import '../../../cubits/auth_cubit/auth_state.dart';
+import '../../../cubits/send_code_cubit/send_code_cubit.dart';
+import '../../../cubits/send_code_cubit/send_code_state.dart';
 import '../providers/login_state.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
@@ -28,7 +28,7 @@ class SendCodeButton extends StatelessWidget {
         ),
         child: Align(
             alignment: AlignmentGeometry.bottomCenter,
-            child: BlocListener<AuthCubit,AuthState>(
+            child: BlocListener<SendCodeCubit,SendCodeState>(
               /*  buildWhen: (oldState,newState){
               return false;
             },*/
@@ -37,7 +37,7 @@ class SendCodeButton extends StatelessWidget {
                 print('строитель кнопка отправить');
             return*/ ElevatedButton(
                   onPressed: loginState.sendCodeEnabled ? () async{
-                    context.read<AuthCubit>().sendCode(loginState.phoneMaskFormatter.getUnmaskedText());
+                    context.read<SendCodeCubit>().sendCode(loginState.phoneMaskFormatter.getUnmaskedText());
                     /* String phoneNumber='+7${loginState.phoneMaskFormatter.getUnmaskedText()}';
                 debugPrint(phoneNumber);
                 try {
@@ -61,23 +61,24 @@ class SendCodeButton extends StatelessWidget {
                     ),
                   ),
                   child: const Text(
-                    'Отправить код',
+                    'Далее',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                 ),
                 //},
                 listener: (context,state){
-                  if(state is AuthSuccess){
+                  if(state is SendCodeSuccess){
                     String phoneNumber='+7${loginState.phoneMaskFormatter.getUnmaskedText()}';
                      di.sl<OtpPhoneState>().setPhone(phoneNumber);
                     //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OtpScreen()), (route) => false, );
                   //context.router.replaceAll([const OtpRoute()]);
                   context.router.push(const OtpRoute());
-                  }else if(state is AuthError){
+                  }else if(state is SendCodeError){
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Ошибка ${state.message}'))
                     );
-
+                  }else if(state is SendCodeSkip){
+                    context.router.push(const NameRoute());
                   }
 
                 })

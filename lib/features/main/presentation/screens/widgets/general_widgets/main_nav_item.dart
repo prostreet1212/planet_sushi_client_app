@@ -34,7 +34,7 @@ class MainNavItem extends StatelessWidget {
             //context.read<MainScreenState>().selectedTab(tabIndex);
             /*final isAuthenticated =
                 di.sl<Supabase>().client.auth.currentUser?.id != null;*/
-            final isAuthenticated =
+          /*  final isAuthenticated =
             context.read<AuthStatusCubit>().state is AuthStatusAuthorized;
             if (tabIndex == 2 && !isAuthenticated) {
               // Не авторизован → открываем логин, вкладку не переключаем
@@ -42,8 +42,8 @@ class MainNavItem extends StatelessWidget {
               //tabsRouter.setActiveIndex(tabIndex);
             }else{
               tabsRouter.setActiveIndex(tabIndex);
-            }
-
+            }*/
+            tabsRouter.setActiveIndex(tabIndex);
 
 
           },

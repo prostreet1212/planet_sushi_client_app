@@ -5,6 +5,7 @@ import 'package:planet_sushi_client_app/core/routers/app_router.dart';
 import 'package:planet_sushi_client_app/features/auth/data/datasource/auth_data_source.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/cubits/add_user_cubit/add_user_cubit.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/cubits/otp_cubit/otp_cubit.dart';
+import 'package:planet_sushi_client_app/features/auth/presentation/cubits/send_code_cubit/send_code_cubit.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/providers/login_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/providers/name_state.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/providers/otp_phone_state.dart';
@@ -17,8 +18,6 @@ import 'package:planet_sushi_client_app/features/profile/datasource/profile_remo
 import 'package:planet_sushi_client_app/features/profile/datasource/profile_repository.dart';
 import 'package:planet_sushi_client_app/features/profile/presentation/cubits/profile_cubit/profile_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import 'features/auth/presentation/cubits/auth_cubit/auth_cubit.dart';
 import 'features/auth/presentation/cubits/auth_status_cubit/auth_status_cubit.dart';
 import 'features/database/database.dart';
 import 'features/shop/datasource/shop_local_data_source.dart';
@@ -33,12 +32,12 @@ Future<void> init() async{
 
   /*sl.registerLazySingleton<LoginState>(()
   => LoginState());*/
-  sl.registerLazySingleton(() => AuthDataSource(supabase: sl(),profileRepository: sl()));
+  sl.registerLazySingleton(() => AuthDataSource(supabase: sl(),profileRepository: sl(), profileLocalDataSource: sl(),));
   sl.registerLazySingleton(() => ShopRemoteDataSource(supabase: sl()));
 
 
  //cubits
-  sl.registerFactory(() => AuthCubit(authDataSource: sl()));
+  sl.registerFactory(() => SendCodeCubit(authDataSource: sl()));
   sl.registerFactory(() => OtpCubit(authDataSource: sl(),profileRepository: sl()));
   sl.registerFactory(() => AddUserCubit(profileRepository: sl()));
   sl.registerFactory(() => CatalogCubit(syncService: sl()));

@@ -6,7 +6,9 @@ class UserModel {
   //final String? email;
   final String? avatarUrl;
 
-  //final int bonusPoints;
+  /// Баллы, накопленные за покупки.
+  final int bonusPoints;
+
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -15,6 +17,7 @@ class UserModel {
     required this.phone,
     required this.name,
     this.avatarUrl,
+    this.bonusPoints = 0,
     this.createdAt,
     this.updatedAt,
   });
@@ -25,7 +28,7 @@ class UserModel {
       phone: json['phone'] as String,
       name: json['name'] as String?,
       avatarUrl: json['avatar_url'] as String?,
-      //bonusPoints: (json['bonus_points'] as num?)?.toInt() ?? 0,
+      bonusPoints: (json['bonus_points'] as num?)?.toInt() ?? 0,
       updatedAt: json['updated_at'] != null
           ? DateTime.parse(json['updated_at'] as String)
           : null,
@@ -59,7 +62,7 @@ class UserModel {
       phone: phone ?? this.phone,
       name: name ?? this.name,
       avatarUrl: avatarUrl ?? this.avatarUrl,
-      //bonusPoints: bonusPoints ?? this.bonusPoints,
+      bonusPoints: bonusPoints ?? this.bonusPoints,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }

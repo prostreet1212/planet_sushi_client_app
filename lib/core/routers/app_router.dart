@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:planet_sushi_client_app/core/routers/empty_router_pages.dart';
-import 'package:planet_sushi_client_app/core/routers/guards.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/login_screen.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/name_screen/name_screen.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/otp_screen/otp_screen.dart';
@@ -10,7 +9,7 @@ import 'package:planet_sushi_client_app/features/main/presentation/screens/main_
 import 'package:planet_sushi_client_app/features/shop/presentation/pages/product_detail_page/product_detail_page.dart';
 
 import '../../features/cart/presentation/pages/cart_page.dart';
-import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/profile/presentation/pages/profile_page/profile_page.dart';
 import '../../features/shop/presentation/pages/menu_page/menu_page.dart';
 
 part 'app_router.gr.dart';
@@ -35,7 +34,8 @@ class AppRouter extends RootStackRouter {
           ],
         ),
         CustomRoute(path: 'cart', page: CartRoute.page),
-        CustomRoute(path: 'profile', page: ProfileRoute.page,guards: [AuthGuard()])
+        // Профиль доступен без авторизации: страница сама показывает кнопку "войти".
+        CustomRoute(path: 'profile', page: ProfileRoute.page)
 
       ],
     ),

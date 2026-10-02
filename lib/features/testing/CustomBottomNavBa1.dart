@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 
 import '../cart/presentation/pages/cart_page.dart';
-import '../profile/presentation/pages/profile_page.dart';
+import '../profile/presentation/pages/profile_page/profile_page.dart';
 
 class CustomBottomNavBar1 extends StatefulWidget {
   const CustomBottomNavBar1({super.key});

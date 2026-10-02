@@ -22,11 +22,11 @@ class OtpCubit extends Cubit<OtpState> {
         if (user != null) {
           //запишем юзера в локальную бд
           final profileData = await _profileRepository.insertLocalProfile(user);
-          profileData.fold((error) {}, (profile) {});
-          if (user.name != '') {
-            emit(OtpSuccess(user: user));
-          } else {
+          //profileData.fold((error) {}, (profile) {});
+          if (user.name == '' || user.name == null) {
             emit(OtpNext());
+          } else {
+            emit(OtpSuccess(user: user));
           }
         } else {
           emit(OtpNext());

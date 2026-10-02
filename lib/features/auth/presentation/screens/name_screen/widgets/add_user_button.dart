@@ -10,6 +10,8 @@ import '../../../../../../injection_container.dart' as di;
 import '../../../../data/models/user_model.dart';
 import '../../../cubits/add_user_cubit/add_user_cubit.dart';
 import '../../../cubits/add_user_cubit/add_user_state.dart';
+import '../../../cubits/auth_status_cubit/auth_status_cubit.dart';
+import '../../../cubits/auth_status_cubit/auth_status_state.dart';
 
 class AddUserButton extends StatelessWidget {
 
@@ -31,6 +33,11 @@ class AddUserButton extends StatelessWidget {
               if (state is AddUserSuccess) {
                 //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const MainScreen()), (route)=>false);
                // context.router.replaceAll([const MainRoute()]);
+                //т.к. после статуса AuthStatusIncomplete он может не поменяться т.к. слушатель на это не сработвет, мы по необходимости ставим вручную
+                //закладка проверить уже добавленным именем на сервере
+                if(di.sl<AuthStatusCubit>().state is !AuthStatusAuthorized){
+                  di.sl<AuthStatusCubit>().changeAuthStatus(AuthStatusAuthorized());
+                }
                 context.router.popUntilRoot();
               }else if(state is AddUserError){
                 ScaffoldMessenger.of(context).showSnackBar(

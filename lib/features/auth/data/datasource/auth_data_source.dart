@@ -6,6 +6,7 @@ import 'package:planet_sushi_client_app/features/profile/datasource/profile_repo
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/error/exception.dart';
+import '../../../profile/datasource/profile_local_data_source.dart';
 import '../models/user_model.dart';
 
 enum AuthStepStatus { success, next }
@@ -25,8 +26,38 @@ enum AppAuthStatus {
 class AuthDataSource {
   final Supabase _supabase;
   ProfileRepository _profileRepository;
+  ProfileLocalDataSource _profileLocalDataSource;
 
-  AuthDataSource({required this._supabase, required this._profileRepository});
+  AuthDataSource({
+    required this._supabase,
+    required this._profileRepository,
+    required this._profileLocalDataSource,
+  });
+
+  Future<Either<String,bool>>checkPrevLogin() async {
+    try{
+      if (_supabase.client.auth.currentUser?.id != null) {
+        UserModel? localUser = await _profileLocalDataSource.getProfile();
+        if (localUser!=null) {
+          String authUser = _supabase.client.auth.currentUser!.id;
+          if (authUser == localUser.id) {
+            return Right(true);
+          }else{
+            return Right(false);
+          }
+        }else{
+          return Right(false);
+        }
+
+
+      }else{
+        return Right(false);
+      }
+    }catch (e) {
+      String error = e.toString();
+      return Left(error);
+    }
+  }
 
   Future<Either<String, Null>> sendCode(String number) async {
     String phoneNumber = '+7$number';
@@ -66,7 +97,7 @@ class AuthDataSource {
           return const Right(null);
         } else {
           final UserModel user = UserModel.fromJson(data);
-            return Right(user);
+          return Right(user);
         }
       }
       return const Left('');
@@ -89,10 +120,10 @@ class AuthDataSource {
   Stream<AuthState> authStatusStream() =>
       _supabase.client.auth.onAuthStateChange;
 
-  StreamSubscription authStatusStreamSubscription() =>
+  /*StreamSubscription authStatusStreamSubscription() =>
   authStatusStream().listen((event){
 
-  });
+  });*/
 
   /// Полная проверка: сессия + запись в таблице users
   Future<AppAuthStatus> checkStatus() async {
@@ -100,11 +131,18 @@ class AuthDataSource {
     if (user == null) return AppAuthStatus.unauthorized;
 
     final profileData = await _profileRepository.getProfile();
-    return profileData.fold((error) {
-      return AppAuthStatus.incomplete;
-    }, (profile) {
+    return profileData.fold(
+      (error) {
+        return AppAuthStatus.incomplete;
+      },
+      (profile) {
+         if(profile.name == '' || profile.name == null){
+       return AppAuthStatus.incomplete;
+     }else{
         return AppAuthStatus.fullyAuthorized;
-    });
+         }
+      },
+    );
 
     //return AppAuthStatus.fullyAuthorized;
 
@@ -124,5 +162,16 @@ class AuthDataSource {
     }*/
   }
 
-
+  /* Future<void> checkUserStatus() async {
+    final session = _supabase.client.auth.currentSession;
+    if (session != null) {
+      try {
+        // Делаем легкий запрос к auth.getUser(), он всегда идет на сервер
+        await _supabase.client.auth.getUser(session.accessToken);
+      } catch (e) {
+        // Если пользователя нет на сервере, getUser выбросит ошибку
+        await _supabase.client.auth.signOut();
+      }
+    }
+  }*/
 }

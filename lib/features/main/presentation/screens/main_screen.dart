@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/core/routers/app_router.dart';
+import 'package:planet_sushi_client_app/features/auth/data/datasource/auth_data_source.dart';
 import 'package:planet_sushi_client_app/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/providers/main_screen_state.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/general_widgets/animated_indexed_stack1.dart';
@@ -18,7 +19,7 @@ import 'package:planet_sushi_client_app/injection_container.dart' as di;
 import '../../../auth/presentation/cubits/auth_status_cubit/auth_status_cubit.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
 import '../../../shop/presentation/pages/menu_page/menu_page.dart';
-import '../../../profile/presentation/pages/profile_page.dart';
+import '../../../profile/presentation/pages/profile_page/profile_page.dart';
 
 @RoutePage()
 class MainScreen extends StatefulWidget {
@@ -29,6 +30,13 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+
+  @override
+  void initState() {
+    //di.sl<AuthDataSource>().checkUserStatus();
+    super.initState();
+
+  }
 
   @override
   void dispose() {

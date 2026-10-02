@@ -53,10 +53,22 @@ class ProfileLocalDataSource {
     }
   }
 
-  Future<void> deleteCProfile(UserModel user) async {
-    _db.delete(_db.users)
-      ..where((tbl) => tbl.id.equals(user.id!))
-      ..go();
+  Future<void> deleteProfile(UserModel user) async {
+    await (_db.delete(_db.users)
+          ..where((tbl) => tbl.id.equals(user.id!)))
+        .go();
+  }
+
+  Future<void> updateNameProfile(UserModel user)async{
+    try{
+      _db.update(_db.users)..where((tbl)=>tbl.id.equals(user.id!))..write(UsersCompanion(name: Value(user.name)));
+    }on SqliteException catch (e) {
+      throw CacheException(error: e.message);
+
+    } catch (e) {
+      print('local db error:$e');
+      throw CacheException(error: e.toString());
+    }
   }
 
   // Проверить, есть ли данные локально

@@ -7,7 +7,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../auth/data/models/user_model.dart';
 
-
 //рабочий образец с обработкой ошибок
 class ProfileRepository {
   final ProfileRemoteDataSource _profileRemoteDataSource;
@@ -20,24 +19,34 @@ class ProfileRepository {
     required this._supabase,
   });
 
-
   Future<Either<String, UserModel>> getProfile() async {
-    try{
-      UserModel? userModel=await _profileLocalDataSource.getProfile();
-      return Right(userModel!);
-    }on CacheException catch(e){
-      return Left(e.error);
+    // Сначала пробуем получить актуальный профиль с сервера
+    // (там же хранятся баллы за покупки).
+    try {
+      final UserModel? remoteUser = await _profileRemoteDataSource.getProfile();
+      if (remoteUser != null) {
+        return Right(remoteUser);
+      }
+    } on ServerException {
+      // Сервер недоступен — используем локальные данные.
     }
 
-
-
+    try {
+      final UserModel? localUser = await _profileLocalDataSource.getProfile();
+      if (localUser != null) {
+        return Right(localUser);
+      }
+      return const Left('Профиль не найден');
+    } on CacheException catch (e) {
+      return Left(e.error);
+    }
   }
 
   Future<Either<String, Null>> insertProfile(UserModel user) async {
     try {
-      if(user.id==null){
+      if (user.id == null) {
         String? userId = _supabase.client.auth.currentUser?.id;
-        user=user.copyWith(id: userId);
+        user = user.copyWith(id: userId);
       }
       final remote = await _profileRemoteDataSource.createProfile(user);
       try {
@@ -46,12 +55,30 @@ class ProfileRepository {
         //если не записалось в локальную бд, не критично
       }
       return const Right(null);
-    }on ServerException catch (e) {
+    } on ServerException catch (e) {
       return Left(e.error);
     }
   }
 
-  Future<Either<String,Null>> insertLocalProfile(UserModel user)async{
+  Future<Either<String, Null>> updateProfile(UserModel user) async {
+    try {
+      if (user.id == null) {
+        String? userId = _supabase.client.auth.currentUser?.id;
+        user = user.copyWith(id: userId);
+      }
+      await _profileRemoteDataSource.updateNameUser(user);
+      try {
+        await _profileLocalDataSource.updateNameProfile(user);
+      } on CacheException catch (e) {
+        //если не записалось в локальную бд, не критично
+      }
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(e.error);
+    }
+  }
+
+  Future<Either<String, Null>> insertLocalProfile(UserModel user) async {
     try {
       final local = await _profileLocalDataSource.insertProfile(user);
     } on CacheException catch (e) {
