@@ -29,14 +29,13 @@ class AddUserButton extends StatelessWidget {
         child: Align(
           alignment: AlignmentGeometry.bottomCenter,
           child: BlocListener<AddUserCubit,AddUserState>(
-            listener: (context,state){
+            listener: (context,state)  {
               if (state is AddUserSuccess) {
                 //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const MainScreen()), (route)=>false);
                // context.router.replaceAll([const MainRoute()]);
                 //т.к. после статуса AuthStatusIncomplete он может не поменяться т.к. слушатель на это не сработвет, мы по необходимости ставим вручную
-                //закладка проверить уже добавленным именем на сервере
                 if(di.sl<AuthStatusCubit>().state is !AuthStatusAuthorized){
-                  di.sl<AuthStatusCubit>().changeAuthStatus(AuthStatusAuthorized());
+                   context.read<AuthStatusCubit>().changeAuthStatus(AuthStatusAuthorized());
                 }
                 context.router.popUntilRoot();
               }else if(state is AddUserError){

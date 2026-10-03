@@ -49,15 +49,17 @@ class _MainScreenState extends State<MainScreen> {
     debugPrint('Строитель мэйнскрин');
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthStatusCubit>(
+        /*BlocProvider<AuthStatusCubit>(
           lazy: false,
           create: (context) => di.sl<AuthStatusCubit>()..init(),
-        ),
+        ),*/
         BlocProvider(create: (context) => di.sl<CartCubit>()..loadCart()),
         BlocProvider<CatalogCubit>(
           create: (context) => di.sl<CatalogCubit>()..getCatalog(),
         ),
         BlocProvider<ProfileCubit>(
+    //закладка проверить моментальности отрисовки
+          lazy: false,
           create: (context) => di.sl<ProfileCubit>(),//..getLProfile(),
         ),
       ],

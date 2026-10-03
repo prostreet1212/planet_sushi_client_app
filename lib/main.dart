@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/core/routers/app_router.dart';
+import 'package:planet_sushi_client_app/features/auth/presentation/cubits/auth_status_cubit/auth_status_cubit.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/screens/login_screen/login_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'features/auth/presentation/screens/name_screen/name_screen.dart';
 import 'features/main/presentation/screens/main_screen.dart';
 import 'injection_container.dart' as di;
-
-
 
 Future<void> main() async {
   await Supabase.initialize(
@@ -25,13 +25,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return/* MultiProvider(providers: [
+    return /* MultiProvider(providers: [
      // BlocProvider<AuthCubit>(create: (context)=>di.sl<AuthCubit>()),
       //BlocProvider<OtpCubit>(create: (context)=>di.sl<OtpCubit>()),
       //Provider(create: (context)=>di.sl<AuthDataSource>())
     ],
-      child: );*/
-      MaterialApp.router(
+      child: );*/ BlocProvider<AuthStatusCubit>(
+      lazy: false,
+      create: (context) => di.sl<AuthStatusCubit>()..init(),
+      child: MaterialApp.router(
         title: 'Flutter Demo',
         theme: ThemeData(
           // Настраиваем цветовую схему выделения
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
         //home: const LoginScreen(),
         //home: const OtpScreen(phone: '+79532602744'),
         //home: const NameScreen(),
-      );
+      ),
+    );
   }
 }

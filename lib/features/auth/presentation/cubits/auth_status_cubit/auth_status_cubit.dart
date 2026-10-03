@@ -48,7 +48,8 @@ class AuthStatusCubit extends Cubit<AuthStatusState> {
   }
 
   void changeAuthStatus(AuthStatusState state){
-    emit(state);
+     emit(state);
+     print('status ${state}');
   }
 
   @override

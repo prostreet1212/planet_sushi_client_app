@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/core/routers/app_router.dart';
+import 'package:planet_sushi_client_app/features/auth/data/datasource/auth_data_source.dart';
 import 'package:planet_sushi_client_app/features/auth/data/models/user_model.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/cubits/auth_status_cubit/auth_status_cubit.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/cubits/auth_status_cubit/auth_status_state.dart';
@@ -72,7 +73,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _logout() async {
-    final ProfileState profileState = context.read<ProfileCubit>().state;
+    di.sl<AuthDataSource>().logOut();
+    /*final ProfileState profileState = context.read<ProfileCubit>().state;
 
     if (di.sl<Supabase>().client.auth.currentUser != null) {
       await di.sl<Supabase>().client.auth.signOut();
@@ -80,11 +82,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (profileState is ProfileSuccess) {
       await di.sl<ProfileLocalDataSource>().deleteProfile(profileState.user);
-    }
+    }*/
 
-    if (mounted) {
+    /*if (mounted) {
       context.read<ProfileCubit>().getLProfile();
-    }
+    }*/
   }
 
   @override
@@ -92,8 +94,20 @@ class _ProfilePageState extends State<ProfilePage> {
     //был bloclistener
     return BlocConsumer<AuthStatusCubit, AuthStatusState>(
       // При любом изменении статуса авторизации перечитываем профиль.
-      listener: (context, authState) {
-        context.read<ProfileCubit>().getLProfile();
+      listener: (context, authState) async {
+        //закладка
+        if(authState is AuthStatusUnauthorized){
+          final ProfileState profileState = context.read<ProfileCubit>().state;
+
+          if (profileState is ProfileSuccess) {
+            await di.sl<ProfileLocalDataSource>().deleteProfile(profileState.user);
+          }
+
+          context.read<ProfileCubit>().getLProfile();
+        }else{
+          context.read<ProfileCubit>().getLProfile();
+        }
+
       },
       builder: (context,authState){
         return Padding(

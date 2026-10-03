@@ -117,6 +117,19 @@ class AuthDataSource {
     }
   }
 
+  Future<Either<String,Null>> logOut() async {
+   try{
+     if (_supabase.client.auth.currentUser != null) {
+       await _supabase.client.auth.signOut();
+       return Right(null);
+     }else{
+       return Left('пользователь уже вышел');
+     }
+   }catch(e){
+     return Left(e.toString());
+   }
+  }
+
   Stream<AuthState> authStatusStream() =>
       _supabase.client.auth.onAuthStateChange;
 
@@ -143,6 +156,9 @@ class AuthDataSource {
          }
       },
     );
+
+
+
 
     //return AppAuthStatus.fullyAuthorized;
 
