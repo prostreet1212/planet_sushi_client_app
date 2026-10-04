@@ -42,7 +42,8 @@ Future<void> init() async{
   sl.registerFactory(() => AddUserCubit(profileRepository: sl()));
   sl.registerFactory(() => CatalogCubit(syncService: sl()));
   sl.registerFactory(() => CartCubit(cartLocalDataSource: sl()));
-  sl.registerFactory(() => ProfileCubit(profileRepository: sl()));
+  //sl.registerFactory(() => ProfileCubit(profileRepository: sl()));
+  sl.registerLazySingleton(() => ProfileCubit(profileRepository: sl()));
   sl.registerFactory(() => AuthStatusCubit(authDataSource: sl()));
 
   //states

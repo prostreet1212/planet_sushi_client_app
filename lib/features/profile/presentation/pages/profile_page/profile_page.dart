@@ -94,19 +94,17 @@ class _ProfilePageState extends State<ProfilePage> {
     //был bloclistener
     return BlocConsumer<AuthStatusCubit, AuthStatusState>(
       // При любом изменении статуса авторизации перечитываем профиль.
-      listener: (context, authState) async {
-        //закладка
+      listener: (context, authState)  {
+        // при выходе ручном или по сроку действия удалить запись в локальной бд
         if(authState is AuthStatusUnauthorized){
           final ProfileState profileState = context.read<ProfileCubit>().state;
 
           if (profileState is ProfileSuccess) {
-            await di.sl<ProfileLocalDataSource>().deleteProfile(profileState.user);
+             di.sl<ProfileLocalDataSource>().deleteProfile(profileState.user);
           }
-
-          context.read<ProfileCubit>().getLProfile();
-        }else{
-          context.read<ProfileCubit>().getLProfile();
         }
+          context.read<ProfileCubit>().getLProfile();
+
 
       },
       builder: (context,authState){

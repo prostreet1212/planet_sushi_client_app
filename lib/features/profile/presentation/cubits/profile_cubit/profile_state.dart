@@ -11,9 +11,13 @@ class ProfileEmpty extends ProfileState{}
 class ProfileSuccess extends ProfileState{
   final UserModel user;
   ProfileSuccess({required this.user});
-
-
 }
+
+class ProfileIncomplete extends ProfileState{
+  final UserModel user;
+  ProfileIncomplete({required this.user});
+}
+
 class ProfileError extends ProfileState{
   final String message;
 

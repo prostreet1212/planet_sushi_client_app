@@ -7,6 +7,8 @@ import 'package:planet_sushi_client_app/features/main/presentation/screens/main_
 
 import '../../../../../../core/routers/app_router.dart';
 import '../../../../../../injection_container.dart' as di;
+import '../../../../../profile/presentation/cubits/profile_cubit/profile_cubit.dart';
+import '../../../../../profile/presentation/cubits/profile_cubit/profile_state.dart';
 import '../../../../data/models/user_model.dart';
 import '../../../cubits/add_user_cubit/add_user_cubit.dart';
 import '../../../cubits/add_user_cubit/add_user_state.dart';
@@ -28,50 +30,65 @@ class AddUserButton extends StatelessWidget {
         ),
         child: Align(
           alignment: AlignmentGeometry.bottomCenter,
-          child: BlocListener<AddUserCubit,AddUserState>(
-            listener: (context,state)  {
-              if (state is AddUserSuccess) {
-                //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const MainScreen()), (route)=>false);
-               // context.router.replaceAll([const MainRoute()]);
-                //т.к. после статуса AuthStatusIncomplete он может не поменяться т.к. слушатель на это не сработвет, мы по необходимости ставим вручную
-                if(di.sl<AuthStatusCubit>().state is !AuthStatusAuthorized){
-                   context.read<AuthStatusCubit>().changeAuthStatus(AuthStatusAuthorized());
+          child: BlocProvider<ProfileCubit>.value(
+            value: di.sl<ProfileCubit>(),
+            child: BlocListener<ProfileCubit, ProfileState>(
+              listener: (context, profileState) {
+                // Навигация на корень — только когда профиль реально загружен.
+                if (profileState is ProfileSuccess /*&& (profileState.user.name!=null||profileState.user.name!='')*/) {
+                  context.router.popUntilRoot();
                 }
-                context.router.popUntilRoot();
-              }else if(state is AddUserError){
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Ошибка ${state.message}'))
-                );
-              }
-            },
-            child: ElevatedButton(
-              onPressed:nameState.nameIsFilled? () {
-                final user = UserModel(phone: otpPhoneState.phone, name: nameState.nameController.text);
-                //di.sl<AuthDataSource>().createUser(user);
-                //di.sl<AddUserCubit>().addUser(user);
-                context.read<AddUserCubit>().addUser(user);
-              }:null,
-              style: ElevatedButton.styleFrom(
-                fixedSize: Size(205, 54),
-                backgroundColor: const Color(0xFF88b705),
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32),
-                ),
-              ),
-              child: const Text(
-                'Завершить',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+              },
+              child: BlocListener<AddUserCubit, AddUserState>(
+                listener: (context, state) {
+                  if (state is AddUserSuccess) {
+                    //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const MainScreen()), (route)=>false);
+                    // context.router.replaceAll([const MainRoute()]);
+                    //т.к. после статуса AuthStatusIncomplete он может не поменяться т.к. слушатель на это не сработвет, мы по необходимости ставим вручную
+                    if (context
+                        .read<AuthStatusCubit>()
+                        .state is! AuthStatusAuthorized) {
+                      context.read<AuthStatusCubit>().changeAuthStatus(
+                          AuthStatusAuthorized());
+                    }
+                   // context.router.popUntilRoot();
+                  } else if (state is AddUserError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Ошибка ${state.message}'))
+                    );
+                  }
+                },
+                child: ElevatedButton(
+                  onPressed: nameState.nameIsFilled ? () {
+                    final user = UserModel(phone: otpPhoneState.phone,
+                        name: nameState.nameController.text);
+                    //di.sl<AuthDataSource>().createUser(user);
+                    //di.sl<AddUserCubit>().addUser(user);
+                    context.read<AddUserCubit>().addUser(user);
+                  } : null,
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: Size(205, 54),
+                    backgroundColor: const Color(0xFF88b705),
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                  ),
+                  child: const Text(
+                    'Завершить',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
           //},
-        ),
-      ),
+        ),)
+      ,
     );
   }
 }

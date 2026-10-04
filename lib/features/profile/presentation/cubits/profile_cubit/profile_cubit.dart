@@ -15,7 +15,16 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(message: error));
     },
             (data) {
-          emit(ProfileSuccess(user: data));
+      if(data.name==null||data.name==''){
+        emit(ProfileIncomplete(user: data));
+      }else{
+        emit(ProfileSuccess(user: data));
+      }
         });
   }
+
+  /*void deleteProfile(){
+
+  }*/
+
 }

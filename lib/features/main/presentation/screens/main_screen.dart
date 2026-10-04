@@ -58,8 +58,6 @@ class _MainScreenState extends State<MainScreen> {
           create: (context) => di.sl<CatalogCubit>()..getCatalog(),
         ),
         BlocProvider<ProfileCubit>(
-    //закладка проверить моментальности отрисовки
-          lazy: false,
           create: (context) => di.sl<ProfileCubit>(),//..getLProfile(),
         ),
       ],
