@@ -28,10 +28,10 @@ class ProductCard extends StatelessWidget {
         //di.sl<CartLocalDataSource>().insertCartItem(id!, product);
         //di.sl<CartRemoteDataSource>().insertCart(id!, product.id);
 
-        /* var id = di.sl<Supabase>().client.auth.currentUser?.id;
-        await context.read<CartCubit>().insertCart(id!, product);*/
+         var id = di.sl<Supabase>().client.auth.currentUser?.id;
+        await context.read<CartCubit>().insertCart(id, product);
 
-        context.router.push(const ProductDetailRoute());
+        //context.router.push(const ProductDetailRoute());
 
         // List<CartItem> a=await di.sl<CartLocalDataSource>().getCartItems();
         // a.map((e){

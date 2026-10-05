@@ -859,9 +859,9 @@ class $CartItemsTable extends CartItems
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
     'user_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _productIdMeta = const VerificationMeta(
     'productId',
@@ -909,8 +909,6 @@ class $CartItemsTable extends CartItems
         _userIdMeta,
         userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_userIdMeta);
     }
     if (data.containsKey('product_id')) {
       context.handle(
@@ -944,7 +942,7 @@ class $CartItemsTable extends CartItems
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
-      )!,
+      ),
       productId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}product_id'],
@@ -964,12 +962,12 @@ class $CartItemsTable extends CartItems
 
 class CartItemTable extends DataClass implements Insertable<CartItemTable> {
   final String id;
-  final String userId;
+  final String? userId;
   final String productId;
   final int quantity;
   const CartItemTable({
     required this.id,
-    required this.userId,
+    this.userId,
     required this.productId,
     required this.quantity,
   });
@@ -977,7 +975,9 @@ class CartItemTable extends DataClass implements Insertable<CartItemTable> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['user_id'] = Variable<String>(userId);
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<String>(userId);
+    }
     map['product_id'] = Variable<String>(productId);
     map['quantity'] = Variable<int>(quantity);
     return map;
@@ -986,7 +986,9 @@ class CartItemTable extends DataClass implements Insertable<CartItemTable> {
   CartItemsCompanion toCompanion(bool nullToAbsent) {
     return CartItemsCompanion(
       id: Value(id),
-      userId: Value(userId),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
       productId: Value(productId),
       quantity: Value(quantity),
     );
@@ -999,7 +1001,7 @@ class CartItemTable extends DataClass implements Insertable<CartItemTable> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CartItemTable(
       id: serializer.fromJson<String>(json['id']),
-      userId: serializer.fromJson<String>(json['userId']),
+      userId: serializer.fromJson<String?>(json['userId']),
       productId: serializer.fromJson<String>(json['productId']),
       quantity: serializer.fromJson<int>(json['quantity']),
     );
@@ -1009,7 +1011,7 @@ class CartItemTable extends DataClass implements Insertable<CartItemTable> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'userId': serializer.toJson<String>(userId),
+      'userId': serializer.toJson<String?>(userId),
       'productId': serializer.toJson<String>(productId),
       'quantity': serializer.toJson<int>(quantity),
     };
@@ -1017,12 +1019,12 @@ class CartItemTable extends DataClass implements Insertable<CartItemTable> {
 
   CartItemTable copyWith({
     String? id,
-    String? userId,
+    Value<String?> userId = const Value.absent(),
     String? productId,
     int? quantity,
   }) => CartItemTable(
     id: id ?? this.id,
-    userId: userId ?? this.userId,
+    userId: userId.present ? userId.value : this.userId,
     productId: productId ?? this.productId,
     quantity: quantity ?? this.quantity,
   );
@@ -1060,7 +1062,7 @@ class CartItemTable extends DataClass implements Insertable<CartItemTable> {
 
 class CartItemsCompanion extends UpdateCompanion<CartItemTable> {
   final Value<String> id;
-  final Value<String> userId;
+  final Value<String?> userId;
   final Value<String> productId;
   final Value<int> quantity;
   final Value<int> rowid;
@@ -1073,12 +1075,11 @@ class CartItemsCompanion extends UpdateCompanion<CartItemTable> {
   });
   CartItemsCompanion.insert({
     required String id,
-    required String userId,
+    this.userId = const Value.absent(),
     required String productId,
     required int quantity,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       userId = Value(userId),
        productId = Value(productId),
        quantity = Value(quantity);
   static Insertable<CartItemTable> custom({
@@ -1099,7 +1100,7 @@ class CartItemsCompanion extends UpdateCompanion<CartItemTable> {
 
   CartItemsCompanion copyWith({
     Value<String>? id,
-    Value<String>? userId,
+    Value<String?>? userId,
     Value<String>? productId,
     Value<int>? quantity,
     Value<int>? rowid,
@@ -2191,7 +2192,7 @@ typedef $$ProductsTableProcessedTableManager =
 typedef $$CartItemsTableCreateCompanionBuilder =
     CartItemsCompanion Function({
       required String id,
-      required String userId,
+      Value<String?> userId,
       required String productId,
       required int quantity,
       Value<int> rowid,
@@ -2199,7 +2200,7 @@ typedef $$CartItemsTableCreateCompanionBuilder =
 typedef $$CartItemsTableUpdateCompanionBuilder =
     CartItemsCompanion Function({
       Value<String> id,
-      Value<String> userId,
+      Value<String?> userId,
       Value<String> productId,
       Value<int> quantity,
       Value<int> rowid,
@@ -2319,7 +2320,7 @@ class $$CartItemsTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<String> userId = const Value.absent(),
+                Value<String?> userId = const Value.absent(),
                 Value<String> productId = const Value.absent(),
                 Value<int> quantity = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -2333,7 +2334,7 @@ class $$CartItemsTableTableManager
           createCompanionCallback:
               ({
                 required String id,
-                required String userId,
+                Value<String?> userId = const Value.absent(),
                 required String productId,
                 required int quantity,
                 Value<int> rowid = const Value.absent(),

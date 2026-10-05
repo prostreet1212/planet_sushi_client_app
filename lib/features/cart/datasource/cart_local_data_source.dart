@@ -45,11 +45,17 @@ class CartLocalDataSource {
   }
 
 
-  Future<void> insertCartItem(String userId, Product product)async{
+  Future<void> insertCartItem(String? userId, Product product)async{
     const uuid = Uuid();
     final String id = uuid.v7();
     try{
-      await _db.into(_db.cartItems).insert(CartItemsCompanion.insert(id: id, userId: userId, productId: product.id, quantity: 1));
+      //закладка  userId==null
+      if(userId!=null){
+        await _db.into(_db.cartItems).insert(CartItemsCompanion.insert(id: id, userId: Value(userId), productId: product.id, quantity: 1));
+      }else{
+        await _db.into(_db.cartItems).insert(CartItemsCompanion.insert(id: id, productId: product.id, quantity: 1));
+      }
+
     }catch(e){
       print('local db error:$e');
     }

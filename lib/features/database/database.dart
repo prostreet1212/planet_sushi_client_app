@@ -36,7 +36,7 @@ class Products extends Table {
 @DataClassName('CartItemTable')
 class CartItems extends Table {
   TextColumn get id => text()();
-  TextColumn get userId => text()();
+  TextColumn get userId => text().nullable()();
   TextColumn get productId => text()();
   IntColumn get quantity => integer()();
 

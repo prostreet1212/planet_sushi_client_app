@@ -20,7 +20,7 @@ class CartCubit extends Cubit<CartState> {
 
 
 
-  Future<void> insertCart(String userId, Product product) async {
+  Future<void> insertCart(String? userId, Product product) async {
     await _cartLocalDataSource.insertCartItem(userId, product);
     await loadCart();
   }
