@@ -8,7 +8,7 @@ class SendCodeCubit extends Cubit<SendCodeState> {
 
   void sendCode(String number) async {
     //сначала проверим пытался ли пользователь войти ранее
-    final checkData=await _authDataSource.checkPrevLogin();
+    final checkData=await _authDataSource.checkPrevLogin(number);
     checkData.fold(
           (error) async {
             final sendCodeData = await _authDataSource.sendCode(number);

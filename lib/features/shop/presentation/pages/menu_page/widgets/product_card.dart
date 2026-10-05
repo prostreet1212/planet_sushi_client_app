@@ -25,20 +25,12 @@ class ProductCard extends StatelessWidget {
     //bool isInCart=false;
     return InkWell(
       onTap: () async {
-        /*
-        if(di.sl<Supabase>().client.auth.currentUser!=null){
-          var id=di.sl<Supabase>().client.auth.currentUser?.id;
-          print('пользователь авторизован $id');
-        }else{
-          print('пользователя нетю');
-        }*/
-
         //di.sl<CartLocalDataSource>().insertCartItem(id!, product);
         //di.sl<CartRemoteDataSource>().insertCart(id!, product.id);
 
         /* var id = di.sl<Supabase>().client.auth.currentUser?.id;
         await context.read<CartCubit>().insertCart(id!, product);*/
-        //Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailPage()));
+
         context.router.push(const ProductDetailRoute());
 
         // List<CartItem> a=await di.sl<CartLocalDataSource>().getCartItems();

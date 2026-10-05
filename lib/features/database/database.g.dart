@@ -1190,8 +1190,26 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UsersTable> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _bonus_pointsMeta = const VerificationMeta(
+    'bonus_points',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, phone, name, avatar_url];
+  late final GeneratedColumn<int> bonus_points = GeneratedColumn<int>(
+    'bonus_points',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    phone,
+    name,
+    avatar_url,
+    bonus_points,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1229,6 +1247,15 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UsersTable> {
         avatar_url.isAcceptableOrUnknown(data['avatar_url']!, _avatar_urlMeta),
       );
     }
+    if (data.containsKey('bonus_points')) {
+      context.handle(
+        _bonus_pointsMeta,
+        bonus_points.isAcceptableOrUnknown(
+          data['bonus_points']!,
+          _bonus_pointsMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1254,6 +1281,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UsersTable> {
         DriftSqlType.string,
         data['${effectivePrefix}avatar_url'],
       ),
+      bonus_points: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}bonus_points'],
+      )!,
     );
   }
 
@@ -1268,11 +1299,13 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
   final String phone;
   final String? name;
   final String? avatar_url;
+  final int bonus_points;
   const UsersTable({
     required this.id,
     required this.phone,
     this.name,
     this.avatar_url,
+    required this.bonus_points,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1285,6 +1318,7 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
     if (!nullToAbsent || avatar_url != null) {
       map['avatar_url'] = Variable<String>(avatar_url);
     }
+    map['bonus_points'] = Variable<int>(bonus_points);
     return map;
   }
 
@@ -1296,6 +1330,7 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
       avatar_url: avatar_url == null && nullToAbsent
           ? const Value.absent()
           : Value(avatar_url),
+      bonus_points: Value(bonus_points),
     );
   }
 
@@ -1309,6 +1344,7 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
       phone: serializer.fromJson<String>(json['phone']),
       name: serializer.fromJson<String?>(json['name']),
       avatar_url: serializer.fromJson<String?>(json['avatar_url']),
+      bonus_points: serializer.fromJson<int>(json['bonus_points']),
     );
   }
   @override
@@ -1319,6 +1355,7 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
       'phone': serializer.toJson<String>(phone),
       'name': serializer.toJson<String?>(name),
       'avatar_url': serializer.toJson<String?>(avatar_url),
+      'bonus_points': serializer.toJson<int>(bonus_points),
     };
   }
 
@@ -1327,11 +1364,13 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
     String? phone,
     Value<String?> name = const Value.absent(),
     Value<String?> avatar_url = const Value.absent(),
+    int? bonus_points,
   }) => UsersTable(
     id: id ?? this.id,
     phone: phone ?? this.phone,
     name: name.present ? name.value : this.name,
     avatar_url: avatar_url.present ? avatar_url.value : this.avatar_url,
+    bonus_points: bonus_points ?? this.bonus_points,
   );
   UsersTable copyWithCompanion(UsersCompanion data) {
     return UsersTable(
@@ -1341,6 +1380,9 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
       avatar_url: data.avatar_url.present
           ? data.avatar_url.value
           : this.avatar_url,
+      bonus_points: data.bonus_points.present
+          ? data.bonus_points.value
+          : this.bonus_points,
     );
   }
 
@@ -1350,13 +1392,14 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
           ..write('id: $id, ')
           ..write('phone: $phone, ')
           ..write('name: $name, ')
-          ..write('avatar_url: $avatar_url')
+          ..write('avatar_url: $avatar_url, ')
+          ..write('bonus_points: $bonus_points')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, phone, name, avatar_url);
+  int get hashCode => Object.hash(id, phone, name, avatar_url, bonus_points);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1364,7 +1407,8 @@ class UsersTable extends DataClass implements Insertable<UsersTable> {
           other.id == this.id &&
           other.phone == this.phone &&
           other.name == this.name &&
-          other.avatar_url == this.avatar_url);
+          other.avatar_url == this.avatar_url &&
+          other.bonus_points == this.bonus_points);
 }
 
 class UsersCompanion extends UpdateCompanion<UsersTable> {
@@ -1372,12 +1416,14 @@ class UsersCompanion extends UpdateCompanion<UsersTable> {
   final Value<String> phone;
   final Value<String?> name;
   final Value<String?> avatar_url;
+  final Value<int> bonus_points;
   final Value<int> rowid;
   const UsersCompanion({
     this.id = const Value.absent(),
     this.phone = const Value.absent(),
     this.name = const Value.absent(),
     this.avatar_url = const Value.absent(),
+    this.bonus_points = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   UsersCompanion.insert({
@@ -1385,6 +1431,7 @@ class UsersCompanion extends UpdateCompanion<UsersTable> {
     required String phone,
     this.name = const Value.absent(),
     this.avatar_url = const Value.absent(),
+    this.bonus_points = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        phone = Value(phone);
@@ -1393,6 +1440,7 @@ class UsersCompanion extends UpdateCompanion<UsersTable> {
     Expression<String>? phone,
     Expression<String>? name,
     Expression<String>? avatar_url,
+    Expression<int>? bonus_points,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1400,6 +1448,7 @@ class UsersCompanion extends UpdateCompanion<UsersTable> {
       if (phone != null) 'phone': phone,
       if (name != null) 'name': name,
       if (avatar_url != null) 'avatar_url': avatar_url,
+      if (bonus_points != null) 'bonus_points': bonus_points,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1409,6 +1458,7 @@ class UsersCompanion extends UpdateCompanion<UsersTable> {
     Value<String>? phone,
     Value<String?>? name,
     Value<String?>? avatar_url,
+    Value<int>? bonus_points,
     Value<int>? rowid,
   }) {
     return UsersCompanion(
@@ -1416,6 +1466,7 @@ class UsersCompanion extends UpdateCompanion<UsersTable> {
       phone: phone ?? this.phone,
       name: name ?? this.name,
       avatar_url: avatar_url ?? this.avatar_url,
+      bonus_points: bonus_points ?? this.bonus_points,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1435,6 +1486,9 @@ class UsersCompanion extends UpdateCompanion<UsersTable> {
     if (avatar_url.present) {
       map['avatar_url'] = Variable<String>(avatar_url.value);
     }
+    if (bonus_points.present) {
+      map['bonus_points'] = Variable<int>(bonus_points.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1448,6 +1502,7 @@ class UsersCompanion extends UpdateCompanion<UsersTable> {
           ..write('phone: $phone, ')
           ..write('name: $name, ')
           ..write('avatar_url: $avatar_url, ')
+          ..write('bonus_points: $bonus_points, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2320,6 +2375,7 @@ typedef $$UsersTableCreateCompanionBuilder =
       required String phone,
       Value<String?> name,
       Value<String?> avatar_url,
+      Value<int> bonus_points,
       Value<int> rowid,
     });
 typedef $$UsersTableUpdateCompanionBuilder =
@@ -2328,6 +2384,7 @@ typedef $$UsersTableUpdateCompanionBuilder =
       Value<String> phone,
       Value<String?> name,
       Value<String?> avatar_url,
+      Value<int> bonus_points,
       Value<int> rowid,
     });
 
@@ -2356,6 +2413,11 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
 
   ColumnFilters<String> get avatar_url => $composableBuilder(
     column: $table.avatar_url,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bonus_points => $composableBuilder(
+    column: $table.bonus_points,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -2388,6 +2450,11 @@ class $$UsersTableOrderingComposer
     column: $table.avatar_url,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get bonus_points => $composableBuilder(
+    column: $table.bonus_points,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$UsersTableAnnotationComposer
@@ -2410,6 +2477,11 @@ class $$UsersTableAnnotationComposer
 
   GeneratedColumn<String> get avatar_url => $composableBuilder(
     column: $table.avatar_url,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get bonus_points => $composableBuilder(
+    column: $table.bonus_points,
     builder: (column) => column,
   );
 }
@@ -2446,12 +2518,14 @@ class $$UsersTableTableManager
                 Value<String> phone = const Value.absent(),
                 Value<String?> name = const Value.absent(),
                 Value<String?> avatar_url = const Value.absent(),
+                Value<int> bonus_points = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion(
                 id: id,
                 phone: phone,
                 name: name,
                 avatar_url: avatar_url,
+                bonus_points: bonus_points,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -2460,12 +2534,14 @@ class $$UsersTableTableManager
                 required String phone,
                 Value<String?> name = const Value.absent(),
                 Value<String?> avatar_url = const Value.absent(),
+                Value<int> bonus_points = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion.insert(
                 id: id,
                 phone: phone,
                 name: name,
                 avatar_url: avatar_url,
+                bonus_points: bonus_points,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

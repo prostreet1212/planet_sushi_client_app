@@ -50,6 +50,7 @@ class Users extends Table{
   TextColumn get phone=>text()();
   TextColumn get name=>text().nullable()();
   TextColumn get avatar_url=>text().nullable()();
+  IntColumn get bonus_points=>integer().withDefault(const Constant(0))();
 
   @override
   Set<Column> get primaryKey => {id};

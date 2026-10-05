@@ -34,18 +34,21 @@ class AuthDataSource {
     required this._profileLocalDataSource,
   });
 
-  Future<Either<String,bool>>checkPrevLogin() async {
+  Future<Either<String,bool>>checkPrevLogin(String phone) async {
     try{
       if (_supabase.client.auth.currentUser?.id != null) {
         UserModel? localUser = await _profileLocalDataSource.getProfile();
         if (localUser!=null) {
-          String authUser = _supabase.client.auth.currentUser!.id;
-          if (authUser == localUser.id) {
+          //String authUserPhone = _supabase.client.auth.currentUser!.phone!;
+          if (localUser.phone=='7${phone}') {
             return Right(true);
           }else{
+             await logOut();
+             await _profileLocalDataSource.deleteProfile(localUser);
             return Right(false);
           }
         }else{
+          await logOut();
           return Right(false);
         }
 

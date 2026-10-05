@@ -45,7 +45,6 @@ class _OtpFormFieldState extends State<OtpFormField> {
     OtpPhoneState otpPhoneState = di.sl<OtpPhoneState>();
     return BlocProvider<ProfileCubit>.value(
       value: di.sl<ProfileCubit>(),
-      //закладка popUntilRoot 2 раза пофиксить+ addbutton
       child: BlocListener<ProfileCubit, ProfileState>(
         listener: (context, profileState) {
           // Навигация на корень — только когда профиль реально загружен.
@@ -83,7 +82,8 @@ class _OtpFormFieldState extends State<OtpFormField> {
             context,
             MaterialPageRoute(builder: (c) =>const NameScreen()),
           );*/
-              context.router.push(const NameRoute());
+              //context.router.push(const NameRoute());
+              context.router.replace(const NameRoute());
             }
           },
           child: SizedBox(
