@@ -27,6 +27,22 @@ class CartRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [CartRouterPage]
+class CartRouter extends PageRouteInfo<void> {
+  const CartRouter({List<PageRouteInfo>? children})
+    : super(CartRouter.name, initialChildren: children);
+
+  static const String name = 'CartRouter';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CartRouterPage();
+    },
+  );
+}
+
+/// generated route for
 /// [LoginScreen]
 class LoginRoute extends PageRouteInfo<void> {
   const LoginRoute({List<PageRouteInfo>? children})
@@ -102,6 +118,22 @@ class NameRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const NameScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [OrderPage]
+class OrderRoute extends PageRouteInfo<void> {
+  const OrderRoute({List<PageRouteInfo>? children})
+    : super(OrderRoute.name, initialChildren: children);
+
+  static const String name = 'OrderRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const OrderPage();
     },
   );
 }

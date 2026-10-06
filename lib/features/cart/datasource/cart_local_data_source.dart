@@ -50,12 +50,7 @@ class CartLocalDataSource {
     final String id = uuid.v7();
     try{
       //закладка  userId==null
-      if(userId!=null){
-        await _db.into(_db.cartItems).insert(CartItemsCompanion.insert(id: id, userId: Value(userId), productId: product.id, quantity: 1));
-      }else{
-        await _db.into(_db.cartItems).insert(CartItemsCompanion.insert(id: id, productId: product.id, quantity: 1));
-      }
-
+         _db.into(_db.cartItems).insert(CartItemsCompanion.insert(id: id, userId: Value(userId), productId: product.id, quantity: 1));
     }catch(e){
       print('local db error:$e');
     }
@@ -73,7 +68,7 @@ class CartLocalDataSource {
   }
 
   Future<void> deleteCartItem(CartItem cart)async{
-    _db.delete(_db.cartItems)..where((tbl)=>tbl.id.equals(cart.id))..go();
+    await _db.delete(_db.cartItems)..where((tbl)=>tbl.id.equals(cart.id))..go();
   }
 
   /// Полная перезапись корзины (транзакция)

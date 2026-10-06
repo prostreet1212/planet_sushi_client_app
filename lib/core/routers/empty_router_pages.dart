@@ -10,3 +10,14 @@ class MenuRouterPage extends StatelessWidget {
     return const AutoRouter();
   }
 }
+
+
+@RoutePage(name: 'CartRouter')
+class CartRouterPage extends StatelessWidget {
+  const CartRouterPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const AutoRouter();
+  }
+}

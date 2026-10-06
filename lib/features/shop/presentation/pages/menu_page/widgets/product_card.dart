@@ -214,7 +214,7 @@ class ProductCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${product.price.toString()}0 ₽',
+                          '${product.price.toString()} ₽',
                           style: TextStyle(fontSize: 16),
                         ),
                         Text(

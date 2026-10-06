@@ -65,7 +65,7 @@ class _CartCounterState extends State<CartCounter> {
                   padding: EdgeInsets.zero,
                   icon: Icon(Icons.remove, color: Colors.black),
                   onPressed: () {
-                    if (mCounter > 0) {
+                    if (mCounter > 1) {
                       setState(() {
                         mCounter = mCounter - 1;
                       });
@@ -109,7 +109,7 @@ class _CartCounterState extends State<CartCounter> {
                       setState(() {
                         mCounter = mCounter + 1;
                       });
-                      widget.onCounterChange?.call(mCounter);
+                      widget.onCounterChange.call(mCounter);
                     }
                   },
                 ),

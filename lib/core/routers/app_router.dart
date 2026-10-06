@@ -9,6 +9,7 @@ import 'package:planet_sushi_client_app/features/main/presentation/screens/main_
 import 'package:planet_sushi_client_app/features/shop/presentation/pages/product_detail_page/product_detail_page.dart';
 
 import '../../features/cart/presentation/pages/cart_page.dart';
+import '../../features/order/pages/order_page.dart';
 import '../../features/profile/presentation/pages/profile_page/profile_page.dart';
 import '../../features/shop/presentation/pages/menu_page/menu_page.dart';
 
@@ -33,7 +34,14 @@ class AppRouter extends RootStackRouter {
               transitionsBuilder: _transitionsBuilder,duration: Duration(milliseconds: 500),),
           ],
         ),
-        CustomRoute(path: 'cart', page: CartRoute.page),
+        AutoRoute(
+          path: 'cartRouter',
+            page: CartRouter.page,
+        children: [
+          CustomRoute(path: 'cart', page: CartRoute.page,initial: true),
+          CustomRoute(path: 'order', page: OrderRoute.page),
+        ]),
+
         // Профиль доступен без авторизации: страница сама показывает кнопку "войти".
         CustomRoute(path: 'profile', page: ProfileRoute.page)
 

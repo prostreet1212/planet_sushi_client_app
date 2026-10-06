@@ -10,6 +10,7 @@ import 'package:planet_sushi_client_app/injection_container.dart' as di;
 class CartCubit extends Cubit<CartState> {
   final CartLocalDataSource _cartLocalDataSource;
   List<CartItem> _items = [];
+  double _totalPrice=0;
 
 
   CartCubit({required this._cartLocalDataSource}) : super(CartLoaded(items: [])) {
@@ -17,6 +18,11 @@ class CartCubit extends Cubit<CartState> {
   }
 
   List<CartItem> get items => _items;
+
+  double get totalPrice=>_items.fold(
+    0,
+        (sum, item) => sum + item.totalPrice,
+  );
 
 
 
@@ -32,11 +38,10 @@ class CartCubit extends Cubit<CartState> {
 
   Future<void> updateCartQuantity (CartItem cart,int count)async{
     await _cartLocalDataSource.updateCartItem(cart, count);
+    await loadCart();
   }
 
   Future<void> loadCart() async {
-    String? a=di.sl<Supabase>().client.auth.currentUser?.id??'a';
-    print('пользователь $a');
     _items = await _cartLocalDataSource.getCartItems();
     if (_items.isEmpty) {
       emit(CartEmpty());
