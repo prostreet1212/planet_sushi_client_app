@@ -13,6 +13,7 @@ import 'package:planet_sushi_client_app/features/cart/datasource/cart_local_data
 import 'package:planet_sushi_client_app/features/cart/datasource/cart_remote_data_source.dart';
 import 'package:planet_sushi_client_app/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/providers/main_screen_state.dart';
+import 'package:planet_sushi_client_app/features/order/presentation/cubits/chekout_cubit/chekout_cubit.dart';
 import 'package:planet_sushi_client_app/features/profile/datasource/profile_local_data_source.dart';
 import 'package:planet_sushi_client_app/features/profile/datasource/profile_remote_data_source.dart';
 import 'package:planet_sushi_client_app/features/profile/datasource/profile_repository.dart';
@@ -21,7 +22,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'features/auth/presentation/cubits/auth_status_cubit/auth_status_cubit.dart';
 import 'features/database/database.dart';
 import 'features/shop/datasource/shop_local_data_source.dart';
-import 'features/shop/datasource/shop_sync_service.dart';
+import 'features/shop/datasource/shop_repository.dart';
 import 'features/shop/datasource/shop_remote_data_source.dart';
 import 'features/shop/presentation/cubits/catalog_cubit/catalog_cubit.dart';
 
@@ -40,11 +41,12 @@ Future<void> init() async{
   sl.registerFactory(() => SendCodeCubit(authDataSource: sl()));
   sl.registerFactory(() => OtpCubit(authDataSource: sl(),profileRepository: sl()));
   sl.registerFactory(() => AddUserCubit(profileRepository: sl()));
-  sl.registerFactory(() => CatalogCubit(syncService: sl()));
+  sl.registerFactory(() => CatalogCubit(shopRepository: sl()));
   sl.registerFactory(() => CartCubit(cartLocalDataSource: sl()));
   //sl.registerFactory(() => ProfileCubit(profileRepository: sl()));
   sl.registerLazySingleton(() => ProfileCubit(profileRepository: sl()));
   sl.registerFactory(() => AuthStatusCubit(authDataSource: sl()));
+  sl.registerFactory(() => CheckoutCubit());
 
   //states
   sl.registerFactory(() => LoginState());
@@ -62,7 +64,7 @@ Future<void> init() async{
   // database
   sl.registerLazySingleton<AppDatabase>(() => AppDatabase());
   sl.registerLazySingleton<ShopLocalDataSource>(() => ShopLocalDataSource( db: sl()));
-  sl.registerLazySingleton<ShopSyncService>(() => ShopSyncService(
+  sl.registerLazySingleton<ShopRepository>(() => ShopRepository(
     remoteDataSource: sl(),
     localDataSource: sl(),
   ));

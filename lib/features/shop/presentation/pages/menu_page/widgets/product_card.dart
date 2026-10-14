@@ -15,6 +15,8 @@ import 'package:planet_sushi_client_app/features/shop/presentation/pages/product
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 
+import '../../../../../../core/utils/utils.dart';
+
 class ProductCard extends StatelessWidget {
   final Product product;
 
@@ -213,8 +215,8 @@ class ProductCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          '${product.price.toString()} ₽',
+                        Text('${Utils.formatPrice(product.price)}  ₽',
+                         // '${product.price.toString()} ₽',
                           style: TextStyle(fontSize: 16),
                         ),
                         Text(

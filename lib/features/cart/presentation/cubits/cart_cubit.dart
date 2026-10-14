@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/cart/datasource/cart_local_data_source.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -41,12 +43,18 @@ class CartCubit extends Cubit<CartState> {
     await loadCart();
   }
 
+  StreamSubscription? _sub;
   Future<void> loadCart() async {
-    _items = await _cartLocalDataSource.getCartItems();
+  /*  _items = await _cartLocalDataSource.getCartItems();
     if (_items.isEmpty) {
       emit(CartEmpty());
     } else {
       emit(CartLoaded(items: _items));
-    }
+    }*/
+    _sub?.cancel();
+    _sub = _cartLocalDataSource.watchCartItems().listen((items) {
+      _items = items;
+      items.isEmpty ? emit(CartEmpty()) : emit(CartLoaded(items: items));
+    });
   }
 }

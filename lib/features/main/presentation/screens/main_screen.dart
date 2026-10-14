@@ -11,6 +11,7 @@ import 'package:planet_sushi_client_app/features/main/presentation/screens/widge
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_body.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_nav_bar.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/main_nav_fab.dart';
+import 'package:planet_sushi_client_app/features/order/presentation/cubits/chekout_cubit/chekout_cubit.dart';
 import 'package:planet_sushi_client_app/features/profile/presentation/cubits/profile_cubit/profile_cubit.dart';
 import 'package:planet_sushi_client_app/features/shop/presentation/cubits/catalog_cubit/catalog_cubit.dart';
 import 'package:provider/provider.dart';
@@ -22,27 +23,8 @@ import '../../../shop/presentation/pages/menu_page/menu_page.dart';
 import '../../../profile/presentation/pages/profile_page/profile_page.dart';
 
 @RoutePage()
-class MainScreen extends StatefulWidget {
+class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-
-  @override
-  void initState() {
-    //di.sl<AuthDataSource>().checkUserStatus();
-    super.initState();
-
-  }
-
-  @override
-  void dispose() {
-    context.read<AuthStatusCubit>().close();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,95 +35,21 @@ class _MainScreenState extends State<MainScreen> {
           lazy: false,
           create: (context) => di.sl<AuthStatusCubit>()..init(),
         ),*/
-        BlocProvider(create: (context) => di.sl<CartCubit>()..loadCart()),
         BlocProvider<CatalogCubit>(
+          lazy: false,
           create: (context) => di.sl<CatalogCubit>()..getCatalog(),
         ),
+        BlocProvider(create: (context) => di.sl<CartCubit>()..loadCart()
+    ),
         BlocProvider<ProfileCubit>(
+          lazy: false,
           create: (context) => di.sl<ProfileCubit>(),//..getLProfile(),
         ),
+        BlocProvider<CheckoutCubit>(
+          create: (context) => di.sl<CheckoutCubit>(),
+        )
       ],
-      child: Theme(
-        data: ThemeData(
-          colorScheme: .fromSeed(seedColor: Colors.yellow),
-          useMaterial3: false,
-          //fontFamily: 'Custom',
-          //fontFamily: 'RobotoCondensed',
-          fontFamily: 'RobotoCondensedRegular',
-        ),
-        child: AutoTabsRouter.builder(
-          routes: [
-            MenuRoute(),
-            CartRoute(),
-            const ProfileRoute(),
-            //LoginRoute(),
-          ],
-          builder: (context, children, tabsRouter) {
-            return SafeArea(
-              child: Scaffold(
-                resizeToAvoidBottomInset: false,
-                extendBody: true,
-                appBar: AppBar(
-                  title: const Text('Планета суши'),
-                  leading: AutoLeadingButton(
-                    showIfChildCanPop: true,
-                    showIfParentCanPop: false,
-                  ),
-                  automaticallyImplyLeading: true,
-                ),
-                // body: MainBody(),
-                body: AnimatedIndexedStack1(
-                  index: tabsRouter.activeIndex,
-                  children: children,
-                  duration: Duration(milliseconds: 500),
-                  curve: Easing.legacy,
-                ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerDocked,
-                //floatingActionButtonLocation: const FixedCenterDockedFabLocation(),
-                floatingActionButton: const MainNavFab(),
-                bottomNavigationBar: const MainNavBar(),
-              ),
-            );
-          },
-        ),
-
-        /*SafeArea(
-            child: Scaffold(
-              extendBody: true,
-              appBar: AppBar(title: const Text('Планета суши'),
-                leading:AutoLeadingButton(),
-                automaticallyImplyLeading: true,),
-              body: MainBody(),
-              floatingActionButtonLocation: FloatingActionButtonLocation
-                  .centerDocked,
-              floatingActionButton: const MainNavFab(),
-              bottomNavigationBar: const MainNavBar(),
-            ),
-          ),*/
-        /*AutoTabsRouter(
-            routes: [
-              MenuRoute(), const CartRoute(), const ProfileRoute(),
-            ],
-
-            builder: (context,child){
-              return SafeArea(
-                child: Scaffold(
-                  extendBody: true,
-                  appBar: AppBar(title: const Text('Планета суши'),
-                    leading:AutoLeadingButton(),
-                  automaticallyImplyLeading: true,),
-                 // body: MainBody(),
-                  body: child,
-                  floatingActionButtonLocation: FloatingActionButtonLocation
-                      .centerDocked,
-                  floatingActionButton: const MainNavFab(),
-                  bottomNavigationBar: const MainNavBar(),
-                ),
-              );
-            },
-          ),*/
-      ),
+      child:const MainBody(),
     ); /*ChangeNotifierProvider.value(
       value: di.sl<MainScreenState>(),
       child: MultiBlocProvider(

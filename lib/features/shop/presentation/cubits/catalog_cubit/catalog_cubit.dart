@@ -5,39 +5,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/shop/models/category.dart';
 
 import '../../../../../core/error/failure.dart';
-import '../../../datasource/shop_sync_service.dart';
+import '../../../datasource/shop_repository.dart';
 
 import 'catalog_state.dart';
 
-/*class CatalogCubit extends Cubit<CatalogState> {
-  final ShopDataSource _shopDataSource;
-
-  CatalogCubit({required this._shopDataSource}) : super(CatalogInit());
-
-  void getCatalog() async {
-    emit(CatalogLoading());
-    final catalogData = await _shopDataSource.getCategoriesWithProducts();
-    catalogData.fold((error) {
-      emit(CatalogError(message: error));
-    },
-            (catalogList) {
-      if(catalogList.isEmpty){
-        emit((CatalogEmpty()));
-      }
-      emit(CatalogSuccess(categoryList: catalogList));
-            });
-  }
-}*/
-
 class CatalogCubit extends Cubit<CatalogState> {
-  final ShopSyncService _syncService;
+  final ShopRepository _shopRepository;
 
-  CatalogCubit({required ShopSyncService this._syncService})
+  CatalogCubit({required ShopRepository this._shopRepository})
       :super(CatalogInit());
 
   /*void getCatalog() async {
     emit(CatalogLoading());
-    final result = await _syncService.getCatalog();
+    final result = await _shopRepository.getCatalog();
     result.fold(
           (error) => emit(CatalogError(message: error)),
           (catalogList) {
@@ -50,11 +30,11 @@ class CatalogCubit extends Cubit<CatalogState> {
     );
   }*/
 
-  void getCatalog() async {
+  Future<void> getCatalog() async {
     emit(CatalogLoading());
 
     // 1. Мгновенно показываем локальные данные
-    final localData = await _syncService.getLocalCatalog();
+    final localData = await _shopRepository.getLocalCatalog();
     localData.fold(
           (error) {},
           (catalogList) {
@@ -66,7 +46,7 @@ class CatalogCubit extends Cubit<CatalogState> {
     );
 
     // 2. Синхронизируем с Supabase и обновляем UI
-    final remoteData = await _syncService.syncFromRemote();
+    final remoteData = await _shopRepository.syncFromRemote();
     remoteData.fold(
           (Failure fail) {
         // Если локальных данных не было — показываем ошибку

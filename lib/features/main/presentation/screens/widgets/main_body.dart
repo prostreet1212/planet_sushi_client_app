@@ -5,62 +5,125 @@ import 'package:planet_sushi_client_app/features/main/presentation/screens/provi
 import 'package:planet_sushi_client_app/features/main/presentation/screens/widgets/general_widgets/animated_indexed_stack1.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../core/routers/app_router.dart';
+import '../../../../auth/presentation/cubits/auth_status_cubit/auth_status_cubit.dart';
+import '../../../../cart/presentation/cubits/cart_cubit.dart';
+import '../../../../shop/presentation/cubits/catalog_cubit/catalog_cubit.dart';
 import 'general_widgets/animated_indexed_stack.dart';
+import 'main_nav_bar.dart';
+import 'main_nav_fab.dart';
 
-class MainBody extends StatelessWidget {
+class MainBody extends StatefulWidget {
   const MainBody({super.key});
 
   @override
-  Widget build(BuildContext context) {
-   /* return Selector<MainScreenState, ({int currentIndex, int previousIndex})>(
-        selector: (_, state) =>
-        (currentIndex: state.currentIndex, previousIndex: state.previousIndex),
-        builder: (context, data, child) {
-          final mainScreenState = context.read<MainScreenState>();
-          return PageTransitionSwitcher(
-            reverse: mainScreenState.getTransitionType(),
-            duration: const Duration(milliseconds: 5000),
-            transitionBuilder: (Widget child, Animation<double> animation,
-                Animation<double> secondaryAnimation) {
-              return SharedAxisTransition(
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                transitionType: SharedAxisTransitionType.horizontal,
-                // Горизонтальная ось
-                fillColor: Colors.transparent,
-                child: child,
-              );
-            },
-            // child: mainScreenState.pages[mainScreenState.currentIndex],было изначально
-            child: IndexedStack(
-              key: ValueKey(data.currentIndex),
-              index: mainScreenState.currentIndex,
-              children: mainScreenState.pages,
-            ),
-          );
-        }
-    );
-  }*/
-return Container();
-  /*  final state = context.watch<MainScreenState>();
-    return AnimatedIndexedStack1(
-      index: state.currentIndex,
-      children: state.pages,
-      duration: Duration(milliseconds: 500),
-      curve: Easing.legacy,
-    );*/
-  }
-
+  State<MainBody> createState() => _MainBodyState();
 }
 
-//пробники
+class _MainBodyState extends State<MainBody> {
 
-// final state = context.watch<MainScreenState>();
-// return AnimatedIndexedStack(
-//   index: state.currentIndex,
-//   previousIndex: state.previousIndex,
-//   reverse: state.getTransitionType(),
-//   children: state.pages,
-//   duration: const Duration(milliseconds: 5000),
-// );
+  @override
+  void initState() {
+    super.initState();
+    //_bootstrap();
+  }
 
+  @override
+  void dispose() {
+    context.read<AuthStatusCubit>().close();
+    super.dispose();
+  }
+
+  Future<void> _bootstrap() async {
+    // 1. Сначала каталог: getCatalog() внутри await-ит syncFromRemote()
+    await context.read<CatalogCubit>().getCatalog();
+    if (!mounted) return;
+    // 2. Только теперь читаем корзину — products уже обновлены
+    await context.read<CartCubit>().loadCart();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: ThemeData(
+        colorScheme: .fromSeed(seedColor: Colors.yellow),
+        useMaterial3: false,
+        //fontFamily: 'Custom',
+        //fontFamily: 'RobotoCondensed',
+        fontFamily: 'RobotoCondensedRegular',
+      ),
+      child: AutoTabsRouter.builder(
+        routes: [
+          const MenuRoute(),
+          const CartRoute(),
+          const ProfileRoute(),
+          //LoginRoute(),
+        ],
+        builder: (context, children, tabsRouter) {
+          return SafeArea(
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              extendBody: true,
+              appBar: AppBar(
+                title: const Text('Планета суши'),
+                leading: AutoLeadingButton(
+                  showIfChildCanPop: true,
+                  showIfParentCanPop: false,
+                ),
+                automaticallyImplyLeading: true,
+              ),
+              // body: MainBody(),
+              body: AnimatedIndexedStack1(
+                index: tabsRouter.activeIndex,
+                children: children,
+                duration: Duration(milliseconds: 500),
+                curve: Easing.legacy,
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              //floatingActionButtonLocation: const FixedCenterDockedFabLocation(),
+              floatingActionButton: const MainNavFab(),
+              bottomNavigationBar: const MainNavBar(),
+            ),
+          );
+        },
+      ),
+
+      /*SafeArea(
+            child: Scaffold(
+              extendBody: true,
+              appBar: AppBar(title: const Text('Планета суши'),
+                leading:AutoLeadingButton(),
+                automaticallyImplyLeading: true,),
+              body: MainBody(),
+              floatingActionButtonLocation: FloatingActionButtonLocation
+                  .centerDocked,
+              floatingActionButton: const MainNavFab(),
+              bottomNavigationBar: const MainNavBar(),
+            ),
+          ),*/
+      /*AutoTabsRouter(
+            routes: [
+              MenuRoute(), const CartRoute(), const ProfileRoute(),
+            ],
+
+            builder: (context,child){
+              return SafeArea(
+                child: Scaffold(
+                  extendBody: true,
+                  appBar: AppBar(title: const Text('Планета суши'),
+                    leading:AutoLeadingButton(),
+                  automaticallyImplyLeading: true,),
+                 // body: MainBody(),
+                  body: child,
+                  floatingActionButtonLocation: FloatingActionButtonLocation
+                      .centerDocked,
+                  floatingActionButton: const MainNavFab(),
+                  bottomNavigationBar: const MainNavBar(),
+                ),
+              );
+            },
+          ),*/
+    );
+  }
+}

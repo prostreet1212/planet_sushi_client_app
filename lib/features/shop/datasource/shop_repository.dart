@@ -1,4 +1,4 @@
-// shop_sync_service.dart
+// shop_repository.dart
 
 import 'package:dartz/dartz.dart';
 import 'package:planet_sushi_client_app/core/error/exception.dart';
@@ -8,11 +8,11 @@ import 'package:planet_sushi_client_app/features/shop/datasource/shop_local_data
 import '../models/category.dart';
 import 'shop_remote_data_source.dart';
 
-class ShopSyncService {
+class ShopRepository {
   final ShopRemoteDataSource _remoteDataSource;
   final ShopLocalDataSource _localDataSource;
 
-  ShopSyncService({
+  ShopRepository({
     required ShopRemoteDataSource remoteDataSource,
     required ShopLocalDataSource localDataSource,
   }) : _remoteDataSource = remoteDataSource,

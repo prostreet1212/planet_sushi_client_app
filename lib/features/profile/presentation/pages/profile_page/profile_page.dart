@@ -16,6 +16,8 @@ import 'package:planet_sushi_client_app/features/profile/presentation/pages/prof
 import 'package:planet_sushi_client_app/injection_container.dart' as di;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../order/presentation/cubits/chekout_cubit/chekout_cubit.dart';
+
 @RoutePage()
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -110,7 +112,14 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (context,authState){
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: BlocBuilder<ProfileCubit, ProfileState>(
+          child: BlocConsumer<ProfileCubit, ProfileState>(
+            listener:(context, profileState) {
+              if (profileState is ProfileSuccess) {
+                final checkout = context.read<CheckoutCubit>();
+                checkout.setName(profileState.user.name ?? '');
+                checkout.setPhone(profileState.user.phone);
+              }
+            } ,
             builder: (context, profileState) {
               /*final bool isAuthorized =
                   di.sl<Supabase>().client.auth.currentUser != null;

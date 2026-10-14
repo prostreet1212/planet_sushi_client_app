@@ -7,11 +7,15 @@ import 'package:planet_sushi_client_app/features/cart/models/cart_item.dart';
 import 'package:planet_sushi_client_app/features/cart/presentation/pages/widgets/cart_card.dart';
 import 'package:planet_sushi_client_app/features/cart/presentation/pages/widgets/cart_counter.dart';
 import 'package:planet_sushi_client_app/features/cart/presentation/pages/widgets/order_button.dart';
+import 'package:planet_sushi_client_app/features/profile/presentation/cubits/profile_cubit/profile_state.dart';
 
+import '../../../../order/presentation/cubits/chekout_cubit/chekout_cubit.dart';
+import '../../../../profile/presentation/cubits/profile_cubit/profile_cubit.dart';
 import '../../cubits/cart_cubit.dart';
+import '../../../../order/pages/widgets/checkout_form.dart';
 
-class CartListView extends StatelessWidget {
-  const CartListView({super.key, required this.cartList});
+class CartBody extends StatelessWidget {
+  const CartBody({super.key, required this.cartList});
 
   final List<CartItem> cartList;
 
@@ -19,15 +23,30 @@ class CartListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ListView.builder(
-          padding: EdgeInsets.only(bottom: 160),
-          itemCount: cartList.length,
-          itemBuilder: (context, index) {
-            CartItem cart = cartList[index];
-            return CartCard(cart: cart);
-          },
+        CustomScrollView(
+          slivers: [
+            /* ListView.builder(
+            padding: EdgeInsets.only(bottom: 160),
+            itemCount: cartList.length,
+            itemBuilder: (context, index) {
+              CartItem cart = cartList[index];
+              return CartCard(cart: cart);
+            },
+          ),*/
+            //корзина списком
+            SliverPadding(
+              padding: const EdgeInsets.only(bottom: 20),
+              sliver: SliverList.builder(
+                itemCount: cartList.length,
+                itemBuilder: (context, index) =>
+                    CartCard(cart: cartList[index]),
+              ),
+            ),
+            const SliverToBoxAdapter(child: CheckoutForm()),
+            const SliverToBoxAdapter(child: SizedBox(height: 160)),
+          ],
         ),
-       OrderButton(),
+        OrderButton(),
         /*Positioned(
           bottom: 85,
           left: 0,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planet_sushi_client_app/features/cart/models/cart_item.dart';
 
+import '../../../../../core/utils/utils.dart';
 import '../../cubits/cart_cubit.dart';
 import '../../cubits/cart_state.dart';
 import 'cart_counter.dart';
@@ -145,7 +146,7 @@ class CartCard extends StatelessWidget {
                               },
                               builder: (context, price) {
                                 return Text(
-                                  '${/*cart.totalPrice*/price.toString()} ₽',
+                                  '${Utils.formatPrice(price)}  ₽',
                                   style: TextStyle(fontSize: 18),
                                 );
                               },

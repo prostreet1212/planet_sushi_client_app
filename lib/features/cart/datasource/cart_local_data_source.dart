@@ -19,7 +19,8 @@ class CartLocalDataSource {
                 ..where((p) => p.id.equals(cart.productId))
               //..where((p) => p.isAvailable.equals(true))
               )
-              .getSingle();
+              .getSingleOrNull();
+      if (product == null) continue; // или обработать как недоступный
 
       result.add(
         CartItem(
@@ -44,12 +45,32 @@ class CartLocalDataSource {
     return result;
   }
 
+  Stream<List<CartItem>> watchCartItems() {
+    JoinedSelectStatement query = _db.select(_db.cartItems).join([
+      innerJoin(_db.products, _db.products.id.equalsExp(_db.cartItems.productId)),
+    ]);
+    return query.watch().map((rows) => rows.map((row) {
+      final cart = row.readTable(_db.cartItems);
+      final p = row.readTable(_db.products);
+      return CartItem(
+        id: cart.id,
+        userId: cart.userId ?? '',
+        productId: cart.productId,
+        product: Product(
+          id: p.id, name: p.name, price: p.price,
+          description: p.description, imageUrl: p.imageUrl,
+          weight: p.weight, isAvailable: p.isAvailable,
+        ),
+        quantity: cart.quantity,
+      );
+    }).toList());
+  }
+
 
   Future<void> insertCartItem(String? userId, Product product)async{
     const uuid = Uuid();
     final String id = uuid.v7();
     try{
-      //закладка  userId==null
          _db.into(_db.cartItems).insert(CartItemsCompanion.insert(id: id, userId: Value(userId), productId: product.id, quantity: 1));
     }catch(e){
       print('local db error:$e');
