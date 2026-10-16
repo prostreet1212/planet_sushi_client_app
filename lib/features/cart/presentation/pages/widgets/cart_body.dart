@@ -12,7 +12,7 @@ import 'package:planet_sushi_client_app/features/profile/presentation/cubits/pro
 import '../../../../order/presentation/cubits/chekout_cubit/chekout_cubit.dart';
 import '../../../../profile/presentation/cubits/profile_cubit/profile_cubit.dart';
 import '../../cubits/cart_cubit.dart';
-import '../../../../order/pages/widgets/checkout_form.dart';
+import '../../../../order/pages/widgets/checkout_form/checkout_form.dart';
 
 class CartBody extends StatelessWidget {
   const CartBody({super.key, required this.cartList});

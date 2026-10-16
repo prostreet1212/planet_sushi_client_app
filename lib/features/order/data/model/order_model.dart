@@ -7,6 +7,7 @@ enum PaymentType { onReceipt, cardNow }
 
 class OrderModel {
   final String? id;
+  final int? orderNumber;
   final String userId;
   final String customerName;
   final String customerPhone;
@@ -24,6 +25,7 @@ class OrderModel {
 
   OrderModel({
     this.id,
+     this.orderNumber,
     required this.userId,
     required this.customerName,
     required this.customerPhone,

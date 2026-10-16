@@ -29,8 +29,18 @@ class ProfileRepository {
       }
     } on ServerException {
       // Сервер недоступен — используем локальные данные.
+      try {
+        final UserModel? localUser = await _profileLocalDataSource.getProfile();
+        if (localUser != null) {
+          return Right(localUser);
+        }
+        return const Left('Профиль не найден');
+      } on CacheException catch (e) {
+        return Left(e.error);
+      }
     }
 
+    //дважды локальный профиль
     try {
       final UserModel? localUser = await _profileLocalDataSource.getProfile();
       if (localUser != null) {

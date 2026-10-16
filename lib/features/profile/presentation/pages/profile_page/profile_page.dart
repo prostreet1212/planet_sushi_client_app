@@ -104,8 +104,11 @@ class _ProfilePageState extends State<ProfilePage> {
           if (profileState is ProfileSuccess) {
              di.sl<ProfileLocalDataSource>().deleteProfile(profileState.user);
           }
-        }
+          //закладка
+        }else if(authState is AuthStatusAuthorized){
           context.read<ProfileCubit>().getLProfile();
+        }
+
 
 
       },

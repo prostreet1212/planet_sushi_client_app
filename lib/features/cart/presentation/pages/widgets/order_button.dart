@@ -55,6 +55,8 @@ class OrderButton extends StatelessWidget {
                 ),
                 onPressed: () {
                   _submit(context, totalPrice);
+                  /*const snackBar = SnackBar(content: Text('Yay! A SnackBar!'),behavior: SnackBarBehavior.floating);
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);*/
                 },
               );
             },

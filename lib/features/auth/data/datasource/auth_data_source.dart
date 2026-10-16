@@ -9,7 +9,7 @@ import '../../../../core/error/exception.dart';
 import '../../../profile/datasource/profile_local_data_source.dart';
 import '../models/user_model.dart';
 
-enum AuthStepStatus { success, next }
+//enum AuthStepStatus { success, next }
 
 /// Итоговый статус авторизации пользователя
 enum AppAuthStatus {
@@ -152,6 +152,7 @@ class AuthDataSource {
         return AppAuthStatus.incomplete;
       },
       (profile) {
+        //может дополнительно сравнить uid чтоб не было рассинхрона?
          if(profile.name == '' || profile.name == null){
        return AppAuthStatus.incomplete;
      }else{

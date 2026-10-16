@@ -10,6 +10,7 @@ import '../../../../auth/presentation/cubits/auth_status_cubit/auth_status_cubit
 import '../../../../cart/presentation/cubits/cart_cubit.dart';
 import '../../../../shop/presentation/cubits/catalog_cubit/catalog_cubit.dart';
 import 'general_widgets/animated_indexed_stack.dart';
+import 'general_widgets/fixed_center_docked_fab_location.dart';
 import 'main_nav_bar.dart';
 import 'main_nav_fab.dart';
 
@@ -60,32 +61,36 @@ class _MainBodyState extends State<MainBody> {
           //LoginRoute(),
         ],
         builder: (context, children, tabsRouter) {
-          return SafeArea(
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              extendBody: true,
-              appBar: AppBar(
-                title: const Text('Планета суши'),
-                leading: AutoLeadingButton(
-                  showIfChildCanPop: true,
-                  showIfParentCanPop: false,
+          //дополнительный scaffold если нужно вывести snackbar из самого низа экрана
+          return /*Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: */SafeArea(
+              child: Scaffold(
+                resizeToAvoidBottomInset: false,
+                extendBody: true,
+                appBar: AppBar(
+                  title: const Text('Планета суши'),
+                  leading: AutoLeadingButton(
+                    showIfChildCanPop: true,
+                    showIfParentCanPop: false,
+                  ),
+                  automaticallyImplyLeading: true,
                 ),
-                automaticallyImplyLeading: true,
+                // body: MainBody(),
+                body: AnimatedIndexedStack1(
+                  index: tabsRouter.activeIndex,
+                  children: children,
+                  duration: Duration(milliseconds: 500),
+                  curve: Easing.legacy,
+                ),
+                /* floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,*/
+                floatingActionButtonLocation: const FixedCenterDockedFabLocation(),
+                floatingActionButton: const MainNavFab(),
+                bottomNavigationBar: const MainNavBar(),
               ),
-              // body: MainBody(),
-              body: AnimatedIndexedStack1(
-                index: tabsRouter.activeIndex,
-                children: children,
-                duration: Duration(milliseconds: 500),
-                curve: Easing.legacy,
-              ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              //floatingActionButtonLocation: const FixedCenterDockedFabLocation(),
-              floatingActionButton: const MainNavFab(),
-              bottomNavigationBar: const MainNavBar(),
-            ),
-          );
+            )/*,
+          )*/;
         },
       ),
 
