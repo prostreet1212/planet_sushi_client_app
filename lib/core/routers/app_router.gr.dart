@@ -75,6 +75,22 @@ class MainRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [MapPickerPage]
+class MapPickerRoute extends PageRouteInfo<void> {
+  const MapPickerRoute({List<PageRouteInfo>? children})
+    : super(MapPickerRoute.name, initialChildren: children);
+
+  static const String name = 'MapPickerRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const MapPickerPage();
+    },
+  );
+}
+
+/// generated route for
 /// [MenuPage]
 class MenuRoute extends PageRouteInfo<void> {
   const MenuRoute({List<PageRouteInfo>? children})

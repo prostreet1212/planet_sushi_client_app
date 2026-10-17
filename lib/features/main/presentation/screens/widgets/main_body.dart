@@ -67,7 +67,7 @@ class _MainBodyState extends State<MainBody> {
             body: */SafeArea(
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
-                extendBody: true,
+                extendBody: false,//true
                 appBar: AppBar(
                   title: const Text('Планета суши'),
                   leading: AutoLeadingButton(

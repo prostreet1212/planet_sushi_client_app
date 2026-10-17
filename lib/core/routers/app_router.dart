@@ -9,6 +9,7 @@ import 'package:planet_sushi_client_app/features/main/presentation/screens/main_
 import 'package:planet_sushi_client_app/features/shop/presentation/pages/product_detail_page/product_detail_page.dart';
 
 import '../../features/cart/presentation/pages/cart_page.dart';
+import '../../features/order/pages/map_picker_page/map_picker_page.dart';
 import '../../features/order/pages/order_page.dart';
 import '../../features/profile/presentation/pages/profile_page/profile_page.dart';
 import '../../features/shop/presentation/pages/menu_page/menu_page.dart';
@@ -39,6 +40,7 @@ class AppRouter extends RootStackRouter {
             page: CartRouter.page,
         children: [
           CustomRoute(path: 'cart', page: CartRoute.page,initial: true),
+          CustomRoute(path: 'map-picker',page: MapPickerRoute.page),
           CustomRoute(path: 'order', page: OrderRoute.page),
         ]),
 
