@@ -13,6 +13,7 @@ import 'package:planet_sushi_client_app/features/cart/datasource/cart_local_data
 import 'package:planet_sushi_client_app/features/cart/datasource/cart_remote_data_source.dart';
 import 'package:planet_sushi_client_app/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:planet_sushi_client_app/features/main/presentation/screens/providers/main_screen_state.dart';
+import 'package:planet_sushi_client_app/features/order/pages/map_picker_page/providers/map_picker_controller.dart';
 import 'package:planet_sushi_client_app/features/order/presentation/cubits/chekout_cubit/chekout_cubit.dart';
 import 'package:planet_sushi_client_app/features/profile/datasource/profile_local_data_source.dart';
 import 'package:planet_sushi_client_app/features/profile/datasource/profile_remote_data_source.dart';
@@ -53,6 +54,7 @@ Future<void> init() async{
   sl.registerLazySingleton(() => NameState());
   sl.registerLazySingleton(() => OtpPhoneState());
   //sl.registerLazySingleton(() => MainScreenState());
+  sl.registerFactory(()=>MapPickerController());
 
   //external
   final supabase =  Supabase.instance;

@@ -21,7 +21,7 @@ class OrderButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 85,
+      bottom: 35,
       left: 0,
       right: 0,
       child: Center(

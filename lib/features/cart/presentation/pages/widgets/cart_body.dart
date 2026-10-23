@@ -35,7 +35,7 @@ class CartBody extends StatelessWidget {
           ),*/
             //корзина списком
             SliverPadding(
-              padding: const EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.only(bottom: 0),
               sliver: SliverList.builder(
                 itemCount: cartList.length,
                 itemBuilder: (context, index) =>
@@ -43,7 +43,7 @@ class CartBody extends StatelessWidget {
               ),
             ),
             const SliverToBoxAdapter(child: CheckoutForm()),
-            const SliverToBoxAdapter(child: SizedBox(height: 160)),
+            const SliverToBoxAdapter(child: SizedBox(height: 120)),
           ],
         ),
         OrderButton(),
