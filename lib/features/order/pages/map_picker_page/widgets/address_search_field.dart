@@ -40,7 +40,13 @@ class _AddressSearchFieldState extends State<AddressSearchField> {
                   hintText: 'Введите адрес...',
                   prefixIcon: const Icon(
                     Icons.search,
-                    color: Colors.blue,
+                    //color: Colors.blue,
+                  ),
+                  suffixIcon: IconButton(
+                    icon:Icon( Icons.my_location, color: Colors.blue,),
+                     onPressed: () async{
+                     await mapPickerController.getCurrentLocation();
+                     },
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),

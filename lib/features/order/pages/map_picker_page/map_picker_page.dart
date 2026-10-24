@@ -18,14 +18,25 @@ import '../../../../injection_container.dart' as di;
 
 
 @RoutePage()
-class MapPickerPage extends StatelessWidget {
+class MapPickerPage extends StatefulWidget {
     const MapPickerPage({super.key});
 
+  @override
+  State<MapPickerPage> createState() => _MapPickerPageState();
+}
+
+class _MapPickerPageState extends State<MapPickerPage> {
    //final MapPickerController mapPickerController = di.sl<MapPickerController>();
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => di.sl<MapPickerController>(),
+      create: (context) => di.sl<MapPickerController>()..getCurrentLocation(),
       child: const Stack(
         children: [CustomMap(), AddressSearchField(), ConfirmAddressPanel()],
       ),

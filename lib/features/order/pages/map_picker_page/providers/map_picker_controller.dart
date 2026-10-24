@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 
@@ -12,9 +13,7 @@ class MapPickerController extends ChangeNotifier {
   final MapController mapController = MapController();
   final TextEditingController searchController = TextEditingController();
   final SuggestionsController<OsmAddress> suggestionsController =
-  SuggestionsController<OsmAddress>();
-
-
+      SuggestionsController<OsmAddress>();
 
   LatLng _selected = const LatLng(61.23661, 46.64179);
   OsmAddress _osmAddress = OsmAddress(
@@ -35,12 +34,15 @@ class MapPickerController extends ChangeNotifier {
 
   // ----- геттеры -----
   LatLng get selected => _selected;
+
   OsmAddress get osmAddress => _osmAddress;
+
   bool get loading => _loading;
 
   // ----- сеттеры -----
-  set selected(LatLng value)=>_selected=value;
-  set osmAddress(OsmAddress value)=>_osmAddress=value;
+  set selected(LatLng value) => _selected = value;
+
+  set osmAddress(OsmAddress value) => _osmAddress = value;
 
   @override
   void dispose() {
@@ -50,9 +52,6 @@ class MapPickerController extends ChangeNotifier {
     mapController.dispose();
     super.dispose();
   }
-
-
-
 
   /// Безопасный notifyListeners, чтобы не упасть после dispose
   void _safeNotify() {
@@ -97,9 +96,7 @@ class MapPickerController extends ChangeNotifier {
         final Map<String, dynamic> root = json.decode(res.body);
         final data = root['features'] as List;
         if (data.isNotEmpty) {
-          _osmAddress = OsmAddress.fromJson(
-            data.first as Map<String, dynamic>,
-          );
+          _osmAddress = OsmAddress.fromJson(data.first as Map<String, dynamic>);
         }
       }
     } catch (e) {
@@ -162,5 +159,26 @@ class MapPickerController extends ChangeNotifier {
     debugPrint(
       'Координаты: Широта: ${address.latitude}, Долгота: ${address.longitude}',
     );
+  }
+
+  Future<void> getCurrentLocation() async {
+    _loading = true;
+    //закладка
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return null;
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return null;
+    }
+
+    // Получаем текущие координаты устройства
+
+    Position position = await Geolocator.getCurrentPosition();
+    _selected = LatLng(position.latitude, position.longitude);
+    mapController.move(_selected, mapController.camera.zoom);
+    _reverseGeocode(_selected);
+    _safeNotify();
   }
 }

@@ -25,7 +25,7 @@ class CustomMap extends StatelessWidget {
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.prostreet1212.planetSushiClientApp',
             ),
-            MarkerLayer(
+            mapPickerController.osmAddress.formattedAddress=='' ? const SizedBox() : MarkerLayer(
               markers: [
                 Marker(
                   point: mapPickerController.selected,
