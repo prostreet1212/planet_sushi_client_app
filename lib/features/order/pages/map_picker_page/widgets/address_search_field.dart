@@ -45,7 +45,7 @@ class _AddressSearchFieldState extends State<AddressSearchField> {
                   suffixIcon: IconButton(
                     icon:Icon( Icons.my_location, color: Colors.blue,),
                      onPressed: () async{
-                     await mapPickerController.getCurrentLocation();
+                     await mapPickerController.getCurrentLocation(context);
                      },
                   ),
                   border: OutlineInputBorder(

@@ -36,7 +36,7 @@ class _MapPickerPageState extends State<MapPickerPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => di.sl<MapPickerController>()..getCurrentLocation(),
+      create: (context) => di.sl<MapPickerController>()..getCurrentLocation(context),
       child: const Stack(
         children: [CustomMap(), AddressSearchField(), ConfirmAddressPanel()],
       ),

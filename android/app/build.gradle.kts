@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.prostreet1212.planet_sushi_client_app"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 37 //flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
