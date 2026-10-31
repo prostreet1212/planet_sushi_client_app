@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:geolocator/geolocator.dart';
+
+//import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart' as loc;
-import 'package:permission_handler/permission_handler.dart'  ;
+import 'package:location/location.dart';
+//import 'package:permission_handler/permission_handler.dart'  ;
 
 import '../../../data/model/osm_address.dart';
 
@@ -16,6 +17,10 @@ class MapPickerController extends ChangeNotifier {
   final TextEditingController searchController = TextEditingController();
   final SuggestionsController<OsmAddress> suggestionsController =
       SuggestionsController<OsmAddress>();
+
+  VoidCallback? onShowDialog;
+  bool _isDialogOpened = false;
+   PermissionStatus prevStatus=PermissionStatus.denied;
 
   LatLng _selected = const LatLng(61.23661, 46.64179);
   OsmAddress _osmAddress = OsmAddress(
@@ -41,10 +46,14 @@ class MapPickerController extends ChangeNotifier {
 
   bool get loading => _loading;
 
+  bool get isDialogOpened => _isDialogOpened;
+
   // ----- сеттеры -----
   set selected(LatLng value) => _selected = value;
 
   set osmAddress(OsmAddress value) => _osmAddress = value;
+
+  set isDialogOpened(bool value) => _isDialogOpened = value;
 
   @override
   void dispose() {
@@ -163,21 +172,10 @@ class MapPickerController extends ChangeNotifier {
     );
   }
 
-  loc.Location location = loc.Location();
-  Future<void> getCurrentLocation(BuildContext context) async {
-    /*LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        _loading = false;
-        return;
-      }else if(permission == LocationPermission.deniedForever){
-        await openAppSettings();
-      };
-    }*/
-    _loading = true;
+  Future<void> checkLocationPermission() async {
+
     //закладка
-    PermissionStatus permission = await Permission.location.status;
+    /*PermissionStatus permission = await Permission.location.status;
     if (permission == PermissionStatus.denied) {
       permission = await Permission.location.request();
       if (permission == PermissionStatus.denied) {
@@ -185,15 +183,54 @@ class MapPickerController extends ChangeNotifier {
         _safeNotify();
         return;
       }else if(permission == PermissionStatus.permanentlyDenied){
-        bool opened=await openAppSettings();
+        bool isShown = await Permission.location.shouldShowRequestRationale;
+        if(isShown){
+          //show dialog
+          if (onShowDialog != null) {
+          onShowDialog!();
+          return;
+        }
+        }else{
+          return;
+        }
+
+        return;
       };
+    }else if(permission == PermissionStatus.permanentlyDenied){
+      if (onShowDialog != null) {
+        onShowDialog!();
+        return;
+      }
+    }*/
+    if (_disposed) return;
+    _loading = true;
+    if (!await Location().isBackgroundPermissionGranted()) {
+      var status = await Location().requestPermission();
+      if (status == PermissionStatus.granted) {
+      } else if (status == PermissionStatus.denied) {
+        prevStatus = PermissionStatus.denied;
+        _loading = false;
+        return;
+      } else if (status == PermissionStatus.deniedForever) {
+        if (prevStatus == PermissionStatus.denied||_isDialogOpened==true) {
+          prevStatus = PermissionStatus.deniedForever;
+          _loading = false;
+          return;
+        } else {
+          if (onShowDialog != null) {
+            onShowDialog!();
+            return;
+          }
+        }
+      }
     }
 
     //проверка на вкл. гео-сервиса
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    // bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    bool serviceEnabled = await Location().serviceEnabled();
     if (!serviceEnabled) {
       // Показывает системный диалог Android для включения GPS
-      serviceEnabled = await location.requestService();
+      serviceEnabled = await Location().requestService();
       if (!serviceEnabled) {
         _loading = false;
         _safeNotify();
@@ -202,10 +239,12 @@ class MapPickerController extends ChangeNotifier {
     }
 
     // Получаем текущие координаты устройства
-    Position position = await Geolocator.getCurrentPosition();
+    /*Position position = await Geolocator.getCurrentPosition();
+    _selected = LatLng(position.latitude, position.longitude);*/
+    LocationData position = await Location().getLocation();
     _selected = LatLng(position.latitude, position.longitude);
     mapController.move(_selected, mapController.camera.zoom);
-    _reverseGeocode(_selected);
+    await _reverseGeocode(_selected);
     _safeNotify();
   }
 }

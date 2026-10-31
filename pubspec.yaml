@@ -53,7 +53,7 @@ dependencies:
   http: ^1.6.0
   osm_location_picker: ^1.0.5
   #flutter_map_location_marker: ^10.3.0 #
-  geolocator: ^14.1.2
+  #geolocator: ^14.1.2
   location: ^10.0.2
   permission_handler: ^13.0.2
 
@@ -63,6 +63,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   auto_route: ^11.1.0
   flutter_typeahead: ^6.0.0
+
 
 
 dev_dependencies:

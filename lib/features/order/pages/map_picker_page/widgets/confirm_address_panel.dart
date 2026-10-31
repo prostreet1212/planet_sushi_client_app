@@ -39,7 +39,7 @@ class ConfirmAddressPanel extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: mapPickerController.osmAddress.formattedAddress.isEmpty
+                      onPressed: mapPickerController.osmAddress.formattedAddress.isEmpty||mapPickerController.osmAddress.housenumber.isEmpty|| mapPickerController.loading
                           ? null
                           : () => context.router.maybePopTop(
                         MapPickResult(
@@ -56,7 +56,7 @@ class ConfirmAddressPanel extends StatelessWidget {
                             _selected.longitude,
                           ),
                         ),*/
-                      child: const Text('Подтвердить адрес'),
+                      child: Text(mapPickerController.osmAddress.housenumber.isEmpty?'Укажите адрес с точностью до дома':'Подтвердить адрес'),
                     ),
                   ),
                 ],
