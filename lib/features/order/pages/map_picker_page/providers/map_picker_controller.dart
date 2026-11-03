@@ -8,9 +8,11 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 //import 'package:permission_handler/permission_handler.dart'  ;
 
 import '../../../data/model/osm_address.dart';
+import '../widgets/permission_dialog.dart';
 
 class MapPickerController extends ChangeNotifier {
   final MapController mapController = MapController();
@@ -20,8 +22,8 @@ class MapPickerController extends ChangeNotifier {
 
   VoidCallback? onShowDialog;
   bool _isDialogOpened = false;
-   PermissionStatus prevStatus=PermissionStatus.denied;
-
+  //костыль для неокрытия окна настроек после 2-го отказа предоставить разрешение
+  PermissionStatus prevStatus = PermissionStatus.denied;
   LatLng _selected = const LatLng(61.23661, 46.64179);
   OsmAddress _osmAddress = OsmAddress(
     name: '',
@@ -36,6 +38,7 @@ class MapPickerController extends ChangeNotifier {
   );
 
   bool _loading = false;
+  //для того чтобы открывался именно последний ответ, при вводе адреса
   int _reverseRequestId = 0;
   bool _disposed = false;
 
@@ -55,9 +58,37 @@ class MapPickerController extends ChangeNotifier {
 
   set isDialogOpened(bool value) => _isDialogOpened = value;
 
+  AppLifecycleListener? _lifecycleListener;
+  bool _initialized = false;
+
+  /// Вызывается один раз из initState страницы.
+  void init() {
+    if (_initialized) return;
+    _initialized = true;
+
+    // запускаем только после первого кадра, когда карта уже смонтирована
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_disposed) return;
+      checkLocationPermission();
+    });
+
+    _lifecycleListener = AppLifecycleListener(
+      onResume: () async {
+        debugPrint('resume is ');
+        if (_isDialogOpened) {
+          if (_disposed) return;
+          await checkLocationPermission();
+        }
+        _isDialogOpened = false;
+      },
+    );
+  }
+
   @override
   void dispose() {
     _disposed = true;
+    _lifecycleListener?.dispose();
+    _lifecycleListener = null;
     suggestionsController.dispose();
     searchController.dispose();
     mapController.dispose();
@@ -173,35 +204,6 @@ class MapPickerController extends ChangeNotifier {
   }
 
   Future<void> checkLocationPermission() async {
-
-    //закладка
-    /*PermissionStatus permission = await Permission.location.status;
-    if (permission == PermissionStatus.denied) {
-      permission = await Permission.location.request();
-      if (permission == PermissionStatus.denied) {
-        _loading = false;
-        _safeNotify();
-        return;
-      }else if(permission == PermissionStatus.permanentlyDenied){
-        bool isShown = await Permission.location.shouldShowRequestRationale;
-        if(isShown){
-          //show dialog
-          if (onShowDialog != null) {
-          onShowDialog!();
-          return;
-        }
-        }else{
-          return;
-        }
-
-        return;
-      };
-    }else if(permission == PermissionStatus.permanentlyDenied){
-      if (onShowDialog != null) {
-        onShowDialog!();
-        return;
-      }
-    }*/
     if (_disposed) return;
     _loading = true;
     if (!await Location().isBackgroundPermissionGranted()) {
@@ -212,7 +214,7 @@ class MapPickerController extends ChangeNotifier {
         _loading = false;
         return;
       } else if (status == PermissionStatus.deniedForever) {
-        if (prevStatus == PermissionStatus.denied||_isDialogOpened==true) {
+        if (prevStatus == PermissionStatus.denied || _isDialogOpened == true) {
           prevStatus = PermissionStatus.deniedForever;
           _loading = false;
           return;
@@ -244,6 +246,8 @@ class MapPickerController extends ChangeNotifier {
     LocationData position = await Location().getLocation();
     _selected = LatLng(position.latitude, position.longitude);
     mapController.move(_selected, mapController.camera.zoom);
+    //закладка
+    //mapController.fitCamera();
     await _reverseGeocode(_selected);
     _safeNotify();
   }

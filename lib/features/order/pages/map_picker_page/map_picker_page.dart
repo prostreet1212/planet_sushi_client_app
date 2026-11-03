@@ -26,28 +26,12 @@ class MapPickerPage extends StatefulWidget {
 }
 
 class _MapPickerPageState extends State<MapPickerPage> {
-  late final MapPickerController
-  mapPickerController; // = di.sl<MapPickerController>();
-  late final AppLifecycleListener _listener;
+  late final MapPickerController mapPickerController;
 
   @override
   void initState() {
     super.initState();
     mapPickerController = di.sl<MapPickerController>();
-    // запускаем только после первого кадра, когда карта уже смонтирована
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) mapPickerController.checkLocationPermission();
-    });
-    _listener = AppLifecycleListener(
-      onResume: () async {
-        print('resume is ');
-        if (mapPickerController.isDialogOpened == true) {
-          if (mounted) await mapPickerController.checkLocationPermission();
-        }
-        mapPickerController.isDialogOpened = false;
-      },
-    );
-
     mapPickerController.onShowDialog = () {
       showDialog(
         context: context,
@@ -60,13 +44,7 @@ class _MapPickerPageState extends State<MapPickerPage> {
         ),
       );
     };
-  }
-
-  @override
-  void dispose() {
-    //mapPickerController.dispose();
-    _listener.dispose();
-    super.dispose();
+    mapPickerController.init();
   }
 
   @override
