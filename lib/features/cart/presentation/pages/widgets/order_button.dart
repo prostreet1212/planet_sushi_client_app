@@ -32,16 +32,12 @@ class OrderButton extends StatelessWidget {
               return state is CartLoaded
                   ? context
                         .read<CartCubit>()
-                        .totalPrice /*state.items.fold<double>(
-                      0,
-                      (sum, item) => sum + item.totalPrice,
-                    )*/
+                        .totalPrice
                   : 0;
             },
             builder: (context, totalPrice) {
               return ElevatedButton(
                 child: Text(
-                  /*'Оформить'*/
                   'Сделать заказ • ${Utils.formatPrice(totalPrice)} ₽',
                   style: TextStyle(fontSize: 20, fontFamily: 'RobotoCondensed'),
                 ),

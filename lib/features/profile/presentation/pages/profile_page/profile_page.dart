@@ -6,6 +6,7 @@ import 'package:planet_sushi_client_app/features/auth/data/datasource/auth_data_
 import 'package:planet_sushi_client_app/features/auth/data/models/user_model.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/cubits/auth_status_cubit/auth_status_cubit.dart';
 import 'package:planet_sushi_client_app/features/auth/presentation/cubits/auth_status_cubit/auth_status_state.dart';
+import 'package:planet_sushi_client_app/features/order/pages/widgets/checkout_form/checkout_form.dart';
 import 'package:planet_sushi_client_app/features/profile/datasource/profile_local_data_source.dart';
 import 'package:planet_sushi_client_app/features/profile/presentation/cubits/profile_cubit/profile_cubit.dart';
 import 'package:planet_sushi_client_app/features/profile/presentation/cubits/profile_cubit/profile_state.dart';
@@ -102,7 +103,12 @@ class _ProfilePageState extends State<ProfilePage> {
           final ProfileState profileState = context.read<ProfileCubit>().state;
 
           if (profileState is ProfileSuccess) {
-             di.sl<ProfileLocalDataSource>().deleteProfile(profileState.user);
+             //di.sl<ProfileLocalDataSource>().deleteProfile(profileState.user);
+            context.read<ProfileCubit>().deleteProfile(profileState.user);
+             //также очищаем поля у формы заказа
+            //закладка потестить
+              context.read<CheckoutCubit>().setName('');
+              context.read<CheckoutCubit>().setPhone('');
           }
         }else if(authState is AuthStatusAuthorized){
           context.read<ProfileCubit>().getLProfile();
@@ -140,8 +146,8 @@ class _ProfilePageState extends State<ProfilePage> {
               if (/*showProfile*/isAuthorized) {
                 header = ProfileCard(user: user);
               } else if (isAuthorized &&
-                  (profileState is ProfileLoading ||
-                      profileState is ProfileInit)) {
+                  (profileState is ProfileLoading /*||
+                      profileState is ProfileInit*/)) {
                 header = const ProfileLoadingCard();
               } else {
                 header = LoginButton(

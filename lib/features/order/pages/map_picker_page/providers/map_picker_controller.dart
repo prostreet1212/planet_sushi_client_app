@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 //import 'package:geolocator/geolocator.dart';
@@ -15,13 +16,15 @@ import '../../../data/model/osm_address.dart';
 import '../widgets/permission_dialog.dart';
 
 class MapPickerController extends ChangeNotifier {
-  final MapController mapController = MapController();
+  //final MapController mapController = MapController();
+  late final AnimatedMapController animatedMapController;
   final TextEditingController searchController = TextEditingController();
   final SuggestionsController<OsmAddress> suggestionsController =
       SuggestionsController<OsmAddress>();
 
   VoidCallback? onShowDialog;
   bool _isDialogOpened = false;
+
   //костыль для неокрытия окна настроек после 2-го отказа предоставить разрешение
   PermissionStatus prevStatus = PermissionStatus.denied;
   LatLng _selected = const LatLng(61.23661, 46.64179);
@@ -38,6 +41,7 @@ class MapPickerController extends ChangeNotifier {
   );
 
   bool _loading = false;
+
   //для того чтобы открывался именно последний ответ, при вводе адреса
   int _reverseRequestId = 0;
   bool _disposed = false;
@@ -69,7 +73,7 @@ class MapPickerController extends ChangeNotifier {
     // запускаем только после первого кадра, когда карта уже смонтирована
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_disposed) return;
-      checkLocationPermission();
+      getCurrentPosition();
     });
 
     _lifecycleListener = AppLifecycleListener(
@@ -77,7 +81,7 @@ class MapPickerController extends ChangeNotifier {
         debugPrint('resume is ');
         if (_isDialogOpened) {
           if (_disposed) return;
-          await checkLocationPermission();
+          await getCurrentPosition();
         }
         _isDialogOpened = false;
       },
@@ -91,7 +95,7 @@ class MapPickerController extends ChangeNotifier {
     _lifecycleListener = null;
     suggestionsController.dispose();
     searchController.dispose();
-    mapController.dispose();
+    animatedMapController.dispose();
     super.dispose();
   }
 
@@ -194,8 +198,8 @@ class MapPickerController extends ChangeNotifier {
     searchController.text = _osmAddress.formattedAddress;
     _selected = LatLng(_osmAddress.latitude, _osmAddress.longitude);
     _safeNotify();
-
-    mapController.move(_selected, mapController.camera.zoom);
+    animatedMapController.animateTo(dest: _selected);
+    // mapController.move(_selected, mapController.camera.zoom);
 
     debugPrint('Выбран адрес: ${address.name}');
     debugPrint(
@@ -203,7 +207,14 @@ class MapPickerController extends ChangeNotifier {
     );
   }
 
-  Future<void> checkLocationPermission() async {
+  Future<bool>_checkLocationPermission()async{
+    //закладка
+    return true;
+
+  }
+
+
+  Future<void> getCurrentPosition() async {
     if (_disposed) return;
     _loading = true;
     if (!await Location().isBackgroundPermissionGranted()) {
@@ -243,12 +254,12 @@ class MapPickerController extends ChangeNotifier {
     // Получаем текущие координаты устройства
     /*Position position = await Geolocator.getCurrentPosition();
     _selected = LatLng(position.latitude, position.longitude);*/
+    if (searchController.text.isNotEmpty) searchController.clear();
     LocationData position = await Location().getLocation();
     _selected = LatLng(position.latitude, position.longitude);
-    mapController.move(_selected, mapController.camera.zoom);
-    //закладка
-    //mapController.fitCamera();
+    //mapController.move(_selected, mapController.camera.zoom);
+    animatedMapController.animateTo(dest: _selected);
     await _reverseGeocode(_selected);
-    _safeNotify();
+    // _reverseGeocode уже вызывает _safeNotify() в конце
   }
 }

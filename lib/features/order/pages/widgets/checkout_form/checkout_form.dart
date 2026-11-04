@@ -70,7 +70,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
         syncControllers(checkoutFormState);
       },
       builder: (context, checkoutFormState) {
-        return Padding(
+        return checkoutFormState.name.isEmpty?const SizedBox(): Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

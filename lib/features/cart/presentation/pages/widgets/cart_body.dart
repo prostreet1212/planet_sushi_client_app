@@ -46,7 +46,7 @@ class CartBody extends StatelessWidget {
             const SliverToBoxAdapter(child: SizedBox(height: 120)),
           ],
         ),
-        OrderButton(),
+        const OrderButton(),
         /*Positioned(
           bottom: 85,
           left: 0,

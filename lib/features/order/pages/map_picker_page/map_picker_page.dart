@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
-import 'package:osm_location_picker/osm_location_picker.dart';
 import 'package:planet_sushi_client_app/features/order/pages/map_picker_page/providers/map_picker_controller.dart';
 import 'package:planet_sushi_client_app/features/order/pages/map_picker_page/widgets/address_search_field.dart';
 import 'package:planet_sushi_client_app/features/order/pages/map_picker_page/widgets/confirm_address_panel.dart';
@@ -25,13 +25,18 @@ class MapPickerPage extends StatefulWidget {
   State<MapPickerPage> createState() => _MapPickerPageState();
 }
 
-class _MapPickerPageState extends State<MapPickerPage> {
+class _MapPickerPageState extends State<MapPickerPage> with TickerProviderStateMixin {
   late final MapPickerController mapPickerController;
 
   @override
   void initState() {
     super.initState();
     mapPickerController = di.sl<MapPickerController>();
+    mapPickerController.animatedMapController= AnimatedMapController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000), // Длительность анимации движения
+      curve: Curves.easeInOut, // Кривая плавности
+    );
     mapPickerController.onShowDialog = () {
       showDialog(
         context: context,

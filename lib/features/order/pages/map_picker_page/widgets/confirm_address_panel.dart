@@ -4,7 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 import '../../widgets/checkout_form/widgets/address_field.dart';
 import '../providers/map_picker_controller.dart';
 
@@ -13,9 +12,15 @@ class ConfirmAddressPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MapPickerController>(
-      builder: (context, mapPickerController, child) {
-        return  Positioned(
+    return Selector<MapPickerController,
+        ({bool loading, String formattedAddress, String housenumber})>(
+      selector: (_, controller) => (
+        loading: controller.loading,
+        formattedAddress: controller.osmAddress.formattedAddress,
+        housenumber: controller.osmAddress.housenumber,
+      ),
+      builder: (context, data, child) {
+        return Positioned(
           left: 16,
           right: 16,
           bottom: 24,
@@ -27,11 +32,11 @@ class ConfirmAddressPanel extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    mapPickerController.loading
+                    data.loading
                         ? 'Определяем адрес...'
-                        : mapPickerController.osmAddress.formattedAddress.isEmpty
+                        : data.formattedAddress.isEmpty
                         ? 'Коснитесь карты для выбора точки'
-                        : mapPickerController.osmAddress.formattedAddress,
+                        : data.formattedAddress,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -39,24 +44,29 @@ class ConfirmAddressPanel extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: mapPickerController.osmAddress.formattedAddress.isEmpty||mapPickerController.osmAddress.housenumber.isEmpty|| mapPickerController.loading
-                          ? null
-                          : () => context.router.maybePopTop(
-                        MapPickResult(
-                          mapPickerController.osmAddress.formattedAddress,
-                          mapPickerController.selected.latitude,
-                          mapPickerController.selected.longitude,
-                        ),
+                      onPressed:
+                          data.formattedAddress.isEmpty ||
+                              data.housenumber.isEmpty ||
+                              data.loading
+                              ? null
+                              : () => context.router.maybePopTop(
+                                MapPickResult(
+                                  data.formattedAddress,
+                                  context
+                                      .read<MapPickerController>()
+                                      .selected
+                                      .latitude,
+                                  context
+                                      .read<MapPickerController>()
+                                      .selected
+                                      .longitude,
+                                ),
+                              ),
+                      child: Text(
+                        data.housenumber.isEmpty
+                            ? 'Укажите адрес с точностью до дома'
+                            : 'Подтвердить адрес',
                       ),
-                      /*Navigator.pop(
-                          context,
-                          MapPickResult(
-                            _address,
-                            _selected.latitude,
-                            _selected.longitude,
-                          ),
-                        ),*/
-                      child: Text(mapPickerController.osmAddress.housenumber.isEmpty?'Укажите адрес с точностью до дома':'Подтвердить адрес'),
                     ),
                   ),
                 ],
@@ -65,6 +75,6 @@ class ConfirmAddressPanel extends StatelessWidget {
           ),
         );
       },
-    ) ;
+    );
   }
 }

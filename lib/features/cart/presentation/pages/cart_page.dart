@@ -22,40 +22,37 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     debugPrint('Строитель картпэйдж');
-    return Container(
-      //color: Colors.yellow,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: BlocBuilder<CartCubit, CartState>(
-          buildWhen: (prev, next) {
-            //не перестравивать когда меняется только кол-во в карточке (у виджета cart_counter свой перестроитель)
-            if (prev is CartLoaded) {
-              if (next is CartLoaded) {
-                if (prev.items.length == (next).items.length) {
-                  return false;
-                } else {
-                  return true;
-                }
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: BlocBuilder<CartCubit, CartState>(
+        buildWhen: (prev, next) {
+          //не перестравивать когда меняется только кол-во в карточке (у виджета cart_counter свой перестроитель)
+          if (prev is CartLoaded) {
+            if (next is CartLoaded) {
+              if (prev.items.length == (next).items.length) {
+                return false;
               } else {
                 return true;
               }
             } else {
               return true;
             }
-          },
-          builder: (context, cartState) {
-            if (cartState is CartEmpty) {
-              return const Center(child: Text('Корзина пуста'));
-            } else if (cartState is CartLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (cartState is CartLoaded) {
-              List<CartItem> cartList = cartState.items;
-              return CartBody(cartList: cartList);
-            } else {
-              return const SizedBox();
-            }
-          },
-        ),
+          } else {
+            return true;
+          }
+        },
+        builder: (context, cartState) {
+          if (cartState is CartEmpty) {
+            return const Center(child: Text('Корзина пуста'));
+          } else if (cartState is CartLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (cartState is CartLoaded) {
+            List<CartItem> cartList = cartState.items;
+            return CartBody(cartList: cartList);
+          } else {
+            return const SizedBox();
+          }
+        },
       ),
     );
   }

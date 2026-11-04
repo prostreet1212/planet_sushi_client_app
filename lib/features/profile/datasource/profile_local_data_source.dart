@@ -54,9 +54,16 @@ class ProfileLocalDataSource {
   }
 
   Future<void> deleteProfile(UserModel user) async {
-    await (_db.delete(_db.users)
-          ..where((tbl) => tbl.id.equals(user.id!)))
-        .go();
+    try{
+      await (_db.delete(_db.users)
+        ..where((tbl) => tbl.id.equals(user.id!)))
+          .go();
+    }on SqliteException catch(e){
+      throw CacheException(error: e.message);
+    }catch(e){
+      throw CacheException(error: e.toString());
+    }
+
   }
 
   Future<void> updateNameProfile(UserModel user)async{

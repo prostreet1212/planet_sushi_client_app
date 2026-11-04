@@ -96,4 +96,13 @@ class ProfileRepository {
     }
     return const Right(null);
   }
+
+  Future<Either<String, Null>> deleteLocalProfile(UserModel user) async {
+    try {
+      await _profileLocalDataSource.deleteProfile(user);
+      return const Right(null);
+    } on CacheException catch (e) {
+      return Left(e.error);
+    }
+  }
 }
