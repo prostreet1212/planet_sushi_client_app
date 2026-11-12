@@ -10,7 +10,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   ProfileCubit({required this._profileRepository}) : super(ProfileLoading());
 
-  void getLProfile() async {
+  Future getLProfile() async {
     emit(ProfileLoading());
     final localData = await _profileRepository.getProfile();
     localData.fold(
@@ -27,7 +27,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  void deleteProfile(UserModel user) async {
+  Future deleteProfile(UserModel user) async {
     final localData = await _profileRepository.deleteLocalProfile(user);
     localData.fold(
         (error){

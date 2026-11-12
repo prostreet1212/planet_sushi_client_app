@@ -207,15 +207,9 @@ class MapPickerController extends ChangeNotifier {
     );
   }
 
-  Future<bool>_checkLocationPermission()async{
+  Future<bool> _checkLocationPermission() async {
     //закладка
-    return true;
-
-  }
-
-
-  Future<void> getCurrentPosition() async {
-    if (_disposed) return;
+    if (_disposed) return false;
     _loading = true;
     if (!await Location().isBackgroundPermissionGranted()) {
       var status = await Location().requestPermission();
@@ -223,16 +217,16 @@ class MapPickerController extends ChangeNotifier {
       } else if (status == PermissionStatus.denied) {
         prevStatus = PermissionStatus.denied;
         _loading = false;
-        return;
+        return false;
       } else if (status == PermissionStatus.deniedForever) {
         if (prevStatus == PermissionStatus.denied || _isDialogOpened == true) {
           prevStatus = PermissionStatus.deniedForever;
           _loading = false;
-          return;
+          return false;
         } else {
           if (onShowDialog != null) {
             onShowDialog!();
-            return;
+            return false;
           }
         }
       }
@@ -247,19 +241,30 @@ class MapPickerController extends ChangeNotifier {
       if (!serviceEnabled) {
         _loading = false;
         _safeNotify();
-        return; // Пользователь отказался включать
+        return false; // Пользователь отказался включать
+      } else {
+        return true;
       }
+    } else {
+      return true;
     }
+  }
 
-    // Получаем текущие координаты устройства
-    /*Position position = await Geolocator.getCurrentPosition();
+  Future<void> getCurrentPosition() async {
+    bool locationEnabled = await _checkLocationPermission();
+    if (locationEnabled) {
+      // Получаем текущие координаты устройства
+      /*Position position = await Geolocator.getCurrentPosition();
     _selected = LatLng(position.latitude, position.longitude);*/
-    if (searchController.text.isNotEmpty) searchController.clear();
-    LocationData position = await Location().getLocation();
-    _selected = LatLng(position.latitude, position.longitude);
-    //mapController.move(_selected, mapController.camera.zoom);
-    animatedMapController.animateTo(dest: _selected);
-    await _reverseGeocode(_selected);
-    // _reverseGeocode уже вызывает _safeNotify() в конце
+      if (searchController.text.isNotEmpty) searchController.clear();
+      LocationData position = await Location().getLocation();
+      _selected = LatLng(position.latitude, position.longitude);
+      //mapController.move(_selected, mapController.camera.zoom);
+      animatedMapController.animateTo(dest: _selected);
+      await _reverseGeocode(_selected);
+      // _reverseGeocode уже вызывает _safeNotify() в конце
+    } else {
+      return;
+    }
   }
 }

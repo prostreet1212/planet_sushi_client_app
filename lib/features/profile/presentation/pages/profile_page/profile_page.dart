@@ -34,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     // Первичная загрузка профиля после появления страницы.
-  /*  WidgetsBinding.instance.addPostFrameCallback((_) {
+    /*  WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<ProfileCubit>().getLProfile();
       }
@@ -46,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
     super.didChangeDependencies();
     // Подписываемся на смену активной вкладки, чтобы обновлять профиль
     // при каждом открытии вкладки "Профиль" (например, после регистрации).
- /*   try {
+    /*   try {
       final TabsRouter tabsRouter = AutoTabsRouter.of(context);
       if (!identical(tabsRouter, _tabsRouter)) {
         _tabsRouter?.removeListener(_onTabChanged);
@@ -58,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }*/
   }
 
-/*  void _onTabChanged() {
+  /*  void _onTabChanged() {
     if (!mounted || _tabsRouter == null) return;
     try {
       if (_tabsRouter!.current.name == context.routeData.name) {
@@ -71,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void dispose() {
-   // _tabsRouter?.removeListener(_onTabChanged);
+    // _tabsRouter?.removeListener(_onTabChanged);
     super.dispose();
   }
 
@@ -99,35 +99,32 @@ class _ProfilePageState extends State<ProfilePage> {
       // При любом изменении статуса авторизации перечитываем профиль.
       listener: (context, authState)  {
         // при выходе ручном или по сроку действия удалить запись в локальной бд
-        if(authState is AuthStatusUnauthorized){
+        if (authState is AuthStatusUnauthorized) {
           final ProfileState profileState = context.read<ProfileCubit>().state;
 
           if (profileState is ProfileSuccess) {
-             //di.sl<ProfileLocalDataSource>().deleteProfile(profileState.user);
-            context.read<ProfileCubit>().deleteProfile(profileState.user);
-             //также очищаем поля у формы заказа
-            //закладка потестить
-              context.read<CheckoutCubit>().setName('');
-              context.read<CheckoutCubit>().setPhone('');
+             context.read<ProfileCubit>().deleteProfile(profileState.user);
           }
-        }else if(authState is AuthStatusAuthorized){
+        } else if (authState is AuthStatusAuthorized) {
           context.read<ProfileCubit>().getLProfile();
         }
-
-
-
       },
-      builder: (context,authState){
+      builder: (context, authState) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: BlocConsumer<ProfileCubit, ProfileState>(
-            listener:(context, profileState) {
+            listener: (context, profileState) {
               if (profileState is ProfileSuccess) {
                 final checkout = context.read<CheckoutCubit>();
                 checkout.setName(profileState.user.name ?? '');
                 checkout.setPhone(profileState.user.phone);
               }
-            } ,
+              //после метода deleteProfile очистим поля в форме заказа
+              else if (profileState is ProfileEmpty) {
+                context.read<CheckoutCubit>().setName('');
+                context.read<CheckoutCubit>().setPhone('');
+              }
+            },
             builder: (context, profileState) {
               /*final bool isAuthorized =
                   di.sl<Supabase>().client.auth.currentUser != null;
@@ -138,16 +135,19 @@ class _ProfilePageState extends State<ProfilePage> {
                   user.name!.trim().isNotEmpty;
               final bool showProfile = isAuthorized && user != null && hasName;*/
 
-              final UserModel? user =
-              profileState is ProfileSuccess ? profileState.user : null;
+              final UserModel? user = profileState is ProfileSuccess
+                  ? profileState.user
+                  : null;
               //final bool showProfile=authState is AuthStatusAuthorized&& user!=null;
-              final bool isAuthorized=authState is AuthStatusAuthorized&& user!=null;
+              final bool isAuthorized =
+                  authState is AuthStatusAuthorized && user != null;
               final Widget header;
-              if (/*showProfile*/isAuthorized) {
+              if ( /*showProfile*/ isAuthorized) {
                 header = ProfileCard(user: user);
               } else if (isAuthorized &&
-                  (profileState is ProfileLoading /*||
-                      profileState is ProfileInit*/)) {
+                  (profileState
+                      is ProfileLoading /*||
+                      profileState is ProfileInit*/ )) {
                 header = const ProfileLoadingCard();
               } else {
                 header = LoginButton(
@@ -166,22 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
             },
           ),
         );
-
-      }
+      },
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
