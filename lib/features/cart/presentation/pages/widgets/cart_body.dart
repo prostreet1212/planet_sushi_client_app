@@ -14,10 +14,17 @@ import '../../../../profile/presentation/cubits/profile_cubit/profile_cubit.dart
 import '../../cubits/cart_cubit.dart';
 import '../../../../order/pages/widgets/checkout_form/checkout_form.dart';
 
-class CartBody extends StatelessWidget {
+class CartBody extends StatefulWidget {
   const CartBody({super.key, required this.cartList});
 
   final List<CartItem> cartList;
+
+  @override
+  State<CartBody> createState() => _CartBodyState();
+}
+
+class _CartBodyState extends State<CartBody> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +44,16 @@ class CartBody extends StatelessWidget {
             SliverPadding(
               padding: const EdgeInsets.only(bottom: 0),
               sliver: SliverList.builder(
-                itemCount: cartList.length,
+                itemCount: widget.cartList.length,
                 itemBuilder: (context, index) =>
-                    CartCard(cart: cartList[index]),
+                    CartCard(cart: widget.cartList[index]),
               ),
             ),
-            const SliverToBoxAdapter(child: CheckoutForm()),
+            SliverToBoxAdapter(child: CheckoutForm(formKey: _formKey,)),
             const SliverToBoxAdapter(child: SizedBox(height: 120)),
           ],
         ),
-        const OrderButton(),
+        OrderButton(formKey: _formKey,),
         /*Positioned(
           bottom: 85,
           left: 0,

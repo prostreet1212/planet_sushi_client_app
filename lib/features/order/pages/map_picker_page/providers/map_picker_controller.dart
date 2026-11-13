@@ -208,7 +208,6 @@ class MapPickerController extends ChangeNotifier {
   }
 
   Future<bool> _checkLocationPermission() async {
-    //закладка
     if (_disposed) return false;
     _loading = true;
     if (!await Location().isBackgroundPermissionGranted()) {

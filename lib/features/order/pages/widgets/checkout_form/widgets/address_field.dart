@@ -17,17 +17,24 @@ class MapPickResult {
 }
 
 class AddressField extends StatefulWidget {
+  const AddressField({super.key, required this.formKey});
+
+  final GlobalKey<FormState> formKey;
+
   @override
   State<AddressField> createState() => _AddressFieldState();
 }
 
 class _AddressFieldState extends State<AddressField> {
   late TextEditingController addressController;
+  final _addressFieldKey = GlobalKey<FormFieldState>();
+  late FocusNode _addressFocusNode;
 
   @override
   void initState() {
     super.initState();
     addressController = TextEditingController();
+    _addressFocusNode=FocusNode();
   }
 
   @override
@@ -37,11 +44,22 @@ class _AddressFieldState extends State<AddressField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
+          key: _addressFieldKey,
+          focusNode:_addressFocusNode,
+          validator: (value){
+            if (value == null || value.isEmpty) {
+              return 'Заполните поле';
+            }
+            return null;
+          },
           controller: addressController,
           //initialValue: state.address,
           readOnly: true,
+
           decoration: InputDecoration(
             hintText: 'Улица, дом, квартира',
+            helperText: ' ',
+            errorMaxLines: 1,
             border: const OutlineInputBorder(),
             prefixIcon: const Icon(Icons.location_on_outlined),
             suffixIcon: IconButton(
@@ -71,7 +89,13 @@ class _AddressFieldState extends State<AddressField> {
       setState(() {
         addressController.text = result.address;
       });
+      //закладка, проверить прежде чем разфокус делать
+      _addressFieldKey.currentState?.validate();
+      //FocusScope.of(context).unfocus();
+      _addressFocusNode.unfocus();
 
+    }else{
+      _addressFocusNode.unfocus();
     }
   }
 }

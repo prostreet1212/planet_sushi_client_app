@@ -14,10 +14,11 @@ import '../../../models/cart_item.dart';
 import '../../cubits/cart_cubit.dart';
 
 class OrderButton extends StatelessWidget {
-  const OrderButton({super.key});
+  const OrderButton({super.key,required this.formKey});
+
+ final  GlobalKey<FormState> formKey;
 
   //final double totalPrice;
-
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -50,9 +51,18 @@ class OrderButton extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  _submit(context, totalPrice);
+                  //_submit(context, totalPrice);
                   /*const snackBar = SnackBar(content: Text('Yay! A SnackBar!'),behavior: SnackBarBehavior.floating);
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);*/
+                  if (formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('успех')),
+                    );
+                  }else{
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('ошибка')),
+                    );
+                  }
                 },
               );
             },
