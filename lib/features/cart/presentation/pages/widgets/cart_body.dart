@@ -24,7 +24,10 @@ class CartBody extends StatefulWidget {
 }
 
 class _CartBodyState extends State<CartBody> {
+  //для проверки и вывода ошибок заполнения
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  //для скрола к 1-му незаполненному виджету
+  final GlobalKey<CheckoutFormState> _checkoutFormKey = GlobalKey<CheckoutFormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +52,12 @@ class _CartBodyState extends State<CartBody> {
                     CartCard(cart: widget.cartList[index]),
               ),
             ),
-            SliverToBoxAdapter(child: CheckoutForm(formKey: _formKey,)),
+            SliverToBoxAdapter(child: CheckoutForm(key: _checkoutFormKey, formKey: _formKey,)),
             const SliverToBoxAdapter(child: SizedBox(height: 120)),
           ],
         ),
-        OrderButton(formKey: _formKey,),
+        OrderButton(formKey: _formKey,
+        onInvalid:  () => _checkoutFormKey.currentState?.scrollToFirstError(),),
         /*Positioned(
           bottom: 85,
           left: 0,

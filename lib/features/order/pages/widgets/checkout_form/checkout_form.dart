@@ -19,18 +19,21 @@ import '../../../presentation/cubits/chekout_cubit/checkout_state.dart';
 import '../../../presentation/cubits/chekout_cubit/chekout_cubit.dart';
 
 class CheckoutForm extends StatefulWidget {
-  const CheckoutForm({super.key,required this.formKey});
+  const CheckoutForm({super.key, required this.formKey});
 
   final GlobalKey<FormState> formKey;
 
   @override
-  State<CheckoutForm> createState() => _CheckoutFormState();
+  State<CheckoutForm> createState() => CheckoutFormState();
 }
 
-class _CheckoutFormState extends State<CheckoutForm> {
+class CheckoutFormState extends State<CheckoutForm> {
   late TextEditingController nameController;
   late TextEditingController phoneController;
 
+  final _nameFieldKey = GlobalKey<FormFieldState<String>>();
+  final _addressFieldKey = GlobalKey<FormFieldState<String>>();
+  final _timePickerFieldKey = GlobalKey<FormFieldState<DateTime>>();
 
   @override
   void initState() {
@@ -65,6 +68,31 @@ class _CheckoutFormState extends State<CheckoutForm> {
     );
   }
 
+  Future<void> scrollToFirstError() async {
+    // порядок = порядок на экране
+    final keys = <GlobalKey<FormFieldState<dynamic>>>[
+      _nameFieldKey,
+      _addressFieldKey,
+      _timePickerFieldKey
+      // отсутствует в дереве при самовывозе — просто пропустится
+    ];
+
+    for (final key in keys) {
+      final fieldState = key.currentState;
+      final fieldContext = key.currentContext;
+      if (fieldState == null || fieldContext == null) continue;
+      if (!fieldState.hasError) continue;
+
+      await Scrollable.ensureVisible(
+        fieldContext,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        alignment: 0.1, // поле чуть ниже верхней кромки
+      );
+      return; // дальше не ищем — нужен только первый
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CheckoutCubit, CheckoutState>(
@@ -75,193 +103,207 @@ class _CheckoutFormState extends State<CheckoutForm> {
         syncControllers(checkoutFormState);
       },
       builder: (context, checkoutFormState) {
-        return context.read<ProfileCubit>().state is ProfileSuccess?
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Form(
-            key: widget.formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SectionTitle('Контакты'),
-                SizedBox(height: 12),
-                Row(
-                  //mainAxisSize: MainAxisSize.min,
-                  children: [
-                    LabeledField(
-                      label: 'Имя',
-                      child: TextFormField(
-                        validator: (value){
-                          if (value == null || value.isEmpty) {
-                            return 'Заполните поле';
-                          }else if(value.length<2){
-                            return 'Минимум 2 символа';
-                          }
-                          return null;
-                        },
-                        controller: nameController,
-                        decoration: InputDecoration(
-                          hintText: 'Ваше имя',
-                          isDense: true,
-                          helperText: ' ',
-                          errorMaxLines: 1,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 12,
+        return context.read<ProfileCubit>().state is ProfileSuccess
+            ? Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: Form(
+                  key: widget.formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SectionTitle('Контакты'),
+                      SizedBox(height: 12),
+                      Row(
+                        //mainAxisSize: MainAxisSize.min,
+                        children: [
+                          LabeledField(
+                            label: 'Имя',
+                            child: TextFormField(
+                              key: _nameFieldKey,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Заполните поле';
+                                } else if (value.length < 2) {
+                                  return 'Минимум 2 символа';
+                                }
+                                return null;
+                              },
+                              controller: nameController,
+                              decoration: InputDecoration(
+                                hintText: 'Ваше имя',
+                                isDense: true,
+                                helperText: ' ',
+                                errorMaxLines: 1,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 12,
+                                ),
+                                //isCollapsed: true,
+                                border: const OutlineInputBorder(),
+                                suffixIconConstraints: const BoxConstraints(
+                                  minWidth: 24,
+                                  minHeight: 24,
+                                  maxWidth: 43,
+                                  maxHeight: 43,
+                                ),
+                                suffixIcon: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  icon: const Icon(Icons.edit),
+                                  tooltip: 'Выбрать на карте',
+                                  onPressed: null,
+                                ),
+                              ),
+                              onChanged: context.read<CheckoutCubit>().setName,
+                            ),
                           ),
-                          //isCollapsed: true,
-                          border: const OutlineInputBorder(),
-                          suffixIconConstraints: const BoxConstraints(
-                            minWidth: 24,
-                            minHeight: 24,
-                            maxWidth: 43,
-                            maxHeight: 43,
-                          ),
-                          suffixIcon: IconButton(
-                            padding: EdgeInsets.zero,
-                            icon: const Icon(Icons.edit),
-                            tooltip: 'Выбрать на карте',
-                            onPressed: null,
-                          ),
-                        ),
-                        onChanged: context.read<CheckoutCubit>().setName,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    LabeledField(
-                      label: 'Телефон',
-                      child: TextFormField(
-                        controller: phoneController,
-                        keyboardType: TextInputType.phone,
-                        enabled: false,
-                        //readOnly: true,
-                        style: TextStyle(color: Colors.black),
-                        decoration: const InputDecoration(
-                          prefix: const Text(
-                            '+',
-                            style: TextStyle(color: Colors.black),
-                          ),
+                          const SizedBox(width: 12),
+                          LabeledField(
+                            label: 'Телефон',
+                            child: TextFormField(
+                              controller: phoneController,
+                              keyboardType: TextInputType.phone,
+                              enabled: false,
+                              //readOnly: true,
+                              style: TextStyle(color: Colors.black),
+                              decoration: const InputDecoration(
+                                prefix: const Text(
+                                  '+',
+                                  style: TextStyle(color: Colors.black),
+                                ),
 
-                          isDense: true,
-                          helperText: ' ',
-                          errorMaxLines: 1,
-                          disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.black38,
-                            ), // Ваша кастомная граница
+                                isDense: true,
+                                helperText: ' ',
+                                errorMaxLines: 1,
+                                disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.black38,
+                                  ), // Ваша кастомная граница
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 12,
+                                ),
+                                hintText: '+7 (___) ___-__-__',
+                                border: OutlineInputBorder(),
+                              ),
+                              //onChanged: context.read<CheckoutCubit>().setPhone,
+                              onChanged: null,
+                            ),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 12,
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      const SectionTitle('Способ получения'),
+                      SegmentedButton<DeliveryType>(
+                        segments: const [
+                          ButtonSegment(
+                            value: DeliveryType.delivery,
+                            label: Text('Доставка'),
+                            icon: Icon(Icons.delivery_dining),
                           ),
-                          hintText: '+7 (___) ___-__-__',
+                          ButtonSegment(
+                            value: DeliveryType.pickup,
+                            label: Text('Самовывоз'),
+                            icon: Icon(Icons.store),
+                          ),
+                        ],
+                        selected: {checkoutFormState.deliveryType},
+                        onSelectionChanged: (s) => context
+                            .read<CheckoutCubit>()
+                            .setDeliveryType(s.first),
+                      ),
+
+                      if (checkoutFormState.deliveryType ==
+                          DeliveryType.delivery) ...[
+                        const SizedBox(height: 12),
+                        AddressField(
+                          //formKey: widget.formKey,
+                          fieldKey: _addressFieldKey,
+                        ),
+                      ],
+
+                      const SizedBox(height: 20),
+                      const SectionTitle('Когда приготовить'),
+                      SegmentedButton<CookingTimeType>(
+                        segments: const [
+                          ButtonSegment(
+                            value: CookingTimeType.asap,
+                            label: Text('По готовности'),
+                            icon: Icon(Icons.flash_on),
+                          ),
+                          ButtonSegment(
+                            value: CookingTimeType.scheduled,
+                            label: Text('Ко времени'),
+                            icon: Icon(Icons.schedule),
+                          ),
+                        ],
+                        selected: {checkoutFormState.cookingTimeType},
+                        onSelectionChanged: (s) => context
+                            .read<CheckoutCubit>()
+                            .setCookingTime(s.first),
+                      ),
+                      if (checkoutFormState.cookingTimeType ==
+                          CookingTimeType.scheduled) ...[
+                        const SizedBox(height: 12),
+                        TimePickerField(fieldKey: _timePickerFieldKey,),
+                      ],
+                      const Divider(thickness: 1),
+                      const SizedBox(height: 20),
+                      const SectionTitle('Комментарий'),
+                      TextFormField(
+                        initialValue: checkoutFormState.comment,
+                        maxLines: 3,
+                        textInputAction: TextInputAction.done,
+                        decoration: const InputDecoration(
+                          hintText: 'Пожелания к заказу...',
                           border: OutlineInputBorder(),
                         ),
-                        //onChanged: context.read<CheckoutCubit>().setPhone,
-                        onChanged: null,
+                        onChanged: context.read<CheckoutCubit>().setComment,
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const SectionTitle('Способ получения'),
-                SegmentedButton<DeliveryType>(
-                  segments: const [
-                    ButtonSegment(
-                      value: DeliveryType.delivery,
-                      label: Text('Доставка'),
-                      icon: Icon(Icons.delivery_dining),
-                    ),
-                    ButtonSegment(
-                      value: DeliveryType.pickup,
-                      label: Text('Самовывоз'),
-                      icon: Icon(Icons.store),
-                    ),
-                  ],
-                  selected: {checkoutFormState.deliveryType},
-                  onSelectionChanged: (s) =>
-                      context.read<CheckoutCubit>().setDeliveryType(s.first),
-                ),
+                      const SizedBox(height: 10),
+                      const Divider(thickness: 1),
+                      const SizedBox(height: 20),
 
-                if (checkoutFormState.deliveryType == DeliveryType.delivery) ...[
-                  const SizedBox(height: 12),
-                  AddressField(formKey: widget.formKey,),
-                ],
+                      const SectionTitle('Способ оплаты'),
+                      RadioListTile<PaymentType>(
+                        value: PaymentType.onReceipt,
+                        groupValue: checkoutFormState.paymentType,
+                        onChanged: (v) =>
+                            context.read<CheckoutCubit>().setPayment(v!),
+                        title: const Text('При получении'),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                      ),
+                      RadioListTile<PaymentType>(
+                        value: PaymentType.cardNow,
+                        groupValue: checkoutFormState.paymentType,
+                        onChanged: (v) =>
+                            context.read<CheckoutCubit>().setPayment(v!),
+                        title: const Text('Картой сейчас'),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                      ),
 
-                const SizedBox(height: 20),
-                const SectionTitle('Когда приготовить'),
-                SegmentedButton<CookingTimeType>(
-                  segments: const [
-                    ButtonSegment(
-                      value: CookingTimeType.asap,
-                      label: Text('По готовности'),
-                      icon: Icon(Icons.flash_on),
-                    ),
-                    ButtonSegment(
-                      value: CookingTimeType.scheduled,
-                      label: Text('Ко времени'),
-                      icon: Icon(Icons.schedule),
-                    ),
-                  ],
-                  selected: {checkoutFormState.cookingTimeType},
-                  onSelectionChanged: (s) =>
-                      context.read<CheckoutCubit>().setCookingTime(s.first),
-                ),
-                if (checkoutFormState.cookingTimeType ==
-                    CookingTimeType.scheduled) ...[
-                  const SizedBox(height: 12),
-                  TimePickerField(),
-                ],
-
-
-                Divider(thickness: 1,),
-                const SizedBox(height: 20),
-                const SectionTitle('Комментарий'),
-                TextFormField(
-                  initialValue: checkoutFormState.comment,
-                  maxLines: 3,
-                  decoration: const InputDecoration(
-                    hintText: 'Пожелания к заказу...',
-                    border: OutlineInputBorder(),
+                      if (checkoutFormState.error != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            checkoutFormState.error!,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                  onChanged: context.read<CheckoutCubit>().setComment,
                 ),
-                const SizedBox(height: 10),
-                const Divider(thickness: 1,),
-                const SizedBox(height: 20),
-
-                const SectionTitle('Способ оплаты'),
-                RadioListTile<PaymentType>(
-                  value: PaymentType.onReceipt,
-                  groupValue: checkoutFormState.paymentType,
-                  onChanged: (v) => context.read<CheckoutCubit>().setPayment(v!),
-                  title: const Text('При получении'),
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                ),
-                RadioListTile<PaymentType>(
-                  value: PaymentType.cardNow,
-                  groupValue: checkoutFormState.paymentType,
-                  onChanged: (v) => context.read<CheckoutCubit>().setPayment(v!),
-                  title: const Text('Картой сейчас'),
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                ),
-
-                if (checkoutFormState.error != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      checkoutFormState.error!,
-                      style: const TextStyle(color: Colors.red, fontSize: 13),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        )
-            :const SizedBox() ;
+              )
+            : const SizedBox();
       },
     );
   }

@@ -17,9 +17,10 @@ class MapPickResult {
 }
 
 class AddressField extends StatefulWidget {
-  const AddressField({super.key, required this.formKey});
+  const AddressField({super.key, /*required this.formKey,*/ required this.fieldKey});
 
-  final GlobalKey<FormState> formKey;
+  //final GlobalKey<FormState> formKey;
+  final GlobalKey<FormFieldState<String>> fieldKey;
 
   @override
   State<AddressField> createState() => _AddressFieldState();
@@ -27,7 +28,7 @@ class AddressField extends StatefulWidget {
 
 class _AddressFieldState extends State<AddressField> {
   late TextEditingController addressController;
-  final _addressFieldKey = GlobalKey<FormFieldState>();
+  //final _addressFieldKey = GlobalKey<FormFieldState>();
   late FocusNode _addressFocusNode;
 
   @override
@@ -44,7 +45,8 @@ class _AddressFieldState extends State<AddressField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
-          key: _addressFieldKey,
+          //key: _addressFieldKey,
+          key: widget.fieldKey,
           focusNode:_addressFocusNode,
           validator: (value){
             if (value == null || value.isEmpty) {
@@ -90,9 +92,10 @@ class _AddressFieldState extends State<AddressField> {
         addressController.text = result.address;
       });
       //закладка, проверить прежде чем разфокус делать
-      _addressFieldKey.currentState?.validate();
+      //_addressFieldKey.currentState?.validate();
       //FocusScope.of(context).unfocus();
       _addressFocusNode.unfocus();
+      widget.fieldKey.currentState?.validate();
 
     }else{
       _addressFocusNode.unfocus();

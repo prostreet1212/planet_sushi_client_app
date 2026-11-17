@@ -14,9 +14,10 @@ import '../../../models/cart_item.dart';
 import '../../cubits/cart_cubit.dart';
 
 class OrderButton extends StatelessWidget {
-  const OrderButton({super.key,required this.formKey});
+  const OrderButton({super.key,required this.formKey,required this.onInvalid});
 
  final  GlobalKey<FormState> formKey;
+  final VoidCallback? onInvalid;
 
   //final double totalPrice;
   @override
@@ -59,6 +60,7 @@ class OrderButton extends StatelessWidget {
                       const SnackBar(content: Text('успех')),
                     );
                   }else{
+                    onInvalid?.call();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('ошибка')),
                     );
